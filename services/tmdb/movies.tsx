@@ -2,10 +2,11 @@ import { tmdbApi } from '.'
 import { Language } from './models/common'
 import { MovieDetails } from './models/movie'
 
-export const details = async (id: number, language: Language) => {
+export const getMovieDetails = async (id: number, language: Language) => {
   const { data } = await tmdbApi.get<MovieDetails>(`/movie/${id}`, {
     params: {
       language,
+      append_to_response: 'casts',
     },
   })
 

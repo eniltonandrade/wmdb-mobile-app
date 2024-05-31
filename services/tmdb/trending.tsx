@@ -15,7 +15,5 @@ export const getTrendingMovies = async (
     },
   )
 
-  console.log(data)
-
   return data
 }

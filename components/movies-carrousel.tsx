@@ -1,8 +1,10 @@
 import { tmdbImage } from '@/utils/image'
 import { FontAwesome } from '@expo/vector-icons'
-import { View, Text, FlatList, Image } from 'react-native'
+import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native'
+
 import colors from 'tailwindcss/colors'
-import { Skeleton } from './Skeleton'
+import { Skeleton } from './skeleton'
+import { router } from 'expo-router'
 
 type MovieCarrousel = {
   tmdbId: number
@@ -26,12 +28,31 @@ export function MoviesCarrousel({
   emptyListText,
   isLoading,
 }: MovieCarrouselProps) {
+  function handleNavigate(id: number) {
+    router.setParams({ id: String(id) })
+    router.push(`/movie/${id}`)
+  }
+
   return (
     <View className="space-y-4 mb-4">
       {isLoading ? (
         <View className="flex flex-row space-x-4 px-4">
-          <Skeleton className="w-[130px] h-[210px] mb-1" />
-          <Skeleton className="w-[130px] h-[210px] mb-1 px-4" />
+          <Skeleton
+            style={{
+              height: 210,
+              width: 130,
+              backgroundColor: colors.gray[800],
+              borderRadius: 5,
+            }}
+          />
+          <Skeleton
+            style={{
+              height: 210,
+              width: 130,
+              backgroundColor: colors.gray[800],
+              borderRadius: 5,
+            }}
+          />
         </View>
       ) : (
         <FlatList
@@ -55,7 +76,10 @@ export function MoviesCarrousel({
           renderItem={({ item }) => {
             return (
               <View className="w-[130px] mr-4 space-y-2">
-                <View className="relative">
+                <TouchableOpacity
+                  className="relative"
+                  onPress={() => handleNavigate(item.tmdbId)}
+                >
                   {item.posterPath && (
                     <Image
                       source={{ uri: tmdbImage(item.posterPath, 'w154') }}
@@ -71,20 +95,20 @@ export function MoviesCarrousel({
                     </Text>
                   </View>
                   {item.userRating && (
-                    <View className="absolute bg-secondary items-center justify-center right-3 bottom-[-6] h-7 w-7 rounded-full border-primary border-4 z-10">
+                    <View className="absolute bg-secondary-100 items-center justify-center right-3 bottom-[-6] h-7 w-7 rounded-full border-primary border-4 z-10">
                       <Text className="text-gray-50 text-xs font-pmedium  text-shad">
                         {item.userRating}
                       </Text>
                     </View>
                   )}
                   {item.isWatched && (
-                    <View className="absolute bg-gray-500 items-center justify-center right-[-4] bottom-[-6] h-7 w-7 rounded-full border-primary border-4">
+                    <View className="absolute bg-secondary-200 items-center justify-center right-[-4] bottom-[-6] h-7 w-7 rounded-full border-primary border-4">
                       <Text className="text-gray-50 text-xs font-pmedium  text-shad">
                         <FontAwesome name="eye" />
                       </Text>
                     </View>
                   )}
-                </View>
+                </TouchableOpacity>
                 <View>
                   <Text
                     numberOfLines={2}

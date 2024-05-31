@@ -1,35 +1,38 @@
-import { useEffect, useRef } from 'react'
-import { Animated, type View } from 'react-native'
+import { useEffect } from 'react'
+import { View } from 'react-native'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated'
 
-function Skeleton({
-  className,
-  ...props
-}: { className?: string } & React.ComponentPropsWithoutRef<typeof View>) {
-  const fadeAnim = useRef(new Animated.Value(0.5)).current
+export function Skeleton({
+  style,
+}: React.ComponentPropsWithoutRef<typeof View>) {
+  const opacity = useSharedValue<number>(0.5)
 
   useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
+    opacity.value = withRepeat(
+      withSequence(
+        withTiming(0.3, {
           duration: 1000,
-          useNativeDriver: true,
         }),
-        Animated.timing(fadeAnim, {
-          toValue: 50,
+        withTiming(1, {
           duration: 1000,
-          useNativeDriver: true,
         }),
-      ]),
-    ).start()
-  }, [fadeAnim])
-  return (
-    <Animated.View
-      className={`bg-gray-700 rounded-md ${className} opacity-${fadeAnim}`}
-      style={[{ opacity: fadeAnim }]}
-      {...props}
-    />
-  )
-}
+      ),
+      Infinity,
+      true,
+    )
+  }, [])
 
-export { Skeleton }
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    }
+  })
+
+  return <Animated.View style={[style, animatedStyles]} />
+}

@@ -7,6 +7,10 @@
     "icon": "./assets/images/icon.png",
     "scheme": "wmdb",
     "userInterfaceStyle": "automatic",
+    "packagerOpts": {
+      "sourceExts": ["js", "jsx", "svgx"],
+      "transformer": "node_modules/react-native-svg-transformer/index.js"
+    },
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",

@@ -2,7 +2,8 @@ import axios from 'axios'
 
 export type ApiResponse<T> = {
   total?: number
-  results: T[]
+  results?: T[]
+  result?: T
 }
 
 export const api = axios.create({
@@ -12,8 +13,8 @@ export const api = axios.create({
   },
 })
 
-api.interceptors.request.use(async (config) => {
-  await new Promise((resolve) => setTimeout(resolve, 2000))
+// api.interceptors.request.use(async (config) => {
+//   await new Promise((resolve) => setTimeout(resolve, 2000))
 
-  return config
-})
+//   return config
+// })

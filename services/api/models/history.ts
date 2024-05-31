@@ -6,7 +6,7 @@ export type History = {
     id: string
     name: string
   } | null
-  movie: {
+  movie?: {
     id: string
     tmdbId: number
     title: string
