@@ -1,7 +1,7 @@
 import { MoviesCarrousel } from '@/components/MoviesCarrousel'
 import { fetchUseHistory } from '@/services/api/fetch-user-history'
 import { getTrendingMovies } from '@/services/tmdb/trending'
-import { FontAwesome } from '@expo/vector-icons'
+import { Feather, FontAwesome } from '@expo/vector-icons'
 import { useQuery } from '@tanstack/react-query'
 import {
   SafeAreaView,
@@ -74,11 +74,7 @@ export default function Home() {
               Recentes
             </Text>
             <View className="flex items-center justify-center ml-2">
-              <FontAwesome
-                name="arrow-right"
-                size={16}
-                color={colors.gray[100]}
-              />
+              <Feather name="arrow-right" size={16} color={colors.gray[100]} />
             </View>
           </TouchableOpacity>
 

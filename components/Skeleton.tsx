@@ -26,7 +26,7 @@ export function Skeleton({
       Infinity,
       true,
     )
-  }, [])
+  }, [opacity])
 
   const animatedStyles = useAnimatedStyle(() => {
     return {

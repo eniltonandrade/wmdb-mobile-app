@@ -29,6 +29,8 @@ import { getUserHistoryByMovieId } from '@/services/api/get-user-history-by-movi
 import { ptBR } from 'date-fns/locale'
 import { format } from 'date-fns'
 import { getImdbMovieDetails } from '@/services/omdb/get-imdb-movie-details'
+import Avatar from '@/components/ui/Avatar'
+import Badge from '@/components/ui/Badge'
 
 const mapper: Record<string, React.ReactNode> = {
   'Internet Movie Database': <ImdbLogo height={24} width={24} />,
@@ -42,7 +44,7 @@ export default function Movie() {
   const scrollY = useRef(new RNAnimated.Value(0)).current
 
   const headerOpacity = scrollY.interpolate({
-    inputRange: [0, 200],
+    inputRange: [0, 100],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   })
@@ -99,9 +101,16 @@ export default function Movie() {
           zIndex: 1000,
         }}
       >
-        <View className="items-center space-x-4 overflow-hidden">
-          <Feather size={9} name="arrow-left" color={colors.gray[100]} />
-          <Text className="text-gray-100">Guardiões da Galaxia: Volume 3</Text>
+        <View className="items-center flex-row space-x-4 pb-1  justify-between overflow-hidden">
+          <TouchableOpacity onPress={handleGoBack}>
+            <Feather name="arrow-left" size={24} color={colors.white} />
+          </TouchableOpacity>
+          <Text className="text-gray-100 font-pbold">
+            Guardiões da Galaxia: Volume 3
+          </Text>
+          <TouchableOpacity>
+            <Feather name="bookmark" size={24} color={colors.white} />
+          </TouchableOpacity>
         </View>
       </RNAnimated.View>
       <ScrollView
@@ -265,6 +274,116 @@ export default function Movie() {
               <FlatList
                 data={movie.genres}
                 horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  marginTop: 4,
+                }}
+                renderItem={({ item, index }) => {
+                  return (
+                    <Badge
+                      index={index}
+                      onPress={() => {
+                        console.log('pressed')
+                      }}
+                      title={item.name}
+                    />
+                  )
+                }}
+              />
+            </View>
+            <View className="mb-4">
+              <Text className="text-gray-100 font-pbold text-lg mb-4 px-4">
+                Equipe Técnica
+              </Text>
+              <FlatList
+                data={movie.casts.crew.filter(
+                  (crew) =>
+                    crew.job === 'Director' || crew.job === 'Screenplay',
+                )}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    key={item.name}
+                    className="mr-4 flex flex-row space-x-4 items-center"
+                  >
+                    <Avatar size="sm" uri={tmdbImage(item.profile_path)} />
+                    <View className="w-[50%]">
+                      <Text className="text-gray-100 text-xs font-pbold ">
+                        {item.name}
+                      </Text>
+                      <Text
+                        className="text-gray-400 text-xs font-pregular"
+                        numberOfLines={2}
+                      >
+                        {item.job}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+                contentContainerStyle={{
+                  paddingRight: 8,
+                  flexGrow: 1,
+                  paddingLeft: 16,
+                }}
+                horizontal={true}
+                keyExtractor={(item) => item.name + item.job}
+              />
+            </View>
+
+            <View className="mb-4">
+              <TouchableOpacity
+                activeOpacity={0.8}
+                className="flex flex-row space-x-2 items-center mb-4 px-4"
+              >
+                <Text className="text-gray-100 font-pbold text-lg ">
+                  Elenco
+                </Text>
+
+                <Feather name="arrow-right" color={colors.white} size={16} />
+              </TouchableOpacity>
+              <FlatList
+                data={movie.casts.cast.slice(0, 10)}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    key={item.name}
+                    className="mr-2 flex space-y-2 items-center w-[75] justify-start text-center"
+                  >
+                    <Avatar size="md" uri={tmdbImage(item.profile_path)} />
+                    <View>
+                      <Text className="text-gray-100 text-xs font-pbold text-center">
+                        {item.name}
+                      </Text>
+                      <Text
+                        className="text-gray-400 text-xs font-pregular text-center"
+                        numberOfLines={2}
+                      >
+                        {item.character}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+                contentContainerStyle={{
+                  paddingRight: 8,
+                  paddingLeft: 16,
+                  flexGrow: 1,
+                }}
+                horizontal={true}
+                keyExtractor={(item) => item.name + item.character}
+              />
+            </View>
+            {/* companies */}
+            <View className="px-4 mb-4">
+              <Text className="text-gray-100 font-pbold text-lg mb-2 ">
+                Estúdios
+              </Text>
+
+              <FlatList
+                data={movie.production_companies}
+                horizontal
+                showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{
                   marginTop: 4,
                 }}
@@ -283,98 +402,46 @@ export default function Movie() {
                 }}
               />
             </View>
-            <View className="px-4 mb-4">
-              <Text className="text-gray-100 font-pbold text-lg mb-4 ">
-                Equipe Técnica
-              </Text>
-              <FlatList
-                data={movie.casts.crew.filter(
-                  (crew) =>
-                    crew.job === 'Director' || crew.job === 'Screenplay',
-                )}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    key={item.name}
-                    className="mr-4 flex flex-row space-x-4 items-center"
-                  >
-                    <Image
-                      source={{ uri: tmdbImage(item.profile_path) }}
-                      height={60}
-                      width={60}
-                      className="rounded-full border"
-                      alt={item.name}
-                    />
-                    <View>
-                      <Text className="text-gray-100 text-sm font-pbold ">
-                        {item.name}
-                      </Text>
-                      <Text
-                        className="text-gray-400 text-xs font-pregular"
-                        numberOfLines={2}
-                      >
-                        {item.job}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-                contentContainerStyle={{
-                  paddingRight: 8,
-                  flexGrow: 1,
-                }}
-                horizontal={true}
-                keyExtractor={(item) => item.name + item.job}
-              />
-            </View>
-
-            <View className="px-4 mb-4">
-              <View className="flex flex-row justify-between items-center mb-4">
-                <Text className="text-gray-100 font-pbold text-lg ">
-                  Elenco
-                </Text>
-                <TouchableOpacity activeOpacity={0.8}>
-                  <Text className="text-gray-100 font-plight text-xs">
-                    Ver Todos
+            {/* Details */}
+            <View className="px-4 mt-4 flex-row space-x-2 pb-10">
+              <View className="mb-2 flex-auto">
+                <View className="mb-2">
+                  <Text className="text-gray-100 font-psemibold ">
+                    Título Original
                   </Text>
-                </TouchableOpacity>
+                  <Text className="text-gray-400">{movie.original_title}</Text>
+                </View>
+                <View>
+                  <Text className="text-gray-100 font-psemibold ">
+                    Data de Lançamento
+                  </Text>
+                  <Text className="text-gray-400 ">{movie.release_date}</Text>
+                </View>
               </View>
-              <FlatList
-                data={movie.casts.cast.slice(0, 10)}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    key={item.name}
-                    className="mr-4 flex space-y-2 items-center w-[70] justify-start text-center"
-                  >
-                    <Image
-                      source={{ uri: tmdbImage(item.profile_path) }}
-                      height={70}
-                      width={70}
-                      className="rounded-full border"
-                      alt={item.name}
-                    />
-                    <View>
-                      <Text className="text-gray-100 text-xs font-pbold text-center">
-                        {item.name}
-                      </Text>
-                      <Text
-                        className="text-gray-400 text-xs font-pregular text-center"
-                        numberOfLines={2}
-                      >
-                        {item.character}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-                contentContainerStyle={{
-                  paddingRight: 8,
-                  flexGrow: 1,
-                }}
-                horizontal={true}
-                keyExtractor={(item) => item.name + item.character}
-              />
+              <View className="mb-2 flex-auto">
+                <View className="mb-2">
+                  <Text className="text-gray-100 font-psemibold ">
+                    Orçamento
+                  </Text>
+                  <Text className="text-gray-400 ">
+                    {movie.budget.toLocaleString('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                    })}
+                  </Text>
+                </View>
+                <View>
+                  <Text className="text-gray-100 font-psemibold ">
+                    Faturamento
+                  </Text>
+                  <Text className="text-gray-400 font-pregular ">
+                    {movie.revenue.toLocaleString('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                    })}
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         )}
