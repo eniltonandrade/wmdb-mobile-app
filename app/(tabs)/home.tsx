@@ -1,4 +1,4 @@
-import { MoviesCarrousel } from '@/components/movies-carrousel'
+import { MoviesCarrousel } from '@/components/MoviesCarrousel'
 import { fetchUseHistory } from '@/services/api/fetch-user-history'
 import { getTrendingMovies } from '@/services/tmdb/trending'
 import { FontAwesome } from '@expo/vector-icons'

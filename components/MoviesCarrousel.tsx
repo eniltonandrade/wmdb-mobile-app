@@ -3,7 +3,7 @@ import { FontAwesome } from '@expo/vector-icons'
 import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native'
 
 import colors from 'tailwindcss/colors'
-import { Skeleton } from './skeleton'
+import { Skeleton } from './Skeleton'
 import { router } from 'expo-router'
 
 type MovieCarrousel = {
