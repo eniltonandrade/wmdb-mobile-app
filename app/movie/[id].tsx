@@ -31,6 +31,8 @@ import { format } from 'date-fns'
 import { getImdbMovieDetails } from '@/services/omdb/get-imdb-movie-details'
 import Avatar from '@/components/ui/Avatar'
 import Badge from '@/components/ui/Badge'
+import CastModal from './_components/CastModal'
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
 
 const mapper: Record<string, React.ReactNode> = {
   'Internet Movie Database': <ImdbLogo height={24} width={24} />,
@@ -39,6 +41,7 @@ const mapper: Record<string, React.ReactNode> = {
 }
 
 export default function Movie() {
+  const castModalRef = useRef<BottomSheetModal>(null)
   const { id } = useLocalSearchParams()
 
   const scrollY = useRef(new RNAnimated.Value(0)).current
@@ -79,6 +82,14 @@ export default function Movie() {
     queryFn: () => getImdbMovieDetails(movie?.imdb_id),
     enabled: !!movie?.imdb_id,
   })
+
+  function handleOpenCastModal() {
+    castModalRef.current?.present()
+  }
+
+  function handleCloseCastModal() {
+    castModalRef.current?.close()
+  }
 
   function handleGoBack() {
     router.back()
@@ -334,6 +345,7 @@ export default function Movie() {
             <View className="mb-4">
               <TouchableOpacity
                 activeOpacity={0.8}
+                onPress={handleOpenCastModal}
                 className="flex flex-row space-x-2 items-center mb-4 px-4"
               >
                 <Text className="text-gray-100 font-pbold text-lg ">
@@ -446,6 +458,9 @@ export default function Movie() {
           </View>
         )}
       </ScrollView>
+      {movie?.casts.cast && (
+        <CastModal modalRef={castModalRef} cast={movie?.casts.cast} />
+      )}
     </>
   )
 }

@@ -1,6 +1,8 @@
 import { View, Image } from 'react-native'
 import React from 'react'
 import { type ComponentProps } from 'react'
+import { Feather } from '@expo/vector-icons'
+import colors from 'tailwindcss/colors'
 
 export type AvatarProps = {
   uri: string
@@ -16,13 +18,21 @@ const SIZES = {
 export default function Avatar({ uri, size, ...props }: AvatarProps) {
   return (
     <View {...props}>
-      <Image
-        source={{ uri }}
-        height={SIZES[size]}
-        width={SIZES[size]}
-        className="rounded-full border"
-        alt="avatar"
-      />
+      {uri ? (
+        <Image
+          source={{ uri }}
+          height={SIZES[size]}
+          width={SIZES[size]}
+          className="rounded-full"
+          alt="avatar"
+        />
+      ) : (
+        <View
+          className={`w-[${SIZES[size]}px] h-[${SIZES[size]}px] rounded-full bg-gray-900 items-center justify-center`}
+        >
+          <Feather name="user" color={colors.gray[500]} size={32} />
+        </View>
+      )}
     </View>
   )
 }

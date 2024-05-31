@@ -3,6 +3,8 @@ import { SplashScreen, Stack } from 'expo-router'
 import { useEffect } from 'react'
 import { queryClient } from '../lib/react-query'
 import { QueryClientProvider } from '@tanstack/react-query'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
@@ -33,12 +35,16 @@ export default function RootLayout() {
     return null
   }
   return (
-    <QueryClientProvider client={queryClient}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="movie/[id]" options={{ headerShown: false }} />
-      </Stack>
-    </QueryClientProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+        <QueryClientProvider client={queryClient}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="movie/[id]" options={{ headerShown: false }} />
+          </Stack>
+        </QueryClientProvider>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   )
 }
