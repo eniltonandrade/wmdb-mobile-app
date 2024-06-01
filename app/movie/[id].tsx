@@ -103,6 +103,8 @@ export default function Movie() {
     }
   }, [historyError])
 
+  console.log(isPendingHistory)
+
   const showToast = () => {
     Toast.show({
       type: 'error',
@@ -207,7 +209,7 @@ export default function Movie() {
                     </Text>
                   </View>
 
-                  {!isPendingHistory ? (
+                  {!isPendingHistory || !storedMovie?.result?.id ? (
                     <View className="w-full flex flex-row space-x-4 mt-4 ">
                       <View className="flex-row items-center space-x-2">
                         <TouchableOpacity
@@ -265,24 +267,18 @@ export default function Movie() {
                         style={{
                           height: 40,
                           width: 40,
-                          backgroundColor: colors.gray[800],
-                          borderRadius: 5,
                         }}
                       />
                       <Skeleton
                         style={{
                           height: 10,
                           width: 60,
-                          backgroundColor: colors.gray[800],
-                          borderRadius: 5,
                         }}
                       />
                       <Skeleton
                         style={{
                           height: 40,
                           width: 40,
-                          backgroundColor: colors.gray[800],
-                          borderRadius: 5,
                         }}
                       />
                       <Skeleton
