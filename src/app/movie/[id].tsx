@@ -29,12 +29,13 @@ import { getUserHistoryByMovieId } from '@/services/api/get-user-history-by-movi
 import { ptBR } from 'date-fns/locale'
 import { format } from 'date-fns'
 import { getImdbMovieDetails } from '@/services/omdb/get-imdb-movie-details'
-import Avatar from '@/components/ui/Avatar'
-import Badge from '@/components/ui/Badge'
+
 import CastModal from './_components/CastModal'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import Toast from 'react-native-toast-message'
 import { Skeleton } from '@/components/Skeleton'
+import Avatar from '@/components/ui/Avatar'
+import Badge from '@/components/ui/Badge'
 
 const mapper: Record<string, React.ReactNode> = {
   'Internet Movie Database': <ImdbLogo height={24} width={24} />,
@@ -65,7 +66,7 @@ export default function Movie() {
     enabled: !!id,
   })
 
-  const { data: storedMovie } = useQuery({
+  const { data: storedMovie, isPending: isStoredMovieLoading } = useQuery({
     queryKey: ['api', 'movie', id],
     queryFn: () =>
       getMovieByExternalId({ movieId: id!.toString(), tmdb: true }),
@@ -102,8 +103,6 @@ export default function Movie() {
       })
     }
   }, [historyError])
-
-  console.log(isPendingHistory)
 
   const showToast = () => {
     Toast.show({
@@ -191,7 +190,10 @@ export default function Movie() {
               </Animated.View>
               <Animated.View entering={FadeInDown.duration(400).delay(300)}>
                 <View className="flex-grow justify-end">
-                  <Text className="text-2xl text-white font-pbold max-w-[200px]">
+                  <Text
+                    className="text-2xl text-white font-pbold max-w-[200px]"
+                    numberOfLines={3}
+                  >
                     {movie.title}
                   </Text>
                   <View className="flex-row items-center space-x-4 mt-2 ">
@@ -209,7 +211,8 @@ export default function Movie() {
                     </Text>
                   </View>
 
-                  {!isPendingHistory || !storedMovie?.result?.id ? (
+                  {!isPendingHistory ||
+                  (!storedMovie?.result?.id && !isStoredMovieLoading) ? (
                     <View className="w-full flex flex-row space-x-4 mt-4 ">
                       <View className="flex-row items-center space-x-2">
                         <TouchableOpacity

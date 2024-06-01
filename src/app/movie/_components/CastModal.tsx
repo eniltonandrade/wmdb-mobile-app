@@ -3,11 +3,12 @@ import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/typ
 
 import { Modal } from '@/components/ui/Modal'
 import { Cast } from '@/services/tmdb/models/credits'
-import Avatar from '@/components/ui/Avatar'
+
 import { tmdbImage } from '@/utils/image'
 import { Feather } from '@expo/vector-icons'
 import colors from 'tailwindcss/colors'
 import { FlatList } from 'react-native-gesture-handler'
+import Avatar from '@/components/ui/Avatar'
 
 type CastModalProps = {
   modalRef: React.RefObject<BottomSheetModalMethods>
