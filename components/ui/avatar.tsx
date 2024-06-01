@@ -28,7 +28,8 @@ export default function Avatar({ uri, size, ...props }: AvatarProps) {
         />
       ) : (
         <View
-          className={`w-[${SIZES[size]}px] h-[${SIZES[size]}px] rounded-full bg-gray-900 items-center justify-center`}
+          className={`rounded-full bg-gray-900 items-center justify-center`}
+          style={{ height: SIZES[size], width: SIZES[size] }}
         >
           <Feather name="user" color={colors.gray[500]} size={32} />
         </View>

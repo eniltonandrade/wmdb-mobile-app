@@ -1,8 +1,9 @@
 import { MoviesCarrousel } from '@/components/MoviesCarrousel'
 import { fetchUseHistory } from '@/services/api/fetch-user-history'
 import { getTrendingMovies } from '@/services/tmdb/trending'
-import { Feather, FontAwesome } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import {
   SafeAreaView,
   Text,
@@ -13,13 +14,18 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native'
+import Toast from 'react-native-toast-message'
 import colors from 'tailwindcss/colors'
 
 const androidPaddingCorrection =
   Platform.OS === 'android' ? StatusBar.currentHeight : 0
 
 export default function Home() {
-  const { data: recentHistory, isLoading: isRecentHistoryLoading } = useQuery({
+  const {
+    data: recentHistory,
+    isLoading: isRecentHistoryLoading,
+    error: recentHistoryError,
+  } = useQuery({
     queryKey: ['api', 'history'],
     queryFn: () =>
       fetchUseHistory({
@@ -27,6 +33,16 @@ export default function Home() {
         sort_by: 'watched_date.desc',
       }),
   })
+
+  useEffect(() => {
+    if (recentHistoryError) {
+      Toast.show({
+        type: 'error',
+        text1: `Erro`,
+        text2: `Não foi possível acessar a API.`,
+      })
+    }
+  }, [recentHistoryError])
 
   const { data: moviesTrending, isLoading: isMoviesTrendingLoading } = useQuery(
     {

@@ -10,7 +10,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import colors from 'tailwindcss/colors'
 import { Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -33,6 +33,8 @@ import Avatar from '@/components/ui/Avatar'
 import Badge from '@/components/ui/Badge'
 import CastModal from './_components/CastModal'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import Toast from 'react-native-toast-message'
+import { Skeleton } from '@/components/Skeleton'
 
 const mapper: Record<string, React.ReactNode> = {
   'Internet Movie Database': <ImdbLogo height={24} width={24} />,
@@ -70,7 +72,11 @@ export default function Movie() {
     enabled: !!id,
   })
 
-  const { data: history } = useQuery({
+  const {
+    data: history,
+    error: historyError,
+    isPending: isPendingHistory,
+  } = useQuery({
     queryKey: ['api', 'movie', storedMovie?.result?.id],
     queryFn: () =>
       getUserHistoryByMovieId({ movieId: storedMovie?.result?.id }),
@@ -87,9 +93,26 @@ export default function Movie() {
     castModalRef.current?.present()
   }
 
-  function handleCloseCastModal() {
-    castModalRef.current?.close()
+  useEffect(() => {
+    if (historyError) {
+      Toast.show({
+        type: 'error',
+        text1: `Ops.`,
+        text2: `Algo deu errado, tente novamente mais tarde.`,
+      })
+    }
+  }, [historyError])
+
+  const showToast = () => {
+    Toast.show({
+      type: 'error',
+      text1: 'Hello',
+      text2: 'This is some something 👋',
+    })
   }
+  // function handleCloseCastModal() {
+  //   castModalRef.current?.close()
+  // }
 
   function handleGoBack() {
     router.back()
@@ -116,9 +139,7 @@ export default function Movie() {
           <TouchableOpacity onPress={handleGoBack}>
             <Feather name="arrow-left" size={24} color={colors.white} />
           </TouchableOpacity>
-          <Text className="text-gray-100 font-pbold">
-            Guardiões da Galaxia: Volume 3
-          </Text>
+          <Text className="text-gray-100 font-pbold">{movie?.title}</Text>
           <TouchableOpacity>
             <Feather name="bookmark" size={24} color={colors.white} />
           </TouchableOpacity>
@@ -167,7 +188,7 @@ export default function Movie() {
                 />
               </Animated.View>
               <Animated.View entering={FadeInDown.duration(400).delay(300)}>
-                <View className="flex-grow pt-8 justify-end">
+                <View className="flex-grow justify-end">
                   <Text className="text-2xl text-white font-pbold max-w-[200px]">
                     {movie.title}
                   </Text>
@@ -175,6 +196,7 @@ export default function Movie() {
                     <TouchableOpacity
                       className="bg-secondary-100 rounded-md py-1 px-2"
                       activeOpacity={0.8}
+                      onPress={showToast}
                     >
                       <Text className="text-white font-psemibold text-xs">
                         {new Date(movie.release_date).getFullYear()}
@@ -184,7 +206,8 @@ export default function Movie() {
                       {movie.runtime} minutos
                     </Text>
                   </View>
-                  {history && (
+
+                  {!isPendingHistory ? (
                     <View className="w-full flex flex-row space-x-4 mt-4 ">
                       <View className="flex-row items-center space-x-2">
                         <TouchableOpacity
@@ -192,16 +215,16 @@ export default function Movie() {
                           activeOpacity={0.8}
                         >
                           <Feather
-                            name={history.date ? 'check' : 'plus'}
+                            name={history?.date ? 'check' : 'plus'}
                             size={20}
                             color={
-                              history.date ? colors.white : colors.green[500]
+                              history?.date ? colors.white : colors.green[500]
                             }
                           />
                         </TouchableOpacity>
-                        {history.date ? (
+                        {history?.date ? (
                           <Text className="text-gray-100 font-pbold text-sm">
-                            {format(new Date(history.date), "dd'/'MM'/'yy", {
+                            {format(new Date(history?.date), "dd'/'MM'/'yy", {
                               locale: ptBR,
                             })}
                           </Text>
@@ -218,16 +241,16 @@ export default function Movie() {
                           activeOpacity={0.8}
                         >
                           <Feather
-                            name={history.rating ? 'check' : 'plus'}
+                            name={history?.rating ? 'check' : 'plus'}
                             size={20}
                             color={
-                              history.rating ? colors.white : colors.green[500]
+                              history?.rating ? colors.white : colors.green[500]
                             }
                           />
                         </TouchableOpacity>
-                        {history.rating ? (
+                        {history?.rating ? (
                           <Text className="text-gray-100 font-pbold text-lg">
-                            {history.rating.toFixed(1)}
+                            {history?.rating.toFixed(1)}
                           </Text>
                         ) : (
                           <Text className="text-gray-100 font-pregular text-md">
@@ -235,6 +258,41 @@ export default function Movie() {
                           </Text>
                         )}
                       </View>
+                    </View>
+                  ) : (
+                    <View className="w-full mt-4 flex-row items-center space-x-2">
+                      <Skeleton
+                        style={{
+                          height: 40,
+                          width: 40,
+                          backgroundColor: colors.gray[800],
+                          borderRadius: 5,
+                        }}
+                      />
+                      <Skeleton
+                        style={{
+                          height: 10,
+                          width: 60,
+                          backgroundColor: colors.gray[800],
+                          borderRadius: 5,
+                        }}
+                      />
+                      <Skeleton
+                        style={{
+                          height: 40,
+                          width: 40,
+                          backgroundColor: colors.gray[800],
+                          borderRadius: 5,
+                        }}
+                      />
+                      <Skeleton
+                        style={{
+                          height: 10,
+                          width: 40,
+                          backgroundColor: colors.gray[800],
+                          borderRadius: 5,
+                        }}
+                      />
                     </View>
                   )}
                 </View>

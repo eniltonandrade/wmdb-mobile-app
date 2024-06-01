@@ -5,6 +5,8 @@ import { queryClient } from '../lib/react-query'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import colors from 'tailwindcss/colors'
+import Toast, { BaseToast } from 'react-native-toast-message'
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
@@ -18,6 +20,37 @@ export default function RootLayout() {
     'Poppins-SemiBold': require('../assets/fonts/Poppins-SemiBold.ttf'),
     'Poppins-Thin': require('../assets/fonts/Poppins-Thin.ttf'),
   })
+
+  const toastConfig = {
+    success: ({ ...rest }) => (
+      <BaseToast
+        {...rest}
+        style={{ borderLeftColor: colors.green[500] }}
+        contentContainerStyle={{
+          paddingHorizontal: 15,
+          backgroundColor: colors.gray[900],
+        }}
+        text1Style={{
+          fontSize: 15,
+          color: colors.gray[100],
+        }}
+      />
+    ),
+    error: ({ ...rest }) => (
+      <BaseToast
+        {...rest}
+        style={{ borderLeftColor: colors.red[500] }}
+        contentContainerStyle={{
+          paddingHorizontal: 15,
+          backgroundColor: colors.gray[900],
+        }}
+        text1Style={{
+          fontSize: 15,
+          color: colors.gray[100],
+        }}
+      />
+    ),
+  }
 
   useEffect(() => {
     if (error) throw error
@@ -38,12 +71,20 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
         <QueryClientProvider client={queryClient}>
-          <Stack>
+          <Stack
+            screenOptions={{
+              contentStyle: {
+                backgroundColor: colors.gray[900],
+              },
+              animation: 'ios',
+            }}
+          >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="movie/[id]" options={{ headerShown: false }} />
           </Stack>
         </QueryClientProvider>
+        <Toast config={toastConfig} />
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   )
