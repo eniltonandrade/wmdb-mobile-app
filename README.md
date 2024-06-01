@@ -1,50 +1,87 @@
-# Welcome to your Expo app 👋
+# WMDB
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+WMDB is a mobile application that allows users to record all the movies they have watched and get detailed statistics about their viewing habits. Built using React Native and Expo, this app offers a sleek and responsive interface, leveraging Nativewind for styling and Reanimated for smooth animations.
 
-## Get started
+## Table of Contents
 
-1. Install dependencies
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Technologies Used](#technologies-used)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-   ```bash
-   npm install
-   ```
+## Features
 
-2. Start the app
+- **Movie Recording**: Add and manage a list of movies you have watched.
+- **Statistics**: View statistics such as the total number of movies watched, genres, and viewing trends.
+- **Smooth Animations**: Enjoy a seamless user experience with Reanimated-powered animations.
+- **Cross-Platform**: Available on both Android and iOS devices.
 
-   ```bash
+## Screenshots
+
+[Include screenshots of your app here. You can add images by placing them in the `assets` folder and referencing them in this section.]
+
+## Installation
+
+1. **Clone the repository**:
+
+    ```sh
+    git clone https://https://github.com/eniltonandrade/wmdb-mobile-app
+    cd wmdb-mobile-app
+    ```
+
+2. **Install dependencies**:
+
+    ```sh
+    npm install
+    ```
+
+3. **Start the Expo server**:
+
+    ```sh
     npx expo start
-   ```
+    ```
 
-In the output, you'll find options to open the app in a
+4. **Run on your device**:
+   - For iOS: Use the Expo Go app and scan the QR code.
+   - For Android: Use the Expo Go app and scan the QR code or run `npx expo run:android`.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Usage
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+1. Open the app on your device.
+2. Add movies to your watch list by clicking the 'Add Movie' button.
+3. View detailed statistics about your movie-watching habits on the 'Statistics' screen.
 
-## Get a fresh project
+## Technologies Used
 
-When you're ready, run:
+- [React Native](https://reactnative.dev/)
+- [Expo](https://expo.dev/)
+- [Nativewind](https://github.com/Nativewind/Nativewind)
+- [Reanimated](https://docs.swmansion.com/react-native-reanimated/)
 
-```bash
-npm run reset-project
-```
+## Contributing
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Contributions are welcome! Please follow these steps:
 
-## Learn more
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes.
+4. Commit your changes (`git commit -m 'Add some feature'`).
+5. Push to the branch (`git push origin feature-branch`).
+6. Open a Pull Request.
 
-To learn more about developing your project with Expo, look at the following resources:
+## License
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Join the community
+## Contact
 
-Join our community of developers creating universal apps.
+If you have any questions or feedback, please feel free to reach out:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- **Email**: enilton.andrade@hotmail.com.br
+- **GitHub**: [eniltonandrade](https://github.com/eniltonandrade)
+
+---
