@@ -7,6 +7,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated'
+import colors from 'tailwindcss/colors'
 
 export function Skeleton({
   style,
@@ -34,5 +35,13 @@ export function Skeleton({
     }
   })
 
-  return <Animated.View style={[style, animatedStyles]} />
+  return (
+    <Animated.View
+      style={[
+        style,
+        { backgroundColor: colors.gray[800], borderRadius: 3 },
+        animatedStyles,
+      ]}
+    />
+  )
 }

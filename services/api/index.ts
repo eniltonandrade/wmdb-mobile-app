@@ -2,8 +2,12 @@ import axios from 'axios'
 
 export type ApiResponse<T> = {
   total?: number
-  results?: T[]
-  result?: T
+  result: T
+}
+
+export type ApiListResponse<T> = {
+  total?: number
+  results: T[]
 }
 
 export const api = axios.create({

@@ -1,4 +1,5 @@
 import { MoviesCarrousel } from '@/components/MoviesCarrousel'
+import MoviesCarrouselSkeleton from '@/components/ui/MoviesCarrouselSkeleton'
 import { fetchUseHistory } from '@/services/api/fetch-user-history'
 import { getTrendingMovies } from '@/services/tmdb/trending'
 import { Feather } from '@expo/vector-icons'
@@ -94,20 +95,23 @@ export default function Home() {
             </View>
           </TouchableOpacity>
 
-          <MoviesCarrousel
-            isLoading={isRecentHistoryLoading}
-            movies={(recentHistory?.results || []).map((history) => ({
-              id: history.movie.id,
-              tmdbId: history.movie.tmdbId,
-              isWatched: true,
-              posterPath: history.movie.posterPath,
-              rating: history.movie.imdbRating,
-              releaseDate: history.movie.releaseDate,
-              title: history.movie.title,
-              userRating: history.rating,
-            }))}
-            emptyListText="Seus filmes assistidos aparecerão aqui."
-          />
+          {recentHistory && !isRecentHistoryLoading ? (
+            <MoviesCarrousel
+              movies={recentHistory.results.map((history) => ({
+                id: history.movie.id,
+                tmdbId: history.movie.tmdbId,
+                isWatched: true,
+                posterPath: history.movie.posterPath,
+                rating: history.movie.imdbRating,
+                releaseDate: history.movie.releaseDate,
+                title: history.movie.title,
+                userRating: history.rating,
+              }))}
+              emptyListText="Seus filmes assistidos aparecerão aqui."
+            />
+          ) : (
+            <MoviesCarrouselSkeleton />
+          )}
 
           <TouchableOpacity
             activeOpacity={0.7}
@@ -118,19 +122,22 @@ export default function Home() {
             </Text>
           </TouchableOpacity>
 
-          <MoviesCarrousel
-            isLoading={isMoviesTrendingLoading}
-            movies={(moviesTrending?.results || []).map((movie) => ({
-              tmdbId: movie.id,
-              isWatched: false,
-              posterPath: movie.poster_path,
-              rating: movie.vote_average,
-              releaseDate: new Date(movie.release_date),
-              title: movie.title,
-              userRating: null,
-            }))}
-            emptyListText="Recomendações de filmes aparecerão aqui."
-          />
+          {moviesTrending && !isMoviesTrendingLoading ? (
+            <MoviesCarrousel
+              movies={(moviesTrending?.results || []).map((movie) => ({
+                tmdbId: movie.id,
+                isWatched: false,
+                posterPath: movie.poster_path,
+                rating: movie.vote_average,
+                releaseDate: new Date(movie.release_date),
+                title: movie.title,
+                userRating: null,
+              }))}
+              emptyListText="Recomendações de filmes aparecerão aqui."
+            />
+          ) : (
+            <MoviesCarrouselSkeleton />
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

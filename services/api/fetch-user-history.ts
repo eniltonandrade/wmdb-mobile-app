@@ -1,5 +1,5 @@
-import { ApiResponse, api } from '.'
-import { History } from './models/history'
+import { ApiListResponse, api } from '.'
+import { HistoryDetails } from './models/history-details'
 
 type queryParams = {
   page: number
@@ -27,8 +27,11 @@ type queryParams = {
 }
 
 export async function fetchUseHistory(params: queryParams) {
-  const { data } = await api.get<ApiResponse<History>>(`user/history/movies`, {
-    params,
-  })
+  const { data } = await api.get<ApiListResponse<HistoryDetails>>(
+    `user/history/movies`,
+    {
+      params,
+    },
+  )
   return data
 }
