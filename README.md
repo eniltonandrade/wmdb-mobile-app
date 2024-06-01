@@ -1,36 +1,37 @@
-# WMDB
+
+# 🎬 WMDB
 
 WMDB is a mobile application that allows users to record all the movies they have watched and get detailed statistics about their viewing habits. Built using React Native and Expo, this app offers a sleek and responsive interface, leveraging Nativewind for styling and Reanimated for smooth animations.
 
-## Table of Contents
+## 📋 Table of Contents
 
-- [Features](#features)
-- [Screenshots](#screenshots)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+- [Features](#-features)
+- [Screenshots](#-screenshots)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Technologies Used](#-technologies-used)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Contact](#-contact)
 
-## Features
+## ✨ Features
 
-- **Movie Recording**: Add and manage a list of movies you have watched.
-- **Statistics**: View statistics such as the total number of movies watched, genres, and viewing trends.
-- **Smooth Animations**: Enjoy a seamless user experience with Reanimated-powered animations.
-- **Cross-Platform**: Available on both Android and iOS devices.
+- **🎥 Movie Recording**: Add and manage a list of movies you have watched.
+- **📊 Statistics**: View statistics such as the total number of movies watched, genres, and viewing trends.
+- **💫 Smooth Animations**: Enjoy a seamless user experience with Reanimated-powered animations.
+- **📱 Cross-Platform**: Available on both Android and iOS devices.
 
-## Screenshots
+## 📸 Screenshots
 
-[Include screenshots of your app here. You can add images by placing them in the `assets` folder and referencing them in this section.]
+TBD
 
-## Installation
+## 🚀 Installation
 
 1. **Clone the repository**:
 
     ```sh
-    git clone https://https://github.com/eniltonandrade/wmdb-mobile-app
-    cd wmdb-mobile-app
+    git clone https://github.com/eniltonandrade/wmdb-mobile-app
+    cd WMDB
     ```
 
 2. **Install dependencies**:
@@ -49,20 +50,20 @@ WMDB is a mobile application that allows users to record all the movies they hav
    - For iOS: Use the Expo Go app and scan the QR code.
    - For Android: Use the Expo Go app and scan the QR code or run `npx expo run:android`.
 
-## Usage
+## 📱 Usage
 
 1. Open the app on your device.
 2. Add movies to your watch list by clicking the 'Add Movie' button.
 3. View detailed statistics about your movie-watching habits on the 'Statistics' screen.
 
-## Technologies Used
+## 🛠 Technologies Used
 
 - [React Native](https://reactnative.dev/)
 - [Expo](https://expo.dev/)
 - [Nativewind](https://github.com/Nativewind/Nativewind)
 - [Reanimated](https://docs.swmansion.com/react-native-reanimated/)
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps:
 
@@ -73,15 +74,13 @@ Contributions are welcome! Please follow these steps:
 5. Push to the branch (`git push origin feature-branch`).
 6. Open a Pull Request.
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Contact
+## 📬 Contact
 
 If you have any questions or feedback, please feel free to reach out:
 
 - **Email**: enilton.andrade@hotmail.com.br
 - **GitHub**: [eniltonandrade](https://github.com/eniltonandrade)
-
----
