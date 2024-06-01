@@ -263,32 +263,10 @@ export default function Movie() {
                     </View>
                   ) : (
                     <View className="w-full mt-4 flex-row items-center space-x-2">
-                      <Skeleton
-                        style={{
-                          height: 40,
-                          width: 40,
-                        }}
-                      />
-                      <Skeleton
-                        style={{
-                          height: 10,
-                          width: 60,
-                        }}
-                      />
-                      <Skeleton
-                        style={{
-                          height: 40,
-                          width: 40,
-                        }}
-                      />
-                      <Skeleton
-                        style={{
-                          height: 10,
-                          width: 40,
-                          backgroundColor: colors.gray[800],
-                          borderRadius: 5,
-                        }}
-                      />
+                      <Skeleton height={40} width={40} />
+                      <Skeleton height={10} width={60} />
+                      <Skeleton height={40} width={40} />
+                      <Skeleton height={10} width={40} />
                     </View>
                   )}
                 </View>

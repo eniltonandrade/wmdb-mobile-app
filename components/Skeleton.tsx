@@ -9,9 +9,16 @@ import Animated, {
 } from 'react-native-reanimated'
 import colors from 'tailwindcss/colors'
 
+type SkeletonProps = {
+  width: number
+  height: number
+}
+
 export function Skeleton({
   style,
-}: React.ComponentPropsWithoutRef<typeof View>) {
+  width,
+  height,
+}: SkeletonProps & React.ComponentPropsWithoutRef<typeof View>) {
   const opacity = useSharedValue<number>(0.5)
 
   useEffect(() => {
@@ -38,6 +45,10 @@ export function Skeleton({
   return (
     <Animated.View
       style={[
+        {
+          height,
+          width,
+        },
         style,
         { backgroundColor: colors.gray[800], borderRadius: 3 },
         animatedStyles,

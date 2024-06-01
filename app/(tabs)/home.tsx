@@ -1,5 +1,5 @@
 import { MoviesCarrousel } from '@/components/MoviesCarrousel'
-import MoviesCarrouselSkeleton from '@/components/ui/MoviesCarrouselSkeleton'
+import MoviesCarrouselSkeleton from '@/components/MoviesCarrouselSkeleton'
 import { fetchUseHistory } from '@/services/api/fetch-user-history'
 import { getTrendingMovies } from '@/services/tmdb/trending'
 import { Feather } from '@expo/vector-icons'
