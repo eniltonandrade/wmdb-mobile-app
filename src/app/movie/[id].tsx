@@ -6,7 +6,6 @@ import {
   Image,
   ImageBackground,
   FlatList,
-  Animated as RNAnimated,
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native'
@@ -23,7 +22,7 @@ import ImdbLogo from '@/assets/icons/imdb_logo.svg'
 import TmdbLogo from '@/assets/icons/tmdb_logo.svg'
 import Metacritic from '@/assets/icons/metacritic_logo.svg'
 import Tomatoes from '@/assets/icons/tomatometer-aud_score-fresh.svg'
-import Animated, { FadeInDown } from 'react-native-reanimated'
+import Animated, { FadeInDown, useSharedValue } from 'react-native-reanimated'
 import { getMovieByExternalId } from '@/services/api/get-movie-by-external-id'
 import { getUserHistoryByMovieId } from '@/services/api/get-user-history-by-movie'
 import { ptBR } from 'date-fns/locale'
@@ -36,6 +35,7 @@ import Toast from 'react-native-toast-message'
 import { Skeleton } from '@/components/Skeleton'
 import Avatar from '@/components/ui/Avatar'
 import Badge from '@/components/ui/Badge'
+import AnimatedHeader from '@/components/AnimatedHeader'
 
 const mapper: Record<string, React.ReactNode> = {
   'Internet Movie Database': <ImdbLogo height={24} width={24} />,
@@ -47,17 +47,11 @@ export default function Movie() {
   const castModalRef = useRef<BottomSheetModal>(null)
   const { id } = useLocalSearchParams()
 
-  const scrollY = useRef(new RNAnimated.Value(0)).current
-
-  const headerOpacity = scrollY.interpolate({
-    inputRange: [0, 100],
-    outputRange: [0, 1],
-    extrapolate: 'clamp',
-  })
+  const scrollY = useSharedValue<number>(0.5)
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = event.nativeEvent.contentOffset.y
-    scrollY.setValue(offsetY)
+    scrollY.value = offsetY
   }
 
   const { data: movie, isLoading: isMoviesTrendingLoading } = useQuery({
@@ -120,32 +114,16 @@ export default function Movie() {
   }
   return (
     <>
-      <RNAnimated.View
-        style={{
-          opacity: headerOpacity,
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: colors.gray['900'],
-          borderBottomColor: colors.gray['800'],
-          borderBottomWidth: 1,
-          paddingHorizontal: 16,
-          paddingBottom: 8,
-          paddingTop: 50,
-          zIndex: 1000,
-        }}
-      >
-        <View className="items-center flex-row space-x-4 pb-1  justify-between overflow-hidden">
-          <TouchableOpacity onPress={handleGoBack}>
-            <Feather name="arrow-left" size={24} color={colors.white} />
-          </TouchableOpacity>
-          <Text className="text-gray-100 font-pbold">{movie?.title}</Text>
+      <AnimatedHeader
+        scrollY={scrollY}
+        title={movie?.title || 'loading'}
+        goBack={handleGoBack}
+        rightButton={
           <TouchableOpacity>
             <Feather name="bookmark" size={24} color={colors.white} />
           </TouchableOpacity>
-        </View>
-      </RNAnimated.View>
+        }
+      />
       <ScrollView
         onScroll={handleScroll}
         contentContainerStyle={{ flexGrow: 1 }}
@@ -317,25 +295,20 @@ export default function Movie() {
                 Gêneros
               </Text>
 
-              <FlatList
-                data={movie.genres}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{
-                  marginTop: 4,
-                }}
-                renderItem={({ item, index }) => {
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {movie.genres.map((genre, index) => {
                   return (
                     <Badge
+                      key={genre.id}
                       index={index}
                       onPress={() => {
                         console.log('pressed')
                       }}
-                      title={item.name}
+                      title={genre.name}
                     />
                   )
-                }}
-              />
+                })}
+              </ScrollView>
             </View>
             <View className="mb-4">
               <Text className="text-gray-100 font-pbold text-lg mb-4 px-4">
@@ -427,27 +400,20 @@ export default function Movie() {
                 Estúdios
               </Text>
 
-              <FlatList
-                data={movie.production_companies}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{
-                  marginTop: 4,
-                }}
-                renderItem={({ item }) => {
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {movie.production_companies.map((company, index) => {
                   return (
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      className="bg-secondary-100 py-1 px-2 rounded-md mr-2 "
-                      key={item.id}
-                    >
-                      <Text className="text-white font-psemibold text-xs">
-                        {item.name}
-                      </Text>
-                    </TouchableOpacity>
+                    <Badge
+                      key={company.id}
+                      index={index}
+                      onPress={() => {
+                        console.log('pressed')
+                      }}
+                      title={company.name}
+                    />
                   )
-                }}
-              />
+                })}
+              </ScrollView>
             </View>
             {/* Details */}
             <View className="px-4 mt-4 flex-row space-x-2 pb-10">
