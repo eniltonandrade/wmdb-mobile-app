@@ -45,13 +45,13 @@ export default function AddToHistoryModal({
               title="Remover"
               handlePress={() => console.log}
               isLoading={false}
-              containerStyles="mr-2"
+              containerStyles="mr-2 flex-1"
             />
           ) : (
             <Button
               variant="outline"
               title="Cancelar"
-              handlePress={() => console.log}
+              handlePress={() => modalRef.current?.close()}
               isLoading={isLoading}
               containerStyles="mr-2 flex-1"
             />

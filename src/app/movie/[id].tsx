@@ -43,8 +43,7 @@ import {
 } from '@/services/api/add-movie-to-user-history'
 
 import { queryClient } from '@/lib/react-query'
-import { ApiListResponse } from '@/services/api'
-import { HistoryDetails } from '@/services/api/models/history-details'
+import UserRatingModal from './_components/UserRatingModal'
 
 const mapper: Record<string, React.ReactNode> = {
   'Internet Movie Database': <ImdbLogo height={24} width={24} />,
@@ -52,10 +51,17 @@ const mapper: Record<string, React.ReactNode> = {
   Metacritic: <Metacritic height={24} width={24} />,
 }
 
+/*
+    TODO: Descobrir um jeito de fechar o modal historico depois que a nota foi salva
+    TODO: Mostrar nota quando user setar nota
+    TODO: Esconder ícone de adicionar a lista quando filme já foi assistido
+*/
+
 export default function Movie() {
   const [watchedDate, setWatchedDate] = useState<Date | null>(null)
   const castModalRef = useRef<BottomSheetModal>(null)
   const addToHistoryModalRef = useRef<BottomSheetModal>(null)
+  const userRatingModalRef = useRef<BottomSheetModal>(null)
   const { id } = useLocalSearchParams()
 
   const scrollY = useSharedValue<number>(0.5)
@@ -63,21 +69,6 @@ export default function Movie() {
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = event.nativeEvent.contentOffset.y
     scrollY.value = offsetY
-  }
-
-  async function addHistoryOnCache(history: HistoryDetails) {
-    queryClient.invalidateQueries({ queryKey: ['api', 'stats', 'cast'] })
-    queryClient.setQueryData<ApiListResponse<HistoryDetails>>(
-      ['api', 'history'],
-      (cachedData) =>
-        cachedData
-          ? {
-              ...cachedData,
-              total: cachedData.total || 0 + 1,
-              results: [history, ...cachedData.results],
-            }
-          : cachedData,
-    )
   }
 
   const { data: movie, isLoading: isMovieLoading } = useQuery({
@@ -113,9 +104,10 @@ export default function Movie() {
   const addToHistoryMutation = useMutation({
     mutationFn: async (data: AddMovieToHistoryProps) =>
       await addMovieToUserHistory(data),
-    onSuccess: async (data) => {
-      await addHistoryOnCache(data.result)
-    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ['api', 'history'],
+      }),
   })
 
   useEffect(() => {
@@ -132,6 +124,10 @@ export default function Movie() {
     addToHistoryModalRef.current?.present()
   }
 
+  function handleOpenUserRatingModal() {
+    userRatingModalRef.current?.present()
+  }
+
   async function handleAddToMovieToUserHistory(date: Date) {
     setWatchedDate(date)
     await addToHistoryMutation.mutateAsync({
@@ -140,6 +136,7 @@ export default function Movie() {
       watchedDate: date,
     })
     addToHistoryModalRef.current?.close()
+    userRatingModalRef.current?.present()
   }
 
   useEffect(() => {
@@ -171,9 +168,6 @@ export default function Movie() {
       text2: 'This is some something 👋',
     })
   }
-  // function handleCloseCastModal() {
-  //   castModalRef.current?.close()
-  // }
 
   function handleGoBack() {
     router.back()
@@ -263,7 +257,8 @@ export default function Movie() {
                   {!isStoredMovieLoading ? (
                     <UserActions
                       history={history}
-                      handleOpenModal={handleOpenAddToHistoryModal}
+                      handleOpenHistoryModal={handleOpenAddToHistoryModal}
+                      handleOpenUserRatingModal={handleOpenUserRatingModal}
                       watchedDate={watchedDate}
                     />
                   ) : (
@@ -486,13 +481,17 @@ export default function Movie() {
       {movie?.casts.cast && (
         <CastModal modalRef={castModalRef} cast={movie?.casts.cast} />
       )}
-
       <AddToHistoryModal
         modalRef={addToHistoryModalRef}
         onSave={handleAddToMovieToUserHistory}
         date={watchedDate}
         isLoading={addToHistoryMutation.isPending}
         isWatched={!!history?.date}
+      />
+      <UserRatingModal
+        modalRef={userRatingModalRef}
+        historyId={history?.id || addToHistoryMutation.data?.result.id}
+        userRating={history?.rating}
       />
     </>
   )

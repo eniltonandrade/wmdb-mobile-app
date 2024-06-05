@@ -72,7 +72,7 @@ export function MoviesCarrousel({
                     {item.rating?.toFixed(1) || '0.0'}
                   </Text>
                 </View>
-                {item.userRating && (
+                {item.userRating?.toString() && (
                   <View className="absolute bg-secondary-100 items-center justify-center right-3 bottom-[-6] h-7 w-7 rounded-full border-primary border-4 z-10">
                     <Text className="text-gray-50 text-xs font-pmedium  text-shad">
                       {item.userRating}

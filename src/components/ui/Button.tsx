@@ -24,7 +24,7 @@ export default function Button({
       onPress={handlePress}
       activeOpacity={0.7}
       className={clsx(
-        `rounded-md min-h-[48px] px-4 flex flex-row justify-center items-center ${containerStyles}`,
+        `rounded-md h-[48px]  px-4 flex flex-row justify-center items-center ${containerStyles}`,
         {
           'opacity-50': isLoading,
           'bg-transparent': variant === 'outline',
