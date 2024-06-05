@@ -15,7 +15,7 @@ import { Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import { router, useLocalSearchParams } from 'expo-router'
 import { getMovieDetails } from '@/services/tmdb/movies'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { tmdbImage } from '@/utils/image'
 
 import ImdbLogo from '@/assets/icons/imdb_logo.svg'
@@ -25,8 +25,6 @@ import Tomatoes from '@/assets/icons/tomatometer-aud_score-fresh.svg'
 import Animated, { FadeInDown, useSharedValue } from 'react-native-reanimated'
 import { getMovieByExternalId } from '@/services/api/get-movie-by-external-id'
 import { getUserHistoryByMovieId } from '@/services/api/get-user-history-by-movie'
-import { ptBR } from 'date-fns/locale'
-import { format } from 'date-fns'
 import { getImdbMovieDetails } from '@/services/omdb/get-imdb-movie-details'
 
 import { CastModal } from './_components/CastModal'
@@ -37,6 +35,16 @@ import Avatar from '@/components/ui/Avatar'
 import Badge from '@/components/ui/Badge'
 import AnimatedHeader from '@/components/AnimatedHeader'
 import AddToHistoryModal from './_components/AddToHistoryModal'
+import Loading from '@/components/Loading'
+import UserActions from './_components/UserActions'
+import {
+  AddMovieToHistoryProps,
+  addMovieToUserHistory,
+} from '@/services/api/add-movie-to-user-history'
+
+import { queryClient } from '@/lib/react-query'
+import { ApiListResponse } from '@/services/api'
+import { HistoryDetails } from '@/services/api/models/history-details'
 
 const mapper: Record<string, React.ReactNode> = {
   'Internet Movie Database': <ImdbLogo height={24} width={24} />,
@@ -57,13 +65,28 @@ export default function Movie() {
     scrollY.value = offsetY
   }
 
-  const { data: movie, isLoading: isMoviesTrendingLoading } = useQuery({
+  async function addHistoryOnCache(history: HistoryDetails) {
+    queryClient.invalidateQueries({ queryKey: ['api', 'stats', 'cast'] })
+    queryClient.setQueryData<ApiListResponse<HistoryDetails>>(
+      ['api', 'history'],
+      (cachedData) =>
+        cachedData
+          ? {
+              ...cachedData,
+              total: cachedData.total || 0 + 1,
+              results: [history, ...cachedData.results],
+            }
+          : cachedData,
+    )
+  }
+
+  const { data: movie, isLoading: isMovieLoading } = useQuery({
     queryKey: ['tmdb', id],
     queryFn: () => getMovieDetails(Number(id), 'pt-BR'),
     enabled: !!id,
   })
 
-  const { data: storedMovie, isPending: isStoredMovieLoading } = useQuery({
+  const { data: storedMovie, isLoading: isStoredMovieLoading } = useQuery({
     queryKey: ['api', 'movie', id],
     queryFn: () =>
       getMovieByExternalId({ movieId: id!.toString(), tmdb: true }),
@@ -74,7 +97,6 @@ export default function Movie() {
     data: history,
     error: historyError,
     status: historyStatus,
-    isPending: isPendingHistory,
   } = useQuery({
     queryKey: ['api', 'history', storedMovie?.result?.id],
     queryFn: () =>
@@ -86,6 +108,14 @@ export default function Movie() {
     queryKey: ['omdb', 'movie', movie?.imdb_id],
     queryFn: () => getImdbMovieDetails(movie?.imdb_id),
     enabled: !!movie?.imdb_id,
+  })
+
+  const addToHistoryMutation = useMutation({
+    mutationFn: async (data: AddMovieToHistoryProps) =>
+      await addMovieToUserHistory(data),
+    onSuccess: async (data) => {
+      await addHistoryOnCache(data.result)
+    },
   })
 
   useEffect(() => {
@@ -102,8 +132,14 @@ export default function Movie() {
     addToHistoryModalRef.current?.present()
   }
 
-  function handleDateChange(date: Date) {
+  async function handleAddToMovieToUserHistory(date: Date) {
     setWatchedDate(date)
+    await addToHistoryMutation.mutateAsync({
+      movie: movie!,
+      ratings: omdbData?.Ratings,
+      watchedDate: date,
+    })
+    addToHistoryModalRef.current?.close()
   }
 
   useEffect(() => {
@@ -116,6 +152,17 @@ export default function Movie() {
       })
     }
   }, [historyError])
+
+  useEffect(() => {
+    if (addToHistoryMutation.error) {
+      console.log(addToHistoryMutation.error)
+      Toast.show({
+        type: 'error',
+        text1: `Ops.`,
+        text2: `Erro ao adicionar filme.`,
+      })
+    }
+  }, [addToHistoryMutation.error])
 
   const showToast = () => {
     Toast.show({
@@ -131,6 +178,11 @@ export default function Movie() {
   function handleGoBack() {
     router.back()
   }
+
+  if (!movie) {
+    return <Loading />
+  }
+
   return (
     <>
       <AnimatedHeader
@@ -149,7 +201,7 @@ export default function Movie() {
         showsVerticalScrollIndicator={false}
         className="flex-grow bg-primary"
       >
-        {!isMoviesTrendingLoading && movie && (
+        {!isMovieLoading && movie && (
           <View className="flex-1 w-full">
             {/* Top Header */}
             <ImageBackground
@@ -208,60 +260,12 @@ export default function Movie() {
                     </Text>
                   </View>
 
-                  {!isPendingHistory ||
-                  (!storedMovie?.result?.id && !isStoredMovieLoading) ? (
-                    <View className="w-full flex flex-row space-x-4 mt-4 ">
-                      <View className="flex-row items-center space-x-2">
-                        <TouchableOpacity
-                          className={`bg-gray-800 p-2 rounded-md`}
-                          activeOpacity={0.8}
-                          onPress={handleOpenAddToHistoryModal}
-                        >
-                          <Feather
-                            name={watchedDate ? 'check' : 'plus'}
-                            size={20}
-                            color={
-                              watchedDate ? colors.white : colors.green[500]
-                            }
-                          />
-                        </TouchableOpacity>
-                        {watchedDate ? (
-                          <Text className="text-gray-100 font-pbold text-sm">
-                            {format(watchedDate, "dd'/'MM'/'yy", {
-                              locale: ptBR,
-                            })}
-                          </Text>
-                        ) : (
-                          <Text className="text-gray-100 font-pregular text-sm">
-                            Adicionar
-                          </Text>
-                        )}
-                      </View>
-
-                      <View className="flex-row items-center space-x-2">
-                        <TouchableOpacity
-                          className={`bg-gray-800 p-2 rounded-md`}
-                          activeOpacity={0.8}
-                        >
-                          <Feather
-                            name={history?.rating ? 'check' : 'plus'}
-                            size={20}
-                            color={
-                              history?.rating ? colors.white : colors.green[500]
-                            }
-                          />
-                        </TouchableOpacity>
-                        {history?.rating ? (
-                          <Text className="text-gray-100 font-pbold text-lg">
-                            {history?.rating.toFixed(1)}
-                          </Text>
-                        ) : (
-                          <Text className="text-gray-100 font-pregular text-md">
-                            Avaliar
-                          </Text>
-                        )}
-                      </View>
-                    </View>
+                  {!isStoredMovieLoading ? (
+                    <UserActions
+                      history={history}
+                      handleOpenModal={handleOpenAddToHistoryModal}
+                      watchedDate={watchedDate}
+                    />
                   ) : (
                     <View className="w-full mt-4 flex-row items-center space-x-2">
                       <Skeleton height={40} width={40} />
@@ -485,8 +489,9 @@ export default function Movie() {
 
       <AddToHistoryModal
         modalRef={addToHistoryModalRef}
-        onDateChange={handleDateChange}
+        onSave={handleAddToMovieToUserHistory}
         date={watchedDate}
+        isLoading={addToHistoryMutation.isPending}
         isWatched={!!history?.date}
       />
     </>

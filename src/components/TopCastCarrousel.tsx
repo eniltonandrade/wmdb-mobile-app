@@ -63,13 +63,11 @@ const TopCastCarrousel = () => {
           renderItem={({ item, index }) => (
             <View className="w-[90px] mr-4">
               <TouchableOpacity activeOpacity={0.7}>
-                {item.profile_path && (
-                  <Avatar
-                    size="lg"
-                    uri={tmdbImage(item.profile_path)}
-                    className="relative mb-2"
-                  />
-                )}
+                <Avatar
+                  size="lg"
+                  uri={tmdbImage(item.profile_path || '')}
+                  className="relative mb-2 bg-gray-800"
+                />
 
                 <View className="bg-gray-900 w-[35px] h-[35px] absolute bottom-0 left-0 rounded-full items-center justify-center ">
                   <Text className="text-white text-xl leading-none font-pbold text-center">

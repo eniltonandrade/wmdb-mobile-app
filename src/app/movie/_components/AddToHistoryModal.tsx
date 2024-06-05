@@ -9,28 +9,33 @@ type CastModalProps = {
   modalRef: React.RefObject<BottomSheetModalMethods>
   date: Date | null
   isWatched: boolean
-  onDateChange: (date: Date) => void
+  onSave: (date: Date) => void
+  isLoading: boolean
 }
 
 export default function AddToHistoryModal({
   modalRef,
   date,
   isWatched,
-  onDateChange,
+  isLoading,
+  onSave,
 }: CastModalProps) {
-  const [selectedDate, setSelectedDate] = useState(date || new Date())
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
 
   function handleDateSelection() {
     if (selectedDate) {
-      onDateChange(selectedDate)
+      onSave(selectedDate)
     }
   }
+
   return (
     <Modal ref={modalRef} heightPercentage="27%">
       <View className="mx-4 ">
-        <Text className="text-xl font-pbold text-gray-100 mb-4">Adicionar</Text>
+        <Text className="text-xl font-pbold text-gray-100 mb-4">
+          {isWatched ? 'Editar' : 'Adicionar'}
+        </Text>
         <DateTimePickerComponent
-          date={date || new Date()}
+          date={date || selectedDate}
           onDateChange={setSelectedDate}
         />
         <View className="flex-row flex-1 space-x-4 px-4 my-4">
@@ -47,17 +52,26 @@ export default function AddToHistoryModal({
               variant="outline"
               title="Cancelar"
               handlePress={() => console.log}
-              isLoading={false}
+              isLoading={isLoading}
               containerStyles="mr-2 flex-1"
             />
           )}
 
-          <Button
-            title="Salvar"
-            handlePress={handleDateSelection}
-            isLoading={false}
-            containerStyles="ml-2 flex-1"
-          />
+          {isWatched ? (
+            <Button
+              title="Atualizar"
+              handlePress={handleDateSelection}
+              isLoading={isLoading}
+              containerStyles="ml-2 flex-1"
+            />
+          ) : (
+            <Button
+              title="Salvar"
+              handlePress={handleDateSelection}
+              isLoading={isLoading}
+              containerStyles="ml-2 flex-1"
+            />
+          )}
         </View>
       </View>
     </Modal>

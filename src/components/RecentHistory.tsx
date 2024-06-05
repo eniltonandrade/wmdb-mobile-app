@@ -50,9 +50,9 @@ export default function RecentHistory() {
           movies={recentHistory.results.map((history) => ({
             id: history.movie.id,
             tmdbId: history.movie.tmdbId,
-            isWatched: true,
+            isWatched: !!history.date,
             posterPath: history.movie.posterPath,
-            rating: history.movie.imdbRating,
+            rating: history.movie.tmdbRating,
             releaseDate: history.movie.releaseDate,
             title: history.movie.title,
             userRating: history.rating,
