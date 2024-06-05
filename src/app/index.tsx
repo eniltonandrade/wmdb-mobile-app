@@ -9,6 +9,8 @@ const Welcome = () => {
   // eslint-disable-next-line no-constant-condition
   if (isLogged) {
     return <Redirect href="/home" />
+  } else {
+    return <Redirect href="/sign-in" />
   }
 
   return (

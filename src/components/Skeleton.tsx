@@ -49,9 +49,9 @@ export function Skeleton({
           height,
           width,
         },
-        style,
         { backgroundColor: colors.gray[800], borderRadius: 3 },
         animatedStyles,
+        style,
       ]}
     />
   )

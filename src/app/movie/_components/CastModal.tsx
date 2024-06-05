@@ -15,9 +15,9 @@ type CastModalProps = {
   cast: Cast[]
 }
 
-export default function CastModal({ modalRef, cast }: CastModalProps) {
+export function CastModal({ modalRef, cast }: CastModalProps) {
   return (
-    <Modal modalRef={modalRef} heightPercentage="85%">
+    <Modal ref={modalRef} heightPercentage="85%">
       <View className="flex-1 px-4">
         <Text className="text-xl font-pbold text-gray-100 mb-4">Elenco</Text>
         <FlatList
@@ -48,33 +48,6 @@ export default function CastModal({ modalRef, cast }: CastModalProps) {
             )
           }}
         />
-        {/* <ScrollView>
-          {cast.map((person) => {
-            return (
-              <View
-                className="bg-gray-800 rounded-lg w-full flex-row px-4 py-2 mb-4 space-x-4 items-center"
-                key={person.cast_id}
-              >
-                <Avatar size="md" uri={tmdbImage(person.profile_path)} />
-                <View className="flex-1">
-                  <Text className="text-gray-100  font-pbold">
-                    {person.name}
-                  </Text>
-                  <Text className="text-gray-400 text-xs font-pregular">
-                    {person.character}
-                  </Text>
-                </View>
-                <Pressable>
-                  <Feather
-                    name="arrow-right"
-                    size={16}
-                    color={colors.gray[100]}
-                  />
-                </Pressable>
-              </View>
-            )
-          })}
-        </ScrollView> */}
       </View>
     </Modal>
   )

@@ -9,7 +9,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import colors from 'tailwindcss/colors'
 import { Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -29,13 +29,14 @@ import { ptBR } from 'date-fns/locale'
 import { format } from 'date-fns'
 import { getImdbMovieDetails } from '@/services/omdb/get-imdb-movie-details'
 
-import CastModal from './_components/CastModal'
+import { CastModal } from './_components/CastModal'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import Toast from 'react-native-toast-message'
 import { Skeleton } from '@/components/Skeleton'
 import Avatar from '@/components/ui/Avatar'
 import Badge from '@/components/ui/Badge'
 import AnimatedHeader from '@/components/AnimatedHeader'
+import AddToHistoryModal from './_components/AddToHistoryModal'
 
 const mapper: Record<string, React.ReactNode> = {
   'Internet Movie Database': <ImdbLogo height={24} width={24} />,
@@ -44,7 +45,9 @@ const mapper: Record<string, React.ReactNode> = {
 }
 
 export default function Movie() {
+  const [watchedDate, setWatchedDate] = useState<Date | null>(null)
   const castModalRef = useRef<BottomSheetModal>(null)
+  const addToHistoryModalRef = useRef<BottomSheetModal>(null)
   const { id } = useLocalSearchParams()
 
   const scrollY = useSharedValue<number>(0.5)
@@ -70,9 +73,10 @@ export default function Movie() {
   const {
     data: history,
     error: historyError,
+    status: historyStatus,
     isPending: isPendingHistory,
   } = useQuery({
-    queryKey: ['api', 'movie', storedMovie?.result?.id],
+    queryKey: ['api', 'history', storedMovie?.result?.id],
     queryFn: () =>
       getUserHistoryByMovieId({ movieId: storedMovie?.result?.id }),
     enabled: !!storedMovie?.result?.id,
@@ -84,12 +88,27 @@ export default function Movie() {
     enabled: !!movie?.imdb_id,
   })
 
+  useEffect(() => {
+    if (historyStatus === 'success' && history && history.date) {
+      setWatchedDate(new Date(history.date))
+    }
+  }, [history, historyStatus])
+
   function handleOpenCastModal() {
     castModalRef.current?.present()
   }
 
+  function handleOpenAddToHistoryModal() {
+    addToHistoryModalRef.current?.present()
+  }
+
+  function handleDateChange(date: Date) {
+    setWatchedDate(date)
+  }
+
   useEffect(() => {
     if (historyError) {
+      console.log(historyError)
       Toast.show({
         type: 'error',
         text1: `Ops.`,
@@ -196,18 +215,19 @@ export default function Movie() {
                         <TouchableOpacity
                           className={`bg-gray-800 p-2 rounded-md`}
                           activeOpacity={0.8}
+                          onPress={handleOpenAddToHistoryModal}
                         >
                           <Feather
-                            name={history?.date ? 'check' : 'plus'}
+                            name={watchedDate ? 'check' : 'plus'}
                             size={20}
                             color={
-                              history?.date ? colors.white : colors.green[500]
+                              watchedDate ? colors.white : colors.green[500]
                             }
                           />
                         </TouchableOpacity>
-                        {history?.date ? (
+                        {watchedDate ? (
                           <Text className="text-gray-100 font-pbold text-sm">
-                            {format(new Date(history?.date), "dd'/'MM'/'yy", {
+                            {format(watchedDate, "dd'/'MM'/'yy", {
                               locale: ptBR,
                             })}
                           </Text>
@@ -327,7 +347,7 @@ export default function Movie() {
                     className="mr-4 flex flex-row space-x-4 items-center"
                   >
                     <Avatar size="sm" uri={tmdbImage(item.profile_path)} />
-                    <View className="w-[50%]">
+                    <View className="w-[120px]">
                       <Text className="text-gray-100 text-xs font-pbold ">
                         {item.name}
                       </Text>
@@ -462,6 +482,13 @@ export default function Movie() {
       {movie?.casts.cast && (
         <CastModal modalRef={castModalRef} cast={movie?.casts.cast} />
       )}
+
+      <AddToHistoryModal
+        modalRef={addToHistoryModalRef}
+        onDateChange={handleDateChange}
+        date={watchedDate}
+        isWatched={!!history?.date}
+      />
     </>
   )
 }

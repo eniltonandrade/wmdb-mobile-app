@@ -61,7 +61,7 @@ export function MoviesCarrousel({
                 {item.posterPath && (
                   <Image
                     source={{ uri: tmdbImage(item.posterPath, 'w154') }}
-                    className="rounded-md"
+                    className="rounded-md bg-gray-800"
                     resizeMode={'cover'}
                     height={210}
                     alt={item.title}

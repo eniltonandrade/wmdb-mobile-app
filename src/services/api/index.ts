@@ -11,9 +11,9 @@ export type ApiListResponse<T> = {
 }
 
 export const api = axios.create({
-  baseURL: 'http://192.168.0.8:3333/',
+  baseURL: 'http://localhost:3333/',
   headers: {
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTFiNzcyYS0xOWNjLTRiMDktYTViYy04NjViYTkzMGQ3Y2YiLCJpYXQiOjE3MTY4MzQ3MzcsImV4cCI6MTcxNzQzOTUzN30._ZZf9MPD1mzyg4jiBzVIQQFZH4KQq5J-xXqFLPwsynU`,
+    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNTIxYjliMi1kN2ExLTRjZGYtOTJkYS0yMWQ1NDgyM2ExMjgiLCJpYXQiOjE3MTc1MDgwNTIsImV4cCI6MTcxODExMjg1Mn0.8D2Hl0LBnaEWCw8LnWiAhH5sB41mN42Yv0KnicnKajk`,
   },
 })
 
