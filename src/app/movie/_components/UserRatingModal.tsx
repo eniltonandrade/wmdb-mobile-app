@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types'
 import { Modal } from '@/components/ui/Modal'
 import Button from '@/components/ui/Button'
@@ -8,19 +8,59 @@ import { Rating } from '@kolking/react-native-rating'
 import colors from 'tailwindcss/colors'
 import { useMutation } from '@tanstack/react-query'
 import { queryClient } from '@/lib/react-query'
+import { History } from '@/services/api/models/history'
+import { HistoryDetails } from '@/services/api/models/history-details'
 
 type UserRatingModalProps = {
   modalRef: React.RefObject<BottomSheetModalMethods>
   historyId?: string | null
-  userRating?: number | null
+  userRating: number
+  movieId: string
+  onChangeRating: (rating: number) => void
 }
 
 export default function UserRatingModal({
   modalRef,
   historyId,
-  userRating,
+  userRating = 0,
+  movieId,
+  onChangeRating,
 }: UserRatingModalProps) {
-  const [rating, setRating] = useState(userRating || 0)
+  function updateHistoryOnCache(historyId: string, rating: number) {
+    queryClient.setQueryData<History>(['api', 'history', movieId], (oldData) =>
+      oldData
+        ? {
+            ...oldData,
+            rating,
+          }
+        : oldData,
+    )
+    const historiesListCache = queryClient.getQueriesData<{
+      histories: HistoryDetails[]
+    }>({
+      queryKey: ['api', 'history'],
+    })
+
+    historiesListCache.forEach(([cacheKey, cacheData]) => {
+      if (!cacheData) {
+        return
+      }
+      queryClient.setQueryData<{
+        histories: HistoryDetails[]
+      }>(cacheKey, {
+        ...cacheData,
+        histories: cacheData?.histories?.map((history) => {
+          if (history.id === historyId) {
+            return {
+              ...history,
+              rating,
+            }
+          }
+          return history
+        }),
+      })
+    })
+  }
 
   const updateHistoryMutation = useMutation({
     mutationFn: async ({
@@ -35,16 +75,15 @@ export default function UserRatingModal({
         rating,
       }),
 
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: ['api', 'history'],
-      }),
+    async onSuccess(_, { historyId, rating }) {
+      updateHistoryOnCache(historyId, rating)
+    },
   })
 
   async function handleSaveHistory() {
     await updateHistoryMutation.mutateAsync({
       historyId: historyId!,
-      rating,
+      rating: userRating,
     })
     modalRef.current?.close()
   }
@@ -60,11 +99,11 @@ export default function UserRatingModal({
           <Rating
             size={27}
             fillColor={colors.green[500]}
-            rating={rating}
-            onChange={(value) => setRating(value)}
+            rating={userRating}
+            onChange={(value) => onChangeRating(value)}
             maxRating={10}
           />
-          <Text className="text-gray-100">Nota {rating} de 10</Text>
+          <Text className="text-gray-100">Nota {userRating} de 10</Text>
         </View>
 
         <View className="flex-row flex-1 space-x-4  my-4">

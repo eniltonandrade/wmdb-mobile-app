@@ -26,7 +26,7 @@ export async function addMovieToUserHistory({
   rating,
   watchedDate,
   ratings,
-}: AddMovieToHistoryProps): Promise<ApiResponse<HistoryDetails>> {
+}: AddMovieToHistoryProps): Promise<HistoryDetails> {
   const {
     genres,
     production_companies: productionCompanies,
@@ -66,13 +66,16 @@ export async function addMovieToUserHistory({
     (c) => c.job === 'Director' || c.job === 'Screenplay',
   )
 
-  const newHistory = await api.post(`user/history/movies`, {
-    history: {
-      movieId,
-      date: watchedDate,
-      rating,
+  const newHistory = await api.post<ApiResponse<HistoryDetails>>(
+    `user/history/movies`,
+    {
+      history: {
+        movieId,
+        date: watchedDate,
+        rating,
+      },
     },
-  })
+  )
 
   if (response.data.movie.created) {
     await Promise.all([
@@ -94,5 +97,5 @@ export async function addMovieToUserHistory({
     })
   }
 
-  return newHistory.data
+  return newHistory.data.result
 }

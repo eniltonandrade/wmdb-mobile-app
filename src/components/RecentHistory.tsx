@@ -10,7 +10,7 @@ import MoviesCarrouselSkeleton from '@/components/MoviesCarrouselSkeleton'
 
 export default function RecentHistory() {
   const {
-    data: recentHistory,
+    data,
     isLoading: isRecentHistoryLoading,
     error: recentHistoryError,
   } = useQuery({
@@ -45,9 +45,9 @@ export default function RecentHistory() {
         </View>
       </TouchableOpacity>
 
-      {recentHistory && !isRecentHistoryLoading ? (
+      {data && !isRecentHistoryLoading ? (
         <MoviesCarrousel
-          movies={recentHistory.results.map((history) => ({
+          movies={data.histories.map((history) => ({
             id: history.movie.id,
             tmdbId: history.movie.tmdbId,
             isWatched: !!history.date,

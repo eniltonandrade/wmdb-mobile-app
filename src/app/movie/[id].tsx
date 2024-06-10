@@ -18,10 +18,6 @@ import { getMovieDetails } from '@/services/tmdb/movies'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { tmdbImage } from '@/utils/image'
 
-import ImdbLogo from '@/assets/icons/imdb_logo.svg'
-import TmdbLogo from '@/assets/icons/tmdb_logo.svg'
-import Metacritic from '@/assets/icons/metacritic_logo.svg'
-import Tomatoes from '@/assets/icons/tomatometer-aud_score-fresh.svg'
 import Animated, { FadeInDown, useSharedValue } from 'react-native-reanimated'
 import { getMovieByExternalId } from '@/services/api/get-movie-by-external-id'
 import { getUserHistoryByMovieId } from '@/services/api/get-user-history-by-movie'
@@ -30,7 +26,6 @@ import { getImdbMovieDetails } from '@/services/omdb/get-imdb-movie-details'
 import { CastModal } from './_components/CastModal'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import Toast from 'react-native-toast-message'
-import { Skeleton } from '@/components/Skeleton'
 import Avatar from '@/components/ui/Avatar'
 import Badge from '@/components/ui/Badge'
 import AnimatedHeader from '@/components/AnimatedHeader'
@@ -44,21 +39,15 @@ import {
 
 import { queryClient } from '@/lib/react-query'
 import UserRatingModal from './_components/UserRatingModal'
-
-const mapper: Record<string, React.ReactNode> = {
-  'Internet Movie Database': <ImdbLogo height={24} width={24} />,
-  'Rotten Tomatoes': <Tomatoes height={24} width={24} />,
-  Metacritic: <Metacritic height={24} width={24} />,
-}
+import RatingBar from './_components/RatingBar'
 
 /*
-    TODO: Descobrir um jeito de fechar o modal historico depois que a nota foi salva
-    TODO: Mostrar nota quando user setar nota
     TODO: Esconder ícone de adicionar a lista quando filme já foi assistido
 */
 
 export default function Movie() {
   const [watchedDate, setWatchedDate] = useState<Date | null>(null)
+  const [userRating, setUserRating] = useState<number>(0)
   const castModalRef = useRef<BottomSheetModal>(null)
   const addToHistoryModalRef = useRef<BottomSheetModal>(null)
   const userRatingModalRef = useRef<BottomSheetModal>(null)
@@ -77,7 +66,7 @@ export default function Movie() {
     enabled: !!id,
   })
 
-  const { data: storedMovie, isLoading: isStoredMovieLoading } = useQuery({
+  const { data: storedMovieData } = useQuery({
     queryKey: ['api', 'movie', id],
     queryFn: () =>
       getMovieByExternalId({ movieId: id!.toString(), tmdb: true }),
@@ -89,10 +78,10 @@ export default function Movie() {
     error: historyError,
     status: historyStatus,
   } = useQuery({
-    queryKey: ['api', 'history', storedMovie?.result?.id],
+    queryKey: ['api', 'history', storedMovieData?.movie?.id],
     queryFn: () =>
-      getUserHistoryByMovieId({ movieId: storedMovie?.result?.id }),
-    enabled: !!storedMovie?.result?.id,
+      getUserHistoryByMovieId({ movieId: storedMovieData?.movie?.id }),
+    enabled: !!storedMovieData?.movie?.id,
   })
 
   const { data: omdbData } = useQuery({
@@ -113,6 +102,7 @@ export default function Movie() {
   useEffect(() => {
     if (historyStatus === 'success' && history && history.date) {
       setWatchedDate(new Date(history.date))
+      setUserRating(history.rating || 0)
     }
   }, [history, historyStatus])
 
@@ -135,7 +125,7 @@ export default function Movie() {
       ratings: omdbData?.Ratings,
       watchedDate: date,
     })
-    addToHistoryModalRef.current?.close()
+    addToHistoryModalRef.current?.dismiss()
     userRatingModalRef.current?.present()
   }
 
@@ -173,7 +163,7 @@ export default function Movie() {
     router.back()
   }
 
-  if (!movie) {
+  if (!movie || !omdbData) {
     return <Loading />
   }
 
@@ -184,9 +174,11 @@ export default function Movie() {
         title={movie?.title || 'loading'}
         goBack={handleGoBack}
         rightButton={
-          <TouchableOpacity>
-            <Feather name="bookmark" size={24} color={colors.white} />
-          </TouchableOpacity>
+          !history?.date && (
+            <TouchableOpacity>
+              <Feather name="bookmark" size={24} color={colors.white} />
+            </TouchableOpacity>
+          )
         }
       />
       <ScrollView
@@ -210,9 +202,11 @@ export default function Movie() {
                 <TouchableOpacity onPress={handleGoBack}>
                   <Feather name="arrow-left" size={24} color={colors.white} />
                 </TouchableOpacity>
-                <TouchableOpacity>
-                  <Feather name="bookmark" size={24} color={colors.white} />
-                </TouchableOpacity>
+                {!history?.date && (
+                  <TouchableOpacity>
+                    <Feather name="bookmark" size={24} color={colors.white} />
+                  </TouchableOpacity>
+                )}
               </View>
               <LinearGradient
                 colors={['rgba(4, 0, 25, 0)', '#030712']}
@@ -254,49 +248,24 @@ export default function Movie() {
                     </Text>
                   </View>
 
-                  {!isStoredMovieLoading ? (
-                    <UserActions
-                      history={history}
-                      handleOpenHistoryModal={handleOpenAddToHistoryModal}
-                      handleOpenUserRatingModal={handleOpenUserRatingModal}
-                      watchedDate={watchedDate}
-                    />
-                  ) : (
-                    <View className="w-full mt-4 flex-row items-center space-x-2">
-                      <Skeleton height={40} width={40} />
-                      <Skeleton height={10} width={60} />
-                      <Skeleton height={40} width={40} />
-                      <Skeleton height={10} width={40} />
-                    </View>
-                  )}
+                  <UserActions
+                    userRating={userRating}
+                    history={history}
+                    handleOpenHistoryModal={handleOpenAddToHistoryModal}
+                    handleOpenUserRatingModal={handleOpenUserRatingModal}
+                    watchedDate={watchedDate}
+                  />
                 </View>
               </Animated.View>
             </View>
             {/* Rating Bar */}
-            <View className="w-full px-4 my-6 flex flex-row space-x-4">
-              <View className="flex-row items-center space-x-2">
-                <View className="bg-gray-800 p-2 rounded-md">
-                  <TmdbLogo height={24} width={24} />
-                </View>
-                <Text className="text-gray-100 font-pbold text-lg">
-                  {movie.vote_average.toFixed(1)}
-                </Text>
-              </View>
-              {omdbData &&
-                omdbData.Ratings.map((rating) => (
-                  <View
-                    className="flex-row items-center space-x-2"
-                    key={rating.Source}
-                  >
-                    <View className="bg-gray-800 p-2 rounded-md">
-                      {mapper[rating.Source]}
-                    </View>
-                    <Text className="text-gray-100 font-pbold text-lg">
-                      {rating.Value.split('/')[0]}
-                    </Text>
-                  </View>
-                ))}
-            </View>
+            {omdbData && (
+              <RatingBar
+                Ratings={omdbData?.Ratings}
+                tmdbRating={movie.vote_average}
+              />
+            )}
+
             {/* Movie Title and Details */}
             <View className="px-4 mb-4">
               <Text className="text-gray-100 font-pbold text-lg mb-2 ">
@@ -490,8 +459,10 @@ export default function Movie() {
       />
       <UserRatingModal
         modalRef={userRatingModalRef}
-        historyId={history?.id || addToHistoryMutation.data?.result.id}
-        userRating={history?.rating}
+        movieId={storedMovieData!.movie!.id!}
+        historyId={history?.id || addToHistoryMutation.data?.id}
+        userRating={userRating}
+        onChangeRating={setUserRating}
       />
     </>
   )

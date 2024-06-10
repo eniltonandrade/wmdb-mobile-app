@@ -33,5 +33,8 @@ export async function fetchUseHistory(params: queryParams) {
       params,
     },
   )
-  return data
+
+  const { results, total } = data
+
+  return { histories: results, total }
 }

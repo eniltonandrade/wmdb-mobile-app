@@ -43,7 +43,7 @@ const TopCastCarrousel = () => {
       </TouchableOpacity>
       {data ? (
         <FlatList
-          data={data.slice(0, 10)}
+          data={data.casts.slice(0, 10)}
           ListEmptyComponent={() => (
             <View className="flex flex-1 border w-full border-gray-600 rounded-md items-center justify-center py-4">
               <FontAwesome name="star-o" size={32} color={colors.gray[600]} />
@@ -57,7 +57,7 @@ const TopCastCarrousel = () => {
           contentContainerStyle={{
             flexGrow: 1,
             paddingLeft: 16,
-            paddingRight: data.length > 0 ? 32 : 16,
+            paddingRight: data.casts.length > 0 ? 32 : 16,
           }}
           horizontal
           renderItem={({ item, index }) => (

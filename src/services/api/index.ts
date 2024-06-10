@@ -13,7 +13,7 @@ export type ApiListResponse<T> = {
 export const api = axios.create({
   baseURL: 'http://192.168.0.8:3333/',
   headers: {
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZmZhNWNjNi04MmFhLTQyZDgtOWRhMS1hYjZiNzE2MjQwMjUiLCJpYXQiOjE3MTc1OTI2MTgsImV4cCI6MTcxODE5NzQxOH0.zjL2aN8Yob2N6Io75bxzpDcfENtgDGgpeMRxovyx0vg`,
+    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkMzg2MzJlZS1lZjVhLTRhODMtODczMC1jN2YxM2ZhYWM4NjQiLCJpYXQiOjE3MTc3ODYzMzksImV4cCI6MTcxODM5MTEzOX0.RW49PWKQah59ihKZW08ExMdcQMGcT-cB0g95IIfRuCY`,
   },
 })
 

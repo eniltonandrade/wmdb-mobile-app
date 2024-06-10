@@ -9,6 +9,7 @@ import { History } from '@/services/api/models/history'
 type UserActionsProps = {
   history?: History | null
   watchedDate: Date | null
+  userRating: number
   handleOpenHistoryModal: () => void
   handleOpenUserRatingModal: () => void
 }
@@ -18,6 +19,7 @@ export default function UserActions({
   watchedDate,
   handleOpenHistoryModal,
   handleOpenUserRatingModal,
+  userRating,
 }: UserActionsProps) {
   return (
     <View className="w-full flex flex-row space-x-4 mt-4 ">
@@ -58,7 +60,7 @@ export default function UserActions({
           </TouchableOpacity>
           {history?.rating ? (
             <Text className="text-gray-100 font-pbold text-lg">
-              {history?.rating.toFixed(1)}
+              {userRating.toFixed(1)}
             </Text>
           ) : (
             <Text className="text-gray-100 font-pregular text-md">Avaliar</Text>

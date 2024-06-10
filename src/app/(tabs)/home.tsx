@@ -14,7 +14,7 @@ export default function Home() {
       style={{ paddingTop: androidPaddingCorrection }}
     >
       <ScrollView
-        className="flex space-y-4"
+        className="flex space-y-4 pt-8"
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >

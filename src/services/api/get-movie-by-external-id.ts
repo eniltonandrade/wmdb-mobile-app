@@ -31,5 +31,5 @@ export async function getMovieByExternalId({
       params,
     },
   )
-  return data
+  return { movie: data.result }
 }

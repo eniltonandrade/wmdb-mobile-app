@@ -19,5 +19,5 @@ export async function getCastStats(params: queryParams) {
     },
   )
 
-  return data.results
+  return { casts: data.results, total: data.total }
 }
