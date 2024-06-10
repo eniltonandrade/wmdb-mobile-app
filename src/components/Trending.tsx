@@ -1,9 +1,10 @@
-import { Text, TouchableOpacity } from 'react-native'
+import { useQuery } from '@tanstack/react-query'
 import React from 'react'
+import { Text, TouchableOpacity } from 'react-native'
+
 import { MoviesCarrousel } from '@/components/MoviesCarrousel'
 import MoviesCarrouselSkeleton from '@/components/MoviesCarrouselSkeleton'
 import { getTrendingMovies } from '@/services/tmdb/trending'
-import { useQuery } from '@tanstack/react-query'
 
 const Trending = () => {
   const { data: moviesTrending, isLoading: isMoviesTrendingLoading } = useQuery(

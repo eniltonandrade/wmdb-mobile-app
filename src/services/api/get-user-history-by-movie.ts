@@ -1,4 +1,4 @@
-import { ApiResponse, api } from '.'
+import { api, ApiResponse } from '.'
 import { History } from './models/history'
 
 type getUserHistoryByMovieIdProps = {

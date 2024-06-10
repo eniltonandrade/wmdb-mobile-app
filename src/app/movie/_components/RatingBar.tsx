@@ -1,11 +1,11 @@
-import { View, Text } from 'react-native'
 import React from 'react'
+import { Text, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 
 import ImdbLogo from '@/assets/icons/imdb_logo.svg'
-import TmdbLogo from '@/assets/icons/tmdb_logo.svg'
 import Metacritic from '@/assets/icons/metacritic_logo.svg'
+import TmdbLogo from '@/assets/icons/tmdb_logo.svg'
 import Tomatoes from '@/assets/icons/tomatometer-aud_score-fresh.svg'
-import Animated, { FadeInDown } from 'react-native-reanimated'
 
 const mapper: Record<string, React.ReactNode> = {
   'Internet Movie Database': <ImdbLogo height={24} width={24} />,

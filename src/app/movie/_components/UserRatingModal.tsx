@@ -1,15 +1,16 @@
-import { Text, View } from 'react-native'
-import React from 'react'
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types'
-import { Modal } from '@/components/ui/Modal'
-import Button from '@/components/ui/Button'
-import { updateUserHistory } from '@/services/api/update-user-history'
 import { Rating } from '@kolking/react-native-rating'
-import colors from 'tailwindcss/colors'
 import { useMutation } from '@tanstack/react-query'
+import React from 'react'
+import { Text, View } from 'react-native'
+import colors from 'tailwindcss/colors'
+
+import Button from '@/components/ui/Button'
+import { Modal } from '@/components/ui/Modal'
 import { queryClient } from '@/lib/react-query'
 import { History } from '@/services/api/models/history'
 import { HistoryDetails } from '@/services/api/models/history-details'
+import { updateUserHistory } from '@/services/api/update-user-history'
 
 type UserRatingModalProps = {
   modalRef: React.RefObject<BottomSheetModalMethods>

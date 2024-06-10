@@ -1,12 +1,13 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React, { useEffect } from 'react'
 import { Feather } from '@expo/vector-icons'
-import { MoviesCarrousel } from '@/components/MoviesCarrousel'
 import { useQuery } from '@tanstack/react-query'
-import { fetchUseHistory } from '@/services/api/fetch-user-history'
+import React, { useEffect } from 'react'
+import { Text, TouchableOpacity, View } from 'react-native'
 import Toast from 'react-native-toast-message'
 import colors from 'tailwindcss/colors'
+
+import { MoviesCarrousel } from '@/components/MoviesCarrousel'
 import MoviesCarrouselSkeleton from '@/components/MoviesCarrouselSkeleton'
+import { fetchUseHistory } from '@/services/api/fetch-user-history'
 
 export default function RecentHistory() {
   const {

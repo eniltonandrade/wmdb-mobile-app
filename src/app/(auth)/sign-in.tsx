@@ -1,9 +1,10 @@
 import { Link } from 'expo-router'
+import { Dimensions, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { View, Text, ScrollView, Dimensions } from 'react-native'
+
+import LogoSVG from '@/assets/images/logo.svg'
 import FormField from '@/components/FormField'
 import Button from '@/components/ui/Button'
-import LogoSVG from '@/assets/images/logo.svg'
 
 const SignIn = () => {
   return (

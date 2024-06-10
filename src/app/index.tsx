@@ -1,8 +1,7 @@
-import { StatusBar } from 'expo-status-bar'
-import { View, ScrollView } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-
 import { Redirect } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
+import { ScrollView, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const Welcome = () => {
   const isLogged = true

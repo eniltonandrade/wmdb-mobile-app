@@ -1,12 +1,13 @@
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { useEffect } from 'react'
-import { queryClient } from '../lib/react-query'
-import { QueryClientProvider } from '@tanstack/react-query'
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import colors from 'tailwindcss/colors'
 import Toast, { BaseToast } from 'react-native-toast-message'
+import colors from 'tailwindcss/colors'
+
+import { queryClient } from '../lib/react-query'
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({

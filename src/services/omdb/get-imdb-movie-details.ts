@@ -1,4 +1,4 @@
-import { OmdbResponse, omdbApi } from '.'
+import { omdbApi, OmdbResponse } from '.'
 
 export const getImdbMovieDetails = async (movieId?: string | null) => {
   if (!movieId) return null

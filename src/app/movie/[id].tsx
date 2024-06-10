@@ -1,45 +1,44 @@
-import {
-  ScrollView,
-  TouchableOpacity,
-  View,
-  Text,
-  Image,
-  ImageBackground,
-  FlatList,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-} from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
-import colors from 'tailwindcss/colors'
 import { Feather } from '@expo/vector-icons'
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { LinearGradient } from 'expo-linear-gradient'
 import { router, useLocalSearchParams } from 'expo-router'
-import { getMovieDetails } from '@/services/tmdb/movies'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { tmdbImage } from '@/utils/image'
-
+import React, { useEffect, useRef, useState } from 'react'
+import {
+  FlatList,
+  Image,
+  ImageBackground,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import Animated, { FadeInDown, useSharedValue } from 'react-native-reanimated'
-import { getMovieByExternalId } from '@/services/api/get-movie-by-external-id'
-import { getUserHistoryByMovieId } from '@/services/api/get-user-history-by-movie'
-import { getImdbMovieDetails } from '@/services/omdb/get-imdb-movie-details'
-
-import { CastModal } from './_components/CastModal'
-import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import Toast from 'react-native-toast-message'
+import colors from 'tailwindcss/colors'
+
+import AnimatedHeader from '@/components/AnimatedHeader'
+import Loading from '@/components/Loading'
 import Avatar from '@/components/ui/Avatar'
 import Badge from '@/components/ui/Badge'
-import AnimatedHeader from '@/components/AnimatedHeader'
-import AddToHistoryModal from './_components/AddToHistoryModal'
-import Loading from '@/components/Loading'
-import UserActions from './_components/UserActions'
+import { queryClient } from '@/lib/react-query'
 import {
   AddMovieToHistoryProps,
   addMovieToUserHistory,
 } from '@/services/api/add-movie-to-user-history'
+import { getMovieByExternalId } from '@/services/api/get-movie-by-external-id'
+import { getUserHistoryByMovieId } from '@/services/api/get-user-history-by-movie'
+import { getImdbMovieDetails } from '@/services/omdb/get-imdb-movie-details'
+import { getMovieDetails } from '@/services/tmdb/movies'
+import { tmdbImage } from '@/utils/image'
 
-import { queryClient } from '@/lib/react-query'
-import UserRatingModal from './_components/UserRatingModal'
+import AddToHistoryModal from './_components/AddToHistoryModal'
+import { CastModal } from './_components/CastModal'
 import RatingBar from './_components/RatingBar'
+import UserActions from './_components/UserActions'
+import UserRatingModal from './_components/UserRatingModal'
 
 /*
     TODO: Esconder ícone de adicionar a lista quando filme já foi assistido

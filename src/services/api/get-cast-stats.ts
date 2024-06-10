@@ -1,4 +1,4 @@
-import { ApiListResponse, api } from '.'
+import { api, ApiListResponse } from '.'
 import { CastStat } from './models/cast-stats'
 
 type queryParams = {

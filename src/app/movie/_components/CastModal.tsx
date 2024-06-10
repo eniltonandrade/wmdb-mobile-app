@@ -1,14 +1,13 @@
-import { View, Text, Pressable } from 'react-native'
+import { Feather } from '@expo/vector-icons'
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types'
+import { Pressable, Text, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
+import colors from 'tailwindcss/colors'
 
+import Avatar from '@/components/ui/Avatar'
 import { Modal } from '@/components/ui/Modal'
 import { Cast } from '@/services/tmdb/models/credits'
-
 import { tmdbImage } from '@/utils/image'
-import { Feather } from '@expo/vector-icons'
-import colors from 'tailwindcss/colors'
-import { FlatList } from 'react-native-gesture-handler'
-import Avatar from '@/components/ui/Avatar'
 
 type CastModalProps = {
   modalRef: React.RefObject<BottomSheetModalMethods>

@@ -1,7 +1,6 @@
-import { useState } from 'react'
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
-
 import { Feather } from '@expo/vector-icons'
+import { useState } from 'react'
+import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 
 type FormFieldProps = {

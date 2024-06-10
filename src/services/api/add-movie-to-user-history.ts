@@ -1,6 +1,7 @@
 import { convertRating } from '@/utils/rating'
-import { ApiResponse, api } from '.'
+
 import { MovieDetails } from '../tmdb/models/movie'
+import { api, ApiResponse } from '.'
 import { HistoryDetails } from './models/history-details'
 
 export type AddMovieToHistoryProps = {

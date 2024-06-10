@@ -1,8 +1,9 @@
-import { SafeAreaView, Platform, StatusBar, ScrollView } from 'react-native'
-import Welcome from '@/components/Welcome'
+import { Platform, SafeAreaView, ScrollView, StatusBar } from 'react-native'
+
 import RecentHistory from '@/components/RecentHistory'
-import Trending from '@/components/Trending'
 import TopCastCarrousel from '@/components/TopCastCarrousel'
+import Trending from '@/components/Trending'
+import Welcome from '@/components/Welcome'
 
 const androidPaddingCorrection =
   Platform.OS === 'android' ? StatusBar.currentHeight : 0

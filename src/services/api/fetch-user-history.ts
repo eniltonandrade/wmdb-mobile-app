@@ -1,4 +1,4 @@
-import { ApiListResponse, api } from '.'
+import { api, ApiListResponse } from '.'
 import { HistoryDetails } from './models/history-details'
 
 type queryParams = {

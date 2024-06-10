@@ -1,10 +1,9 @@
-import { tmdbImage } from '@/utils/image'
 import { FontAwesome } from '@expo/vector-icons'
-import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native'
-
+import { router } from 'expo-router'
+import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 
-import { router } from 'expo-router'
+import { tmdbImage } from '@/utils/image'
 
 type MovieCarrousel = {
   tmdbId: number

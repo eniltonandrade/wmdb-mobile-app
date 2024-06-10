@@ -1,4 +1,4 @@
-import { ApiResponse, api } from '.'
+import { api, ApiResponse } from '.'
 import { Movie } from './models/movie'
 
 type getMovieByExternalIdProps = {

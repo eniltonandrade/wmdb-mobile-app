@@ -1,9 +1,10 @@
-import { Text, View } from 'react-native'
-import React, { useState } from 'react'
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types'
-import { Modal } from '@/components/ui/Modal'
+import React, { useState } from 'react'
+import { Text, View } from 'react-native'
+
 import { DateTimePickerComponent } from '@/components/DateTimePicker'
 import Button from '@/components/ui/Button'
+import { Modal } from '@/components/ui/Modal'
 
 type CastModalProps = {
   modalRef: React.RefObject<BottomSheetModalMethods>

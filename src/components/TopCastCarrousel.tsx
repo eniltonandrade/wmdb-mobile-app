@@ -1,12 +1,14 @@
-import { View, Text, TouchableOpacity, FlatList } from 'react-native'
-import React, { useState } from 'react'
-import Avatar from './ui/Avatar'
-import { tmdbImage } from '@/utils/image'
-import { getCastStats } from '@/services/api/get-cast-stats'
-import { useQuery } from '@tanstack/react-query'
-import { Skeleton } from './Skeleton'
-import colors from 'tailwindcss/colors'
 import { FontAwesome } from '@expo/vector-icons'
+import { useQuery } from '@tanstack/react-query'
+import React, { useState } from 'react'
+import { FlatList, Text, TouchableOpacity, View } from 'react-native'
+import colors from 'tailwindcss/colors'
+
+import { getCastStats } from '@/services/api/get-cast-stats'
+import { tmdbImage } from '@/utils/image'
+
+import { Skeleton } from './Skeleton'
+import Avatar from './ui/Avatar'
 
 type Params = {
   gender?: 1 | 2
