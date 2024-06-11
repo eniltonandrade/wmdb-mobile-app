@@ -1,22 +1,46 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from 'expo-router'
-import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { Dimensions, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { z } from 'zod'
 
 import LogoSVG from '@/assets/images/logo.svg'
 import FormField from '@/components/FormField'
 import Button from '@/components/ui/Button'
 import { useSession } from '@/contexts/authContext'
 
+const loginFormSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Por favor, insira seu endereço de e-mail.')
+    .email('Por favor, insira um endereço de e-mail válido.'),
+
+  password: z
+    .string()
+    .min(1, 'Por favor, insira sua senha.')
+    .min(6, 'Sua senha deve ter pelo menos 8 caracteres.'),
+})
+
+export type LoginFormProps = z.infer<typeof loginFormSchema>
+
 const SignIn = () => {
   const { signInWithCredentials } = useSession()
-  const [form, setForm] = useState({
-    email: '',
-    password: '',
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormProps>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   })
 
-  async function handleSignIn() {
-    signInWithCredentials(form)
+  async function handleSignIn(values: LoginFormProps) {
+    signInWithCredentials(values)
   }
 
   return (
@@ -34,26 +58,41 @@ const SignIn = () => {
             Entrar no WMDB
           </Text>
 
-          <FormField
-            title="E-mail"
-            value={form.email}
-            handleChangeText={(e) => setForm({ ...form, email: e })}
-            otherStyles="mt-7"
-            autoCapitalize="none"
-            keyboardType="email-address"
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, value } }) => (
+              <FormField
+                title="E-mail"
+                value={value}
+                handleChangeText={onChange}
+                otherStyles="mt-7"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                errorMessage={errors.email?.message}
+              />
+            )}
           />
 
-          <FormField
-            title="Senha"
-            value={form.password}
-            autoCapitalize="none"
-            handleChangeText={(e) => setForm({ ...form, password: e })}
-            otherStyles="mt-7"
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, value } }) => (
+              <FormField
+                title="Senha"
+                value={value}
+                isPassword
+                handleChangeText={onChange}
+                otherStyles="mt-7"
+                autoCapitalize="none"
+                errorMessage={errors.password?.message}
+              />
+            )}
           />
 
           <Button
             title="Entrar"
-            handlePress={handleSignIn}
+            handlePress={handleSubmit(handleSignIn)}
             containerStyles="mt-7 flex-0"
             isLoading={false}
           />

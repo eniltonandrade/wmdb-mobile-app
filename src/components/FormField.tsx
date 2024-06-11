@@ -8,13 +8,17 @@ type FormFieldProps = {
   value: string
   handleChangeText: (text: string) => void
   otherStyles: string
+  errorMessage?: string
+  isPassword?: boolean
 }
 
 const FormField = ({
   title,
   value,
   handleChangeText,
+  errorMessage,
   otherStyles,
+  isPassword,
   ...props
 }: FormFieldProps & React.ComponentPropsWithoutRef<typeof TextInput>) => {
   const [showPassword, setShowPassword] = useState(false)
@@ -29,11 +33,11 @@ const FormField = ({
           value={value}
           placeholderTextColor="#7B7B8B"
           onChangeText={handleChangeText}
-          secureTextEntry={title === 'Senha' && !showPassword}
+          secureTextEntry={isPassword && !showPassword}
           {...props}
         />
 
-        {title === 'Senha' && (
+        {isPassword && (
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Feather
               size={16}
@@ -43,6 +47,7 @@ const FormField = ({
           </TouchableOpacity>
         )}
       </View>
+      {errorMessage && <Text className="text-red-500">{errorMessage}</Text>}
     </View>
   )
 }

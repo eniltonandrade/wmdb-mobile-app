@@ -5,6 +5,7 @@ import React, { createContext, useContext, useEffect } from 'react'
 import Toast from 'react-native-toast-message'
 
 import { api } from '@/services/api'
+import { createNewUser } from '@/services/api/create-new-user'
 import { signInWithPassword } from '@/services/api/sign-in-with-password'
 
 import { useStorageState } from '../hooks/useStorageState'
@@ -14,9 +15,15 @@ export type SignInCredentials = {
   password: string
 }
 
+export type SignUpData = {
+  name: string
+  email: string
+  password: string
+}
+
 interface SessionContextData {
   signInWithCredentials: (credentials: SignInCredentials) => Promise<void>
-  signUp: () => Promise<void>
+  signUp: (data: SignUpData) => Promise<void>
   signOut: () => Promise<void>
   session: string | null
   isLoading: boolean
@@ -42,6 +49,25 @@ export function SessionProvider(props: React.PropsWithChildren) {
   useEffect(() => {
     api.defaults.headers.common.Authorization = `Bearer ${session}`
   }, [session])
+
+  const signUpMutation = useMutation({
+    mutationFn: async (data: SignUpData) => await createNewUser(data),
+    onSuccess: () => {
+      Toast.show({
+        type: 'success',
+        text1: 'Cadastro feito com sucesso!',
+      })
+      router.replace('/sign-in')
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        Toast.show({
+          type: 'error',
+          text1: error?.response?.data.message,
+        })
+      }
+    },
+  })
 
   const signInMutation = useMutation({
     mutationFn: async (data: SignInCredentials) =>
@@ -74,8 +100,8 @@ export function SessionProvider(props: React.PropsWithChildren) {
     router.replace('/')
   }
 
-  async function signUp() {
-    setSession(null)
+  async function signUp(data: SignUpData) {
+    signUpMutation.mutate(data)
   }
 
   return (
