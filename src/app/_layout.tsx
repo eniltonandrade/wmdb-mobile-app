@@ -7,6 +7,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import Toast, { BaseToast } from 'react-native-toast-message'
 import colors from 'tailwindcss/colors'
 
+import { SessionProvider } from '@/contexts/authContext'
+
 import { queryClient } from '../lib/react-query'
 
 export default function RootLayout() {
@@ -72,19 +74,24 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
         <QueryClientProvider client={queryClient}>
-          <Stack
-            screenOptions={{
-              contentStyle: {
-                backgroundColor: colors.gray[900],
-              },
-              animation: 'ios',
-            }}
-          >
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="movie/[id]" options={{ headerShown: false }} />
-          </Stack>
+          <SessionProvider>
+            <Stack
+              screenOptions={{
+                contentStyle: {
+                  backgroundColor: colors.gray[900],
+                },
+                animation: 'ios',
+              }}
+            >
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="movie/[id]"
+                options={{ headerShown: false }}
+              />
+            </Stack>
+          </SessionProvider>
         </QueryClientProvider>
         <Toast config={toastConfig} />
       </BottomSheetModalProvider>

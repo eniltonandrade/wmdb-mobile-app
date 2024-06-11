@@ -1,11 +1,11 @@
-import { Text, TouchableOpacity, ActivityIndicator } from 'react-native'
-import React from 'react'
 import clsx from 'clsx'
+import React from 'react'
+import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
 
 export type ButtonProps = {
   title: string
   handlePress: () => void
-  isLoading: boolean
+  isLoading?: boolean
   containerStyles?: string
   textStyles?: string
   variant?: 'outline' | 'default' | 'danger'

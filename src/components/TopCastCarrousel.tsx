@@ -40,7 +40,7 @@ const TopCastCarrousel = () => {
           Favoritos
         </Text>
         <Text className="flex text-gray-400 text-xs font-pregular ml-2">
-          Mais assistidos
+          Atores e Atrizes
         </Text>
       </TouchableOpacity>
       {data ? (

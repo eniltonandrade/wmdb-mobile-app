@@ -6,7 +6,7 @@ import colors from 'tailwindcss/colors'
 type FormFieldProps = {
   title: string
   value: string
-  handleChangeText: () => void
+  handleChangeText: (text: string) => void
   otherStyles: string
 }
 
@@ -23,20 +23,20 @@ const FormField = ({
     <View className={`space-y-2 ${otherStyles}`}>
       <Text className="text-base text-gray-100 font-pmedium">{title}</Text>
 
-      <View className="w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 focus:border-secondary flex flex-row items-center">
+      <View className="w-full h-12 px-4 bg-black-100 rounded-xl border-2 border-black-200 focus:border-secondary flex flex-row items-center">
         <TextInput
           className="flex-1 text-white font-psemibold text-base"
           value={value}
           placeholderTextColor="#7B7B8B"
           onChangeText={handleChangeText}
-          secureTextEntry={title === 'Password' && !showPassword}
+          secureTextEntry={title === 'Senha' && !showPassword}
           {...props}
         />
 
-        {title === 'Password' && (
+        {title === 'Senha' && (
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Feather
-              size={6}
+              size={16}
               color={colors.gray[100]}
               name={!showPassword ? 'eye' : 'eye-off'}
             />

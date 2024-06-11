@@ -1,5 +1,6 @@
 import { Feather } from '@expo/vector-icons'
 import { useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import React, { useEffect } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import Toast from 'react-native-toast-message'
@@ -24,12 +25,15 @@ export default function RecentHistory() {
   })
 
   useEffect(() => {
-    if (recentHistoryError) {
-      Toast.show({
-        type: 'error',
-        text1: `Erro`,
-        text2: `Não foi possível acessar a API.`,
-      })
+    if (recentHistoryError?.message) {
+      console.log(recentHistoryError)
+      if (recentHistoryError instanceof AxiosError) {
+        Toast.show({
+          type: 'error',
+          text1: `Não foi possível acessar a API.`,
+          text2: recentHistoryError?.response?.data.message,
+        })
+      }
     }
   }, [recentHistoryError])
   return (

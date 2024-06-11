@@ -1,12 +1,24 @@
 import { Link } from 'expo-router'
+import { useState } from 'react'
 import { Dimensions, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import LogoSVG from '@/assets/images/logo.svg'
 import FormField from '@/components/FormField'
 import Button from '@/components/ui/Button'
+import { useSession } from '@/contexts/authContext'
 
 const SignIn = () => {
+  const { signInWithCredentials } = useSession()
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+  })
+
+  async function handleSignIn() {
+    signInWithCredentials(form)
+  }
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
@@ -16,7 +28,7 @@ const SignIn = () => {
             minHeight: Dimensions.get('window').height - 100,
           }}
         >
-          <LogoSVG height={115} width={115} />
+          <LogoSVG height={90} width={90} />
 
           <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
             Entrar no WMDB
@@ -24,23 +36,25 @@ const SignIn = () => {
 
           <FormField
             title="E-mail"
-            value=""
-            handleChangeText={() => console.log}
+            value={form.email}
+            handleChangeText={(e) => setForm({ ...form, email: e })}
             otherStyles="mt-7"
+            autoCapitalize="none"
             keyboardType="email-address"
           />
 
           <FormField
             title="Senha"
-            value=""
-            handleChangeText={() => console.log}
+            value={form.password}
+            autoCapitalize="none"
+            handleChangeText={(e) => setForm({ ...form, password: e })}
             otherStyles="mt-7"
           />
 
           <Button
             title="Entrar"
-            handlePress={() => console.log}
-            containerStyles="mt-7 h-[32px] flex-0"
+            handlePress={handleSignIn}
+            containerStyles="mt-7 flex-0"
             isLoading={false}
           />
 
