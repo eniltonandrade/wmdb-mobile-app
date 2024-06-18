@@ -14,9 +14,9 @@ export const api = axios.create({
   baseURL: 'http://192.168.0.8:3333/',
 })
 
-// api.interceptors.request.use(async (config) => {
-//   console.log(config.headers)
-//   await new Promise((resolve) => setTimeout(resolve, 2000))
+api.interceptors.request.use(async (config) => {
+  // console.log('intec', config.params)
+  // await new Promise((resolve) => setTimeout(resolve, 2000))
 
-//   return config
-// })
+  return config
+})

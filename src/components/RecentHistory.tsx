@@ -20,7 +20,9 @@ export default function RecentHistory() {
     queryFn: () =>
       fetchUseHistory({
         page: 1,
-        sort_by: 'watched_date.desc',
+        params: {
+          sort_by: 'watched_date.desc',
+        },
       }),
   })
 

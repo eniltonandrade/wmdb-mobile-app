@@ -1,3 +1,4 @@
 import images from './images'
+import utils from './utils'
 
-export { images }
+export { images, utils }

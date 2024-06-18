@@ -5,18 +5,14 @@ import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 
-import { History } from '@/services/api/models/history'
-
 type UserActionsProps = {
-  history?: History | null
   watchedDate: Date | null
-  userRating: number
+  userRating?: number | null
   handleOpenHistoryModal: () => void
   handleOpenUserRatingModal: () => void
 }
 
 export default function UserActions({
-  history,
   watchedDate,
   handleOpenHistoryModal,
   handleOpenUserRatingModal,
@@ -54,12 +50,12 @@ export default function UserActions({
             onPress={handleOpenUserRatingModal}
           >
             <Feather
-              name={history?.rating ? 'check' : 'plus'}
+              name={userRating ? 'check' : 'plus'}
               size={20}
-              color={history?.rating ? colors.white : colors.green[500]}
+              color={userRating ? colors.white : colors.green[500]}
             />
           </TouchableOpacity>
-          {history?.rating ? (
+          {userRating ? (
             <Text className="text-gray-100 font-pbold text-lg">
               {userRating.toFixed(1)}
             </Text>

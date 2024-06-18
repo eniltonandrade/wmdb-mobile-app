@@ -46,7 +46,7 @@ import UserRatingModal from './_components/UserRatingModal'
 
 export default function Movie() {
   const [watchedDate, setWatchedDate] = useState<Date | null>(null)
-  const [userRating, setUserRating] = useState<number>(0)
+  const [userRating, setUserRating] = useState<number | null>()
   const castModalRef = useRef<BottomSheetModal>(null)
   const addToHistoryModalRef = useRef<BottomSheetModal>(null)
   const userRatingModalRef = useRef<BottomSheetModal>(null)
@@ -249,7 +249,6 @@ export default function Movie() {
 
                   <UserActions
                     userRating={userRating}
-                    history={history}
                     handleOpenHistoryModal={handleOpenAddToHistoryModal}
                     handleOpenUserRatingModal={handleOpenUserRatingModal}
                     watchedDate={watchedDate}
@@ -456,11 +455,12 @@ export default function Movie() {
         isLoading={addToHistoryMutation.isPending}
         isWatched={!!history?.date}
       />
+
       <UserRatingModal
         modalRef={userRatingModalRef}
-        movieId={storedMovieData!.movie!.id!}
+        movieId={storedMovieData?.movie?.id}
         historyId={history?.id || addToHistoryMutation.data?.id}
-        userRating={userRating}
+        userRating={userRating || 0}
         onChangeRating={setUserRating}
       />
     </>

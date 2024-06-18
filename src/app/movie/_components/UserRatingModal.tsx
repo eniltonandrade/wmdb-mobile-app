@@ -16,7 +16,7 @@ type UserRatingModalProps = {
   modalRef: React.RefObject<BottomSheetModalMethods>
   historyId?: string | null
   userRating: number
-  movieId: string
+  movieId?: string
   onChangeRating: (rating: number) => void
 }
 
