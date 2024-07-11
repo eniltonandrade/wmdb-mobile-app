@@ -185,14 +185,6 @@ export default function History() {
                       <Text className=" font-pbold text-xs text-gray-100">
                         {sortMap[selectedOrder as sortMapType]}
                       </Text>
-                      <Pressable
-                        className="bg-gray-900 rounded-md"
-                        onPress={() =>
-                          handleRemoveFilter(param as queryParamsKeys)
-                        }
-                      >
-                        <Ionicons name="close" size={18} color={colors.white} />
-                      </Pressable>
                     </View>
                   )}
                 </View>

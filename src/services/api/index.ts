@@ -11,12 +11,10 @@ export type ApiListResponse<T> = {
 }
 
 export const api = axios.create({
-  baseURL: 'http://192.168.0.8:3333/',
+  baseURL: 'http://localhost:3333/',
 })
 
 api.interceptors.request.use(async (config) => {
-  // console.log('intec', config.params)
-  // await new Promise((resolve) => setTimeout(resolve, 2000))
-
+  // await new Promise((resolve) => setTimeout(resolve, 4000))
   return config
 })

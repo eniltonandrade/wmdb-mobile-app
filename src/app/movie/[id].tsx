@@ -166,6 +166,10 @@ export default function Movie() {
     return <Loading />
   }
 
+  /*
+    TODO: Lidar com erros
+  */
+
   return (
     <>
       <AnimatedHeader

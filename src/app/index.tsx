@@ -3,19 +3,26 @@ import { StatusBar } from 'expo-status-bar'
 import { ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import Loading from '@/components/Loading'
+import LogoLoading from '@/components/LogoLoading'
 import Button from '@/components/ui/Button'
 import { useSession } from '@/contexts/authContext'
+import { useUser } from '@/contexts/userContext'
 
 const Welcome = () => {
   const { session, isLoading } = useSession()
+  const { loadUserData, user, isLoading: isLoadingUser } = useUser()
 
-  if (isLoading) {
-    return <Loading />
+  console.log(session)
+
+  if (isLoading || isLoadingUser) {
+    return <LogoLoading />
   }
 
   if (session) {
-    return <Redirect href="/home" />
+    loadUserData()
+    if (user && user.id) {
+      return <Redirect href="/home" />
+    }
   }
 
   return (

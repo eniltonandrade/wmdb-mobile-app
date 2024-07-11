@@ -9,6 +9,7 @@ import colors from 'tailwindcss/colors'
 
 import { AppProvider } from '@/contexts/appContext'
 import { SessionProvider } from '@/contexts/authContext'
+import { UserProvider } from '@/contexts/userContext'
 
 import { queryClient } from '../lib/react-query'
 
@@ -76,24 +77,32 @@ export default function RootLayout() {
       <BottomSheetModalProvider>
         <QueryClientProvider client={queryClient}>
           <SessionProvider>
-            <AppProvider>
-              <Stack
-                screenOptions={{
-                  contentStyle: {
-                    backgroundColor: colors.gray[900],
-                  },
-                  animation: 'ios',
-                }}
-              >
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="movie/[id]"
-                  options={{ headerShown: false }}
-                />
-              </Stack>
-            </AppProvider>
+            <UserProvider>
+              <AppProvider>
+                <Stack
+                  screenOptions={{
+                    contentStyle: {
+                      backgroundColor: colors.gray[900],
+                    },
+                    animation: 'ios',
+                  }}
+                >
+                  <Stack.Screen
+                    name="(auth)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen name="index" options={{ headerShown: false }} />
+                  <Stack.Screen
+                    name="movie/[id]"
+                    options={{ headerShown: false }}
+                  />
+                </Stack>
+              </AppProvider>
+            </UserProvider>
           </SessionProvider>
         </QueryClientProvider>
         <Toast config={toastConfig} />

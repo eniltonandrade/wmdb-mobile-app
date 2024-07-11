@@ -75,7 +75,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
     onSuccess: (token) => {
       setSession(token)
       api.defaults.headers.common.Authorization = `Bearer ${token}`
-      router.replace('/home')
+      router.replace('/')
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
