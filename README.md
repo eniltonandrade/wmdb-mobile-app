@@ -3,14 +3,18 @@
  - [ ] **SM** | **Home** - "Recentes" should redirect to History.
  - [ ] **SM** | **Modals** - Adds a button to close modal in all modals.
  - [X] **MD** | **Welcome** - While session is being validate a loading message should be display: "Conectando no servidor".
- - [ ] **MD** | **Home** - Create a Fake Search to redirect to search page.
+ - [ ] **MD** | **Home** - [REMOVE SEARCH FROM HOME ]Create a Fake Search to redirect to search page.
+ - [ ] **MD** | **Movie** - Change color of the rating component based on the rating (red, yellow, green)
  - [ ] **LG** | On application startup, it should check if user has a valid token, if not, redirect to Welcome page.
  - [ ] **XL** | **Search** - Add recent searches to local storage.
  - [ ] **XL** | **Profile** - Create Profile Page.
  - [ ] **XL** | **Person** - Create Person Page.
  - [ ] **XL** | **Movie** - Link to Person details.
  - [ ] **XL** | **Statistics** - Create Person Page.
- 
+
+# BUGS:
+- [ ] When user first logs in, the name doesn't show in the Home Screen. Need to revisit sigIn functionality.
+
 # 🎬 WMDB
 
 WMDB is a mobile application that allows users to record all the movies they have watched and get detailed statistics about their viewing habits. Built using React Native and Expo, this app offers a sleek and responsive interface, leveraging Nativewind for styling and Reanimated for smooth animations.

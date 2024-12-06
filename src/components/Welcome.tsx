@@ -1,10 +1,10 @@
 import React from 'react'
 import { Image, Text, View } from 'react-native'
 
-import { useUser } from '@/contexts/userContext'
+import { useSession } from '@/contexts/authContext'
 
 export default function Welcome() {
-  const { user } = useUser()
+  const { user } = useSession()
 
   function getFirstAndLastName(fullName: string) {
     if (!fullName || typeof fullName !== 'string') {

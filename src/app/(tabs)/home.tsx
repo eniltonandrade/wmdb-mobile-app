@@ -28,6 +28,7 @@ export default function Home() {
       debouncedChangeHandler.cancel()
     }
   })
+
   return (
     <SafeAreaView
       className="bg-primary h-full"

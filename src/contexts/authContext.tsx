@@ -1,11 +1,13 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { router } from 'expo-router'
 import React, { createContext, useContext, useEffect } from 'react'
 import Toast from 'react-native-toast-message'
 
+import { queryClient } from '@/lib/react-query'
 import { api } from '@/services/api'
 import { createNewUser } from '@/services/api/create-new-user'
+import { getUserProfile, User } from '@/services/api/get-user-profile'
 import { signInWithPassword } from '@/services/api/sign-in-with-password'
 
 import { useStorageState } from '../hooks/useStorageState'
@@ -26,7 +28,9 @@ interface SessionContextData {
   signUp: (data: SignUpData) => Promise<void>
   signOut: () => Promise<void>
   session: string | null
+  user?: User
   isLoading: boolean
+  error: Error | null
 }
 
 const AuthContext = createContext<SessionContextData>({} as SessionContextData)
@@ -46,9 +50,19 @@ export function useSession() {
 export function SessionProvider(props: React.PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState('session')
 
+  const {
+    data: userData,
+    error: userError,
+    isLoading: isUserLoading,
+  } = useQuery({
+    queryKey: ['user'],
+    queryFn: () => getUserProfile(),
+    enabled: !!session,
+  })
+
   useEffect(() => {
     api.defaults.headers.common.Authorization = `Bearer ${session}`
-  }, [session])
+  }, [session, userData])
 
   const signUpMutation = useMutation({
     mutationFn: async (data: SignUpData) => await createNewUser(data),
@@ -75,13 +89,14 @@ export function SessionProvider(props: React.PropsWithChildren) {
     onSuccess: (token) => {
       setSession(token)
       api.defaults.headers.common.Authorization = `Bearer ${token}`
-      router.replace('/')
+      router.replace('/home')
     },
     onError: (error) => {
+      console.log('ERROR', error)
       if (error instanceof AxiosError) {
         Toast.show({
           type: 'error',
-          text1: error?.response?.data.message,
+          text1: error?.response?.data.message || 'Erro ao tentar fazer login',
         })
       }
     },
@@ -91,12 +106,15 @@ export function SessionProvider(props: React.PropsWithChildren) {
     try {
       signInMutation.mutate(credentials)
     } catch (error) {
-      console.log(error)
+      console.log('error', error)
     }
   }
 
   async function signOut() {
     setSession(null)
+    queryClient.invalidateQueries({
+      queryKey: ['user'],
+    })
     router.replace('/')
   }
 
@@ -110,8 +128,10 @@ export function SessionProvider(props: React.PropsWithChildren) {
         signInWithCredentials,
         signOut,
         signUp,
+        error: userError,
+        user: userData,
         session,
-        isLoading,
+        isLoading: isLoading || isUserLoading,
       }}
     >
       {props.children}

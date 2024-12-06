@@ -1,6 +1,7 @@
 import { Feather } from '@expo/vector-icons'
 import { useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
+import { router } from 'expo-router'
 import React, { useEffect } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import Toast from 'react-native-toast-message'
@@ -35,6 +36,9 @@ export default function RecentHistory() {
           text1: `Não foi possível acessar a API.`,
           text2: recentHistoryError?.response?.data.message,
         })
+        if (recentHistoryError.response?.status === 401) {
+          router.replace('/sign-in')
+        }
       }
     }
   }, [recentHistoryError])

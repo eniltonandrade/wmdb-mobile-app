@@ -1,4 +1,7 @@
+import { useQuery } from '@tanstack/react-query'
 import React, { createContext, useContext, useEffect, useState } from 'react'
+
+import { healthCheck } from '@/services/api/health-check'
 
 export type Genre = {
   id: string
@@ -7,6 +10,9 @@ export type Genre = {
 
 interface AppContextData {
   genres: Genre[]
+  appStatus: boolean
+  appError: Error | null
+  appHealthLoading: boolean
 }
 
 const AppContext = createContext<AppContextData>({} as AppContextData)
@@ -111,10 +117,23 @@ export function AppProvider(props: React.PropsWithChildren) {
     ])
   }
 
+  const {
+    data,
+    error,
+    isLoading: appHealthLoading,
+  } = useQuery({
+    queryKey: ['health'],
+    queryFn: () => healthCheck(),
+    gcTime: 0,
+  })
+
   return (
     <AppContext.Provider
       value={{
         genres,
+        appStatus: data,
+        appError: error,
+        appHealthLoading,
       }}
     >
       {props.children}

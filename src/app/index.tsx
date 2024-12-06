@@ -6,23 +6,16 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import LogoLoading from '@/components/LogoLoading'
 import Button from '@/components/ui/Button'
 import { useSession } from '@/contexts/authContext'
-import { useUser } from '@/contexts/userContext'
 
 const Welcome = () => {
-  const { session, isLoading } = useSession()
-  const { loadUserData, user, isLoading: isLoadingUser } = useUser()
+  const { user, session, isLoading } = useSession()
 
-  console.log(session)
-
-  if (isLoading || isLoadingUser) {
+  if (isLoading) {
     return <LogoLoading />
   }
 
-  if (session) {
-    loadUserData()
-    if (user && user.id) {
-      return <Redirect href="/home" />
-    }
+  if (user && session) {
+    return <Redirect href="/home" />
   }
 
   return (
