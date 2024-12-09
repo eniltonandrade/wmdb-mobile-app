@@ -10,7 +10,7 @@ import { useSession } from '@/contexts/authContext'
 const Welcome = () => {
   const { user, session, isLoading } = useSession()
 
-  if (isLoading) {
+  if (isLoading && !user) {
     return <LogoLoading />
   }
 

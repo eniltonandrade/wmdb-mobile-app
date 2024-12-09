@@ -117,6 +117,11 @@ export default function Movie() {
     userRatingModalRef.current?.present()
   }
 
+  function handleNavigateToPersonDetails(id: number) {
+    router.setParams({ id: String(id) })
+    router.push(`/person-details/${id}`)
+  }
+
   async function handleAddToMovieToUserHistory(date: Date) {
     setWatchedDate(date)
     await addToHistoryMutation.mutateAsync({
@@ -313,6 +318,7 @@ export default function Movie() {
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     activeOpacity={0.8}
+                    onPress={() => handleNavigateToPersonDetails(item.id)}
                     key={item.name}
                     className="mr-4 flex flex-row space-x-4 items-center"
                   >
@@ -358,6 +364,7 @@ export default function Movie() {
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     activeOpacity={0.8}
+                    onPress={() => handleNavigateToPersonDetails(item.id)}
                     key={item.name}
                     className="mr-2 flex space-y-2 items-center w-[75] justify-start text-center"
                   >

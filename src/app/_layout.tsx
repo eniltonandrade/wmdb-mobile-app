@@ -92,6 +92,10 @@ export default function RootLayout() {
                   name="movie/[id]"
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                  name="person-details/[id]"
+                  options={{ headerShown: false }}
+                />
               </Stack>
             </AppProvider>
           </SessionProvider>

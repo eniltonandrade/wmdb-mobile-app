@@ -19,7 +19,7 @@ import { type queryParams } from '@/services/api/fetch-user-history'
 const androidPaddingCorrection =
   Platform.OS === 'android' ? StatusBar.currentHeight : 0
 
-export default function History() {
+export default function PersonDetails() {
   const movieHistoryListRef = useRef<MovieHistoryListRef>(null)
   const [displayMethod, setDisplayMethod] = useState<'LIST' | 'GRID'>('LIST')
 
