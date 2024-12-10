@@ -18,6 +18,8 @@ type MovieGridsProps = {
   fetchNextPage: () => void
   openMovieActions: (id: string) => void
   handleNavigate: (id: number) => void
+  listHeader?: JSX.Element
+  isFullyLoaded: boolean
 }
 
 const MovieGrid = ({
@@ -25,16 +27,19 @@ const MovieGrid = ({
   openMovieActions,
   fetchNextPage,
   handleNavigate,
+  listHeader,
+  isFullyLoaded,
 }: MovieGridsProps) => {
   return (
     <FlatList
       data={items}
       onEndReached={() => fetchNextPage()}
       showsVerticalScrollIndicator={false}
+      ListHeaderComponent={listHeader}
       ListFooterComponentStyle={{ marginBottom: 16, paddingTop: 16 }}
       numColumns={3}
       ListFooterComponent={
-        items.length > 0 ? (
+        items.length > 0 && !isFullyLoaded ? (
           <ActivityIndicator size="small" color={colors.green[500]} />
         ) : (
           <></>
@@ -44,7 +49,7 @@ const MovieGrid = ({
         <View className="flex-1 items-center justify-center">
           <FontAwesome name="search" color={colors.gray[400]} size={36} />
           <Text className="text-gray-100 font-pbold my-4">
-            Nenhum filme encontrado para esse filtro.
+            Nenhum filme encontrado.
           </Text>
         </View>
       }
@@ -89,12 +94,21 @@ const MovieGrid = ({
             )}
           </TouchableOpacity>
           <View className="mt-2 flex-row items-start">
-            <Text
-              numberOfLines={2}
-              className="text-gray-100 font-psemibold text-xs flex-1"
-            >
-              {item.movie.title}
-            </Text>
+            <View className="flex flex-col">
+              <Text
+                numberOfLines={2}
+                className="text-gray-100 font-psemibold text-xs flex-1"
+              >
+                {item.movie.title}
+              </Text>
+              <Text
+                numberOfLines={1}
+                className="text-gray-400 font-pregular text-xs flex-1"
+              >
+                {item.movie?.credits?.cast?.at(0)?.character}
+                {item.movie?.credits?.crew?.at(0)?.job}
+              </Text>
+            </View>
             <Pressable onPress={() => openMovieActions(item.movie.id)}>
               <Feather
                 name="more-vertical"

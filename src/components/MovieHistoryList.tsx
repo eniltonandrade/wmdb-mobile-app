@@ -41,13 +41,14 @@ type MovieHistoryListProps = {
   params: queryParams
   displayMethod: 'LIST' | 'GRID'
   setParams: React.Dispatch<React.SetStateAction<queryParams>>
+  header?: JSX.Element
 }
 export type MovieHistoryListRef = {
   openFilterModal: () => void
 }
 
 const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
-  ({ params, setParams, displayMethod }, ref) => {
+  ({ params, setParams, displayMethod, header }, ref) => {
     const filterModalRef = useRef<BottomSheetModal>(null)
     const movieActionsModalRef = useRef<BottomSheetModal>(null)
 
@@ -182,6 +183,8 @@ const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
               handleNavigate={handleNavigate}
               openMovieActions={handleOpenMovieActionsModal}
               items={histories}
+              isFullyLoaded={total === histories.length}
+              listHeader={header}
             />
           )}
 

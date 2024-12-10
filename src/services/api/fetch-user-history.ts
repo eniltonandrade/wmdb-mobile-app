@@ -19,8 +19,7 @@ export type SortType =
 
 export type queryParams = {
   genre_id?: string
-  cast_member_id?: string
-  crew_member_id?: string
+  personId?: string
   company_id?: string
   release_year?: string
   watched_year?: string

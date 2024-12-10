@@ -50,7 +50,7 @@ export default function Movie() {
   const castModalRef = useRef<BottomSheetModal>(null)
   const addToHistoryModalRef = useRef<BottomSheetModal>(null)
   const userRatingModalRef = useRef<BottomSheetModal>(null)
-  const { id } = useLocalSearchParams()
+  const { movieId } = useLocalSearchParams()
 
   const scrollY = useSharedValue<number>(0.5)
 
@@ -60,16 +60,16 @@ export default function Movie() {
   }
 
   const { data: movie, isLoading: isMovieLoading } = useQuery({
-    queryKey: ['tmdb', id],
-    queryFn: () => getMovieDetails(Number(id), 'pt-BR'),
-    enabled: !!id,
+    queryKey: ['tmdb', movieId],
+    queryFn: () => getMovieDetails(Number(movieId), 'pt-BR'),
+    enabled: !!movieId,
   })
 
   const { data: storedMovieData } = useQuery({
-    queryKey: ['api', 'movie', id],
+    queryKey: ['api', 'movie', movieId],
     queryFn: () =>
-      getMovieByExternalId({ movieId: id!.toString(), tmdb: true }),
-    enabled: !!id,
+      getMovieByExternalId({ movieId: movieId!.toString(), tmdb: true }),
+    enabled: !!movieId,
   })
 
   const {

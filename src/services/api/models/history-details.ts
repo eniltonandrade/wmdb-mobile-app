@@ -18,5 +18,18 @@ export type HistoryDetails = {
     tmdbRating: number | null
     rottenTomatoesRating: number | null
     metacriticRating: number | null
+    credits?: {
+      cast?: {
+        personId: string
+        movieId: string
+        character: string
+        order: number
+      }[]
+      crew?: {
+        personId: string
+        movieId: string
+        job: string
+      }[]
+    }
   }
 }
