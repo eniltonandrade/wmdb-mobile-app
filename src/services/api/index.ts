@@ -11,10 +11,11 @@ export type ApiListResponse<T> = {
 }
 
 export const api = axios.create({
-  baseURL: 'http://localhost:3333/',
+  // baseURL: 'https://wmdb-api-v2.onrender.com/',
+  baseURL: 'http://9.62.36.197:3333/',
 })
 
-api.interceptors.request.use(async (config) => {
-  // await new Promise((resolve) => setTimeout(resolve, 14000))
-  return config
-})
+// api.interceptors.request.use(async (config) => {
+//   // await new Promise((resolve) => setTimeout(resolve, 14000))
+//   return config
+// })

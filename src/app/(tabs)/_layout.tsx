@@ -24,7 +24,7 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
+            <FontAwesome size={24} name="home" color={color} />
           ),
         }}
       />
@@ -34,7 +34,7 @@ export default function TabLayout() {
           title: 'Historia',
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="history" color={color} />
+            <FontAwesome size={24} name="history" color={color} />
           ),
         }}
       />
@@ -43,7 +43,7 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="search" color={color} />
+            <FontAwesome size={24} name="search" color={color} />
           ),
         }}
       />
@@ -52,7 +52,7 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="user" color={color} />
+            <FontAwesome size={24} name="user" color={color} />
           ),
         }}
       />

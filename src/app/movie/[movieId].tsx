@@ -35,7 +35,7 @@ import { getMovieDetails } from '@/services/tmdb/movies'
 import { tmdbImage } from '@/utils/image'
 
 import AddToHistoryModal from './_components/AddToHistoryModal'
-import { CastModal } from './_components/CastModal'
+import CastModal from './_components/CastModal'
 import RatingBar from './_components/RatingBar'
 import UserActions from './_components/UserActions'
 import UserRatingModal from './_components/UserRatingModal'

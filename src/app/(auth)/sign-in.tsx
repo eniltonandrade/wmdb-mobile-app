@@ -25,7 +25,7 @@ const loginFormSchema = z.object({
 export type LoginFormProps = z.infer<typeof loginFormSchema>
 
 const SignIn = () => {
-  const { signInWithCredentials } = useSession()
+  const { signInWithCredentials, isLoading } = useSession()
 
   const {
     control,
@@ -94,7 +94,7 @@ const SignIn = () => {
             title="Entrar"
             handlePress={handleSubmit(handleSignIn)}
             containerStyles="mt-7 flex-0"
-            isLoading={false}
+            isLoading={isLoading}
           />
 
           <View className="flex justify-center pt-5 flex-row gap-2">

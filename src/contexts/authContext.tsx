@@ -64,7 +64,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
     api.defaults.headers.common.Authorization = `Bearer ${session}`
   }, [session, userData])
 
-  const signUpMutation = useMutation({
+  const { mutate: singUpMutate, isPending: isSignUpLoading } = useMutation({
     mutationFn: async (data: SignUpData) => await createNewUser(data),
     onSuccess: () => {
       Toast.show({
@@ -83,7 +83,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
     },
   })
 
-  const signInMutation = useMutation({
+  const { mutate: singInMutate, isPending: isSignInLoading } = useMutation({
     mutationFn: async (data: SignInCredentials) =>
       await signInWithPassword(data),
     onSuccess: (token) => {
@@ -104,7 +104,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
 
   async function signInWithCredentials(credentials: SignInCredentials) {
     try {
-      signInMutation.mutate(credentials)
+      singInMutate(credentials)
     } catch (error) {
       console.log('error', error)
     }
@@ -119,7 +119,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
   }
 
   async function signUp(data: SignUpData) {
-    signUpMutation.mutate(data)
+    singUpMutate(data)
   }
 
   return (
@@ -131,7 +131,8 @@ export function SessionProvider(props: React.PropsWithChildren) {
         error: userError,
         user: userData,
         session,
-        isLoading: isLoading || isUserLoading,
+        isLoading:
+          isLoading || isUserLoading || isSignInLoading || isSignUpLoading,
       }}
     >
       {props.children}

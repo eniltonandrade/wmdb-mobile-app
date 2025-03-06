@@ -3,13 +3,15 @@ import { useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { router } from 'expo-router'
 import React, { useEffect } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import Toast from 'react-native-toast-message'
 import colors from 'tailwindcss/colors'
 
 import { MoviesCarrousel } from '@/components/MoviesCarrousel'
 import MoviesCarrouselSkeleton from '@/components/MoviesCarrouselSkeleton'
 import { fetchUseHistory } from '@/services/api/fetch-user-history'
+
+import { Heading } from './ui/Heading'
 
 export default function RecentHistory() {
   const {
@@ -48,9 +50,8 @@ export default function RecentHistory() {
         activeOpacity={0.7}
         className="flex-row w-full px-4 pb-4 "
       >
-        <Text className="flex text-gray-100 text-lg font-pbold items-center justify-center">
-          Recentes
-        </Text>
+        <Heading size="lg">Recentes</Heading>
+
         <View className="flex items-center justify-center ml-2">
           <Feather name="arrow-right" size={16} color={colors.gray[100]} />
         </View>

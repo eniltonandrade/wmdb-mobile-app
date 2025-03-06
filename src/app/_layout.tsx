@@ -1,3 +1,5 @@
+import 'react-native-reanimated'
+
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useFonts } from 'expo-font'
@@ -82,7 +84,7 @@ export default function RootLayout() {
                   contentStyle: {
                     backgroundColor: colors.gray[900],
                   },
-                  animation: 'ios',
+                  animation: 'ios_from_left',
                 }}
               >
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
@@ -94,6 +96,10 @@ export default function RootLayout() {
                 />
                 <Stack.Screen
                   name="person-details/[personId]"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="stats/genres"
                   options={{ headerShown: false }}
                 />
               </Stack>

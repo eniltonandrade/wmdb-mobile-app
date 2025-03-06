@@ -1,6 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons'
 import { useQuery } from '@tanstack/react-query'
-import React, { useState } from 'react'
+import { router } from 'expo-router'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 
@@ -21,14 +21,19 @@ type Params = {
 }
 
 const TopCastCarrousel = () => {
-  const [params, setParams] = useState<Params>({
+  const params: Params = {
     preferred_rating: 'imdb_rating',
     sort_by: 'count.desc',
-  })
+  }
   const { data } = useQuery({
     queryKey: ['api', 'stats', 'cast', ...Object.values(params)],
     queryFn: () => getCastStats(params),
   })
+
+  function handleNavigateToPersonDetails(id: number) {
+    router.setParams({ id: String(id) })
+    router.push(`/person-details/${id}`)
+  }
 
   return (
     <View className="mb-4">
@@ -64,7 +69,10 @@ const TopCastCarrousel = () => {
           horizontal
           renderItem={({ item, index }) => (
             <View className="w-[90px] mr-4">
-              <TouchableOpacity activeOpacity={0.7}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => handleNavigateToPersonDetails(item.tmdbId)}
+              >
                 <Avatar
                   size="lg"
                   uri={tmdbImage(item.profile_path || '')}

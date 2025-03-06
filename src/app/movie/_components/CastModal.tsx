@@ -14,7 +14,7 @@ type CastModalProps = {
   cast: Cast[]
 }
 
-export function CastModal({ modalRef, cast }: CastModalProps) {
+export default function CastModal({ modalRef, cast }: CastModalProps) {
   return (
     <Modal ref={modalRef} heightPercentage="85%">
       <View className="flex-1 px-4">

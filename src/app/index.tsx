@@ -1,3 +1,5 @@
+import 'react-native-reanimated'
+
 import { Redirect, router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { ScrollView, View } from 'react-native'

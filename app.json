@@ -7,6 +7,7 @@
     "icon": "./assets/icon.png",
     "scheme": "wmdb",
     "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
     "packagerOpts": {
       "sourceExts": [
         "js",
@@ -21,13 +22,15 @@
       "backgroundColor": "#030712"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.enilton.andrade.wmdb"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#030712"
-      }
+      },
+      "package": "com.enilton.andrade.wmdb"
     },
     "web": {
       "bundler": "metro",
@@ -36,10 +39,19 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "616df49c-e855-44a7-9f2c-9cc73c199776"
+      }
     }
   }
 }

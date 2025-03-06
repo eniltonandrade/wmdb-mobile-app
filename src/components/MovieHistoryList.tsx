@@ -87,6 +87,7 @@ const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
     }))
 
     function handleRemoveFilter(key: queryParamsKeys) {
+      router.setParams({})
       setParams((prev) => {
         delete prev[key]
         return {

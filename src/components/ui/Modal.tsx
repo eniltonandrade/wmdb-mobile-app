@@ -1,7 +1,7 @@
-import React, { forwardRef, useMemo } from 'react'
-
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import React, { forwardRef, useMemo } from 'react'
 import colors from 'tailwindcss/colors'
+
 import { BlurBackdrop } from './BlurBackdrop'
 
 type ModalProps = {
