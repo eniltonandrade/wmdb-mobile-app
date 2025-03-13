@@ -14,19 +14,32 @@ import {
 import { ScrollView } from 'react-native-gesture-handler'
 import colors from 'tailwindcss/colors'
 
-import CastFiltersModal from '@/components/CastFilterModal'
+import FilterSelectionModal from '@/components/filtering/FilterSelectionModal'
+import OrderSelectionModal from '@/components/filtering/OrderSelectionModal'
 import { Skeleton } from '@/components/Skeleton'
 import Avatar from '@/components/ui/Avatar'
 import { Container } from '@/components/ui/Container'
 import FilterBadge from '@/components/ui/FilterBadge'
-import { ratingSourceMap, sortMap, sortMapType } from '@/constants/utils'
-import { fetchCastStats, QueryParams } from '@/services/api/fetch-cast-stats'
+import {
+  GENDER_OPTIONS,
+  genderMap,
+  RATING_SOURCES_OPTIONS,
+  ratingSourceMap,
+  sortMap,
+  sortMapType,
+} from '@/constants/utils'
+import {
+  fetchCastStats,
+  PreferredRatingType,
+  QueryParams,
+  SortType,
+} from '@/services/api/fetch-cast-stats'
 import { tmdbImage } from '@/utils/image'
 
-type queryParamsKeys = keyof QueryParams
-
 export default function CastStats() {
-  const filterModalRef = useRef<BottomSheetModal>(null)
+  const ratingSelectionModalRef = useRef<BottomSheetModal>(null)
+  const orderSelectionModalRef = useRef<BottomSheetModal>(null)
+  const genderSelectionModalRef = useRef<BottomSheetModal>(null)
   const [params, setParams] = useState<QueryParams>({
     sort_by: 'count.desc',
     preferred_rating: 'imdb_rating',
@@ -69,23 +82,63 @@ export default function CastStats() {
     return 'text-red-400'
   }
 
-  function handleRemoveFilter(key: queryParamsKeys) {
-    router.setParams({})
+  function handleRatingSourceChange(key: string) {
     setParams((prev) => {
-      delete prev[key]
       return {
         ...prev,
+        preferred_rating: key as PreferredRatingType,
       }
     })
+    ratingSelectionModalRef.current?.close()
   }
 
-  function handleOpenFilterModal() {
-    filterModalRef.current?.present()
+  function handleOrderDirectionChange(direction: string, key: string) {
+    const sortBy = (key + '.' + direction) as SortType
+    setParams((prev) => {
+      return {
+        ...prev,
+        sort_by: sortBy,
+      }
+    })
+    orderSelectionModalRef.current?.close()
+  }
+
+  function handleGenderChange(id: string) {
+    if (id === 'todos') {
+      setParams((prev) => {
+        delete prev.gender
+        return {
+          ...prev,
+        }
+      })
+    } else {
+      setParams((prev) => {
+        return {
+          ...prev,
+          gender: Number(id),
+        }
+      })
+    }
+
+    genderSelectionModalRef.current?.close()
+  }
+
+  function handleOpenRatingSourceSelectionModal() {
+    ratingSelectionModalRef.current?.present()
+  }
+  function handleOpenOrderSelectionModal() {
+    orderSelectionModalRef.current?.present()
+  }
+
+  function handleOpenGenderSelectionModal() {
+    genderSelectionModalRef.current?.present()
   }
 
   const isFullyLoaded = total === data?.length
 
-  const [selectedOrder, selectedDirection] = params.sort_by.split('.')
+  const [selectedItem, selectedOrder] = params.sort_by.split('.')
+
+  const selectedGender = params.gender ? params.gender : 'todos'
 
   return (
     <>
@@ -102,9 +155,6 @@ export default function CastStats() {
                   Atores e Atrizes
                 </Text>
               </View>
-              <TouchableOpacity onPress={handleOpenFilterModal}>
-                <Ionicons name="options" size={22} color={colors.white} />
-              </TouchableOpacity>
             </View>
             <View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -115,48 +165,33 @@ export default function CastStats() {
                     <Ionicons name="stats-chart-sharp" color={colors.white} />
                   }
                 />
-                {Object.keys(params).map((param) => {
-                  return (
-                    <View key={param}>
-                      {param === 'preferred_rating' && (
-                        <FilterBadge
-                          onPress={handleOpenFilterModal}
-                          text={params[param] && ratingSourceMap[params[param]]}
-                          removable={false}
-                          Icon={<Ionicons name="star" color={colors.white} />}
-                        />
-                      )}
-                      {param === 'gender' && (
-                        <FilterBadge
-                          onRemoval={() =>
-                            handleRemoveFilter(param as queryParamsKeys)
-                          }
-                          onPress={handleOpenFilterModal}
-                          text={params[param] === 1 ? 'Atrizes' : 'Atores'}
-                          removable
-                          Icon={<Ionicons name="person" color={colors.white} />}
-                        />
-                      )}
-                      {param === 'sort_by' && (
-                        <FilterBadge
-                          text={sortMap[selectedOrder as sortMapType]}
-                          onPress={handleOpenFilterModal}
-                          Icon={
-                            <MaterialCommunityIcons
-                              name={
-                                selectedDirection === 'asc'
-                                  ? 'sort-reverse-variant'
-                                  : 'sort-variant'
-                              }
-                              size={16}
-                              color={colors.white}
-                            />
-                          }
-                        />
-                      )}
-                    </View>
-                  )
-                })}
+                <FilterBadge
+                  text={sortMap[selectedItem as sortMapType]}
+                  onPress={handleOpenOrderSelectionModal}
+                  Icon={
+                    <MaterialCommunityIcons
+                      name={
+                        selectedOrder === 'asc'
+                          ? 'sort-reverse-variant'
+                          : 'sort-variant'
+                      }
+                      size={16}
+                      color={colors.white}
+                    />
+                  }
+                />
+                <FilterBadge
+                  text={ratingSourceMap[params.preferred_rating]}
+                  removable={false}
+                  onPress={handleOpenRatingSourceSelectionModal}
+                  Icon={<Ionicons name="star" color={colors.white} />}
+                />
+                <FilterBadge
+                  text={genderMap[selectedGender]}
+                  removable={false}
+                  onPress={handleOpenGenderSelectionModal}
+                  Icon={<Ionicons name="person" color={colors.white} />}
+                />
               </ScrollView>
             </View>
 
@@ -248,11 +283,24 @@ export default function CastStats() {
           </View>
         </SafeAreaView>
       </Container>
-
-      <CastFiltersModal
-        modalRef={filterModalRef}
-        setParams={setParams}
-        selectedFilters={params}
+      <OrderSelectionModal
+        currentSelection={params.sort_by}
+        modalRef={orderSelectionModalRef}
+        onChange={handleOrderDirectionChange}
+      />
+      <FilterSelectionModal
+        filterTitle="Gênero"
+        modalRef={genderSelectionModalRef}
+        currentSelection={selectedGender}
+        onChange={handleGenderChange}
+        items={GENDER_OPTIONS}
+      />
+      <FilterSelectionModal
+        filterTitle="Notas por:"
+        currentSelection={params.preferred_rating}
+        modalRef={ratingSelectionModalRef}
+        onChange={handleRatingSourceChange}
+        items={RATING_SOURCES_OPTIONS}
       />
     </>
   )

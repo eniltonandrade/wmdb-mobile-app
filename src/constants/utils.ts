@@ -45,32 +45,57 @@ export const AGGREGATION_SORTING_OPTIONS = [
 export const RATING_SOURCES_OPTIONS = [
   {
     name: 'IMDB',
-    key: 'imdb_rating',
+    id: 'imdb_rating',
   },
   {
     name: 'TMDB',
-    key: 'tmdb_rating',
+    id: 'tmdb_rating',
   },
   {
     name: 'Rotten Tomatoes',
-    key: 'rotten_tomatoes_rating',
+    id: 'rotten_tomatoes_rating',
   },
   {
     name: 'Metacritic',
-    key: 'metacritic_rating',
+    id: 'metacritic_rating',
   },
 ]
 
+export const GENDER_OPTIONS = [
+  {
+    id: 'todos',
+    name: 'Todos',
+  },
+  {
+    id: '1',
+    name: 'Mulheres',
+  },
+  {
+    id: '2',
+    name: 'Homens',
+  },
+]
+
+export const genderMap = GENDER_OPTIONS.reduce(
+  (acc, { id, name }) => {
+    acc[id] = name
+    return acc
+  },
+  {} as Record<string, string>,
+)
+
+export type genderMapType = keyof typeof genderMap
+
 export const sortMap = {
-  count: 'Total de Filmes',
+  count: 'Total',
   average: 'Nota Média',
 }
 
 export type sortMapType = keyof typeof sortMap
 
 export const ratingSourceMap = RATING_SOURCES_OPTIONS.reduce(
-  (acc, { key, name }) => {
-    acc[key] = name
+  (acc, { id, name }) => {
+    acc[id] = name
     return acc
   },
   {} as Record<string, string>,

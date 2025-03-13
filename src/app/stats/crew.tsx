@@ -14,31 +14,32 @@ import {
 import { ScrollView } from 'react-native-gesture-handler'
 import colors from 'tailwindcss/colors'
 
-import CastFiltersModal from '@/components/CastFilterModal'
+import FilterSelectionModal from '@/components/filtering/FilterSelectionModal'
+import OrderSelectionModal from '@/components/filtering/OrderSelectionModal'
 import { Skeleton } from '@/components/Skeleton'
 import Avatar from '@/components/ui/Avatar'
 import { Container } from '@/components/ui/Container'
 import FilterBadge from '@/components/ui/FilterBadge'
-import { fetchCrewStats, QueryParams } from '@/services/api/fetch-crew-stats'
+import {
+  GENDER_OPTIONS,
+  genderMap,
+  RATING_SOURCES_OPTIONS,
+  ratingSourceMap,
+  sortMap,
+  sortMapType,
+} from '@/constants/utils'
+import {
+  fetchCrewStats,
+  PreferredRatingType,
+  QueryParams,
+  SortType,
+} from '@/services/api/fetch-crew-stats'
 import { tmdbImage } from '@/utils/image'
 
-type queryParamsKeys = keyof QueryParams
-
-const sortMap = {
-  count: 'Total',
-  average: 'Nota Média',
-}
-const ratingMap = {
-  imdb_rating: 'Nota IMDB',
-  tmdb_rating: 'Nota TMDB',
-  rotten_tomatoes_rating: 'Nota Rotten Tomatoes',
-  metacritic_rating: 'Nota Metacritic',
-}
-
-type sortMapType = keyof typeof sortMap
-
 export default function CrewStats() {
-  const filterModalRef = useRef<BottomSheetModal>(null)
+  const ratingSelectionModalRef = useRef<BottomSheetModal>(null)
+  const orderSelectionModalRef = useRef<BottomSheetModal>(null)
+  const genderSelectionModalRef = useRef<BottomSheetModal>(null)
   const [params, setParams] = useState<QueryParams>({
     sort_by: 'count.desc',
     preferred_rating: 'imdb_rating',
@@ -82,23 +83,63 @@ export default function CrewStats() {
     return 'text-red-400'
   }
 
-  function handleRemoveFilter(key: queryParamsKeys) {
-    router.setParams({})
+  function handleRatingSourceChange(key: string) {
     setParams((prev) => {
-      delete prev[key]
       return {
         ...prev,
+        preferred_rating: key as PreferredRatingType,
       }
     })
+    ratingSelectionModalRef.current?.close()
   }
 
-  function handleOpenFilterModal() {
-    filterModalRef.current?.present()
+  function handleOrderDirectionChange(direction: string, key: string) {
+    const sortBy = (key + '.' + direction) as SortType
+    setParams((prev) => {
+      return {
+        ...prev,
+        sort_by: sortBy,
+      }
+    })
+    orderSelectionModalRef.current?.close()
+  }
+
+  function handleGenderChange(id: string) {
+    if (id === 'todos') {
+      setParams((prev) => {
+        delete prev.gender
+        return {
+          ...prev,
+        }
+      })
+    } else {
+      setParams((prev) => {
+        return {
+          ...prev,
+          gender: Number(id),
+        }
+      })
+    }
+
+    genderSelectionModalRef.current?.close()
+  }
+
+  function handleOpenRatingSourceSelectionModal() {
+    ratingSelectionModalRef.current?.present()
+  }
+  function handleOpenOrderSelectionModal() {
+    orderSelectionModalRef.current?.present()
+  }
+
+  function handleOpenGenderSelectionModal() {
+    genderSelectionModalRef.current?.present()
   }
 
   const isFullyLoaded = total === data?.length
 
-  const [selectedOrder, selectedDirection] = params.sort_by.split('.')
+  const [selectedItem, selectedOrder] = params.sort_by.split('.')
+
+  const selectedGender = params.gender ? params.gender : 'todos'
 
   return (
     <>
@@ -115,58 +156,43 @@ export default function CrewStats() {
                   Diretores
                 </Text>
               </View>
-              <TouchableOpacity onPress={handleOpenFilterModal}>
-                <Ionicons name="options" size={22} color={colors.white} />
-              </TouchableOpacity>
             </View>
             <View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View className="bg-gray-900 flex-row py-1 px-2 rounded-md items-center space-x-2 mr-2 mb-4">
-                  <Ionicons name="stats-chart-sharp" color={colors.white} />
-                  <Text className=" font-pbold text-xs text-gray-100">
-                    {total}
-                  </Text>
-                </View>
-                {Object.keys(params).map((param) => {
-                  return (
-                    <View key={param}>
-                      {param === 'preferred_rating' && (
-                        <FilterBadge
-                          onRemoval={() =>
-                            handleRemoveFilter(param as queryParamsKeys)
-                          }
-                          text={params[param] && ratingMap[params[param]]}
-                          removable={false}
-                        />
-                      )}
-                      {param === 'gender' && (
-                        <FilterBadge
-                          onRemoval={() =>
-                            handleRemoveFilter(param as queryParamsKeys)
-                          }
-                          text={params[param] === 1 ? 'Atrizes' : 'Atores'}
-                          removable
-                        />
-                      )}
-                      {param === 'sort_by' && (
-                        <View className="bg-gray-900 flex-row rounded-md py-1 px-2 items-center space-x-2 mb-4 h-[26px]">
-                          <MaterialCommunityIcons
-                            name={
-                              selectedDirection === 'asc'
-                                ? 'sort-reverse-variant'
-                                : 'sort-variant'
-                            }
-                            size={16}
-                            color={colors.white}
-                          />
-                          <Text className=" font-pbold text-xs text-gray-100">
-                            {sortMap[selectedOrder as sortMapType]}
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-                  )
-                })}
+                <FilterBadge
+                  text={`${total} Items`}
+                  removable={false}
+                  Icon={
+                    <Ionicons name="stats-chart-sharp" color={colors.white} />
+                  }
+                />
+                <FilterBadge
+                  text={sortMap[selectedItem as sortMapType]}
+                  onPress={handleOpenOrderSelectionModal}
+                  Icon={
+                    <MaterialCommunityIcons
+                      name={
+                        selectedOrder === 'asc'
+                          ? 'sort-reverse-variant'
+                          : 'sort-variant'
+                      }
+                      size={16}
+                      color={colors.white}
+                    />
+                  }
+                />
+                <FilterBadge
+                  text={ratingSourceMap[params.preferred_rating]}
+                  removable={false}
+                  onPress={handleOpenRatingSourceSelectionModal}
+                  Icon={<Ionicons name="star" color={colors.white} />}
+                />
+                <FilterBadge
+                  text={genderMap[selectedGender]}
+                  removable={false}
+                  onPress={handleOpenGenderSelectionModal}
+                  Icon={<Ionicons name="person" color={colors.white} />}
+                />
               </ScrollView>
             </View>
 
@@ -207,7 +233,6 @@ export default function CrewStats() {
                       },
                     }}
                     asChild
-                    key={item.id}
                     className="bg-gray-900 rounded-lg p-4 my-2 flex-row justify-start items-center"
                   >
                     <TouchableOpacity
@@ -221,7 +246,7 @@ export default function CrewStats() {
 
                         <Avatar
                           size="sm"
-                          uri={tmdbImage(item.profile_path, 'w500')}
+                          uri={tmdbImage(item.profile_path, 'w154')}
                         />
                       </View>
                       <View className="flex-1 ml-4 flex-row justify-between items-center">
@@ -235,7 +260,7 @@ export default function CrewStats() {
                             </Text>
                           ) : (
                             <Text className="text-gray-400 text-xs font-psemibold">
-                              Média: {item.average}
+                              Média: {item.average.toFixed(1)}
                             </Text>
                           )}
                         </View>
@@ -259,11 +284,24 @@ export default function CrewStats() {
           </View>
         </SafeAreaView>
       </Container>
-
-      <CastFiltersModal
-        modalRef={filterModalRef}
-        setParams={setParams}
-        selectedFilters={params}
+      <OrderSelectionModal
+        currentSelection={params.sort_by}
+        modalRef={orderSelectionModalRef}
+        onChange={handleOrderDirectionChange}
+      />
+      <FilterSelectionModal
+        filterTitle="Gênero"
+        modalRef={genderSelectionModalRef}
+        currentSelection={selectedGender}
+        onChange={handleGenderChange}
+        items={GENDER_OPTIONS}
+      />
+      <FilterSelectionModal
+        filterTitle="Notas por:"
+        currentSelection={params.preferred_rating}
+        modalRef={ratingSelectionModalRef}
+        onChange={handleRatingSourceChange}
+        items={RATING_SOURCES_OPTIONS}
       />
     </>
   )

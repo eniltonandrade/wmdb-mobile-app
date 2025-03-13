@@ -15,12 +15,17 @@ import {
 import { ScrollView } from 'react-native-gesture-handler'
 import colors from 'tailwindcss/colors'
 
+import FilterSelectionModal from '@/components/filtering/FilterSelectionModal'
 import OrderSelectionModal from '@/components/filtering/OrderSelectionModal'
-import RatingSelectionModal from '@/components/filtering/RatingSelectionModal'
 import { Skeleton } from '@/components/Skeleton'
 import { Container } from '@/components/ui/Container'
 import FilterBadge from '@/components/ui/FilterBadge'
-import { ratingSourceMap, sortMap, sortMapType } from '@/constants/utils'
+import {
+  RATING_SOURCES_OPTIONS,
+  ratingSourceMap,
+  sortMap,
+  sortMapType,
+} from '@/constants/utils'
 import { SortType } from '@/services/api/fetch-cast-stats'
 import {
   fetchCompanyStats,
@@ -57,11 +62,11 @@ export default function CompanyStats() {
     orderSelectionModalRef.current?.close()
   }
 
-  function handleRatingSourceChange(key: PreferredRatingType) {
+  function handleRatingSourceChange(id: string) {
     setParams((prev) => {
       return {
         ...prev,
-        preferred_rating: key,
+        preferred_rating: id as PreferredRatingType,
       }
     })
     ratingSelectionModalRef.current?.close()
@@ -262,10 +267,12 @@ export default function CompanyStats() {
         modalRef={orderSelectionModalRef}
         onChange={handleOrderDirectionChange}
       />
-      <RatingSelectionModal
+      <FilterSelectionModal
+        filterTitle="Notas por:"
         currentSelection={params.preferred_rating}
         modalRef={ratingSelectionModalRef}
         onChange={handleRatingSourceChange}
+        items={RATING_SOURCES_OPTIONS}
       />
     </Container>
   )

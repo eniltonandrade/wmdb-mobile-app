@@ -14,7 +14,7 @@ export type PreferredRatingType =
   | 'rotten_tomatoes_rating'
 
 export type QueryParams = {
-  preferred_rating?: PreferredRatingType
+  preferred_rating: PreferredRatingType
   gender?: number
   page?: number
   sort_by: SortType
