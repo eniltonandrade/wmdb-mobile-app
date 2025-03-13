@@ -19,23 +19,11 @@ import { Skeleton } from '@/components/Skeleton'
 import Avatar from '@/components/ui/Avatar'
 import { Container } from '@/components/ui/Container'
 import FilterBadge from '@/components/ui/FilterBadge'
+import { ratingSourceMap, sortMap, sortMapType } from '@/constants/utils'
 import { fetchCastStats, QueryParams } from '@/services/api/fetch-cast-stats'
 import { tmdbImage } from '@/utils/image'
 
 type queryParamsKeys = keyof QueryParams
-
-const sortMap = {
-  count: 'Total',
-  average: 'Nota Média',
-}
-const ratingMap = {
-  imdb_rating: 'Nota IMDB',
-  tmdb_rating: 'Nota TMDB',
-  rotten_tomatoes_rating: 'Nota Rotten Tomatoes',
-  metacritic_rating: 'Nota Metacritic',
-}
-
-type sortMapType = keyof typeof sortMap
 
 export default function CastStats() {
   const filterModalRef = useRef<BottomSheetModal>(null)
@@ -120,22 +108,22 @@ export default function CastStats() {
             </View>
             <View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View className="bg-gray-900 flex-row py-1 px-2 rounded-md items-center space-x-2 mr-2 mb-4">
-                  <Ionicons name="stats-chart-sharp" color={colors.white} />
-                  <Text className=" font-pbold text-xs text-gray-100">
-                    {total}
-                  </Text>
-                </View>
+                <FilterBadge
+                  text={`${total} Artistas`}
+                  removable={false}
+                  Icon={
+                    <Ionicons name="stats-chart-sharp" color={colors.white} />
+                  }
+                />
                 {Object.keys(params).map((param) => {
                   return (
                     <View key={param}>
                       {param === 'preferred_rating' && (
                         <FilterBadge
-                          onRemoval={() =>
-                            handleRemoveFilter(param as queryParamsKeys)
-                          }
-                          text={params[param] && ratingMap[params[param]]}
+                          onPress={handleOpenFilterModal}
+                          text={params[param] && ratingSourceMap[params[param]]}
                           removable={false}
+                          Icon={<Ionicons name="star" color={colors.white} />}
                         />
                       )}
                       {param === 'gender' && (
@@ -143,25 +131,28 @@ export default function CastStats() {
                           onRemoval={() =>
                             handleRemoveFilter(param as queryParamsKeys)
                           }
+                          onPress={handleOpenFilterModal}
                           text={params[param] === 1 ? 'Atrizes' : 'Atores'}
                           removable
+                          Icon={<Ionicons name="person" color={colors.white} />}
                         />
                       )}
                       {param === 'sort_by' && (
-                        <View className="bg-gray-900 flex-row rounded-md py-1 px-2 items-center space-x-2 mb-4 h-[26px]">
-                          <MaterialCommunityIcons
-                            name={
-                              selectedDirection === 'asc'
-                                ? 'sort-reverse-variant'
-                                : 'sort-variant'
-                            }
-                            size={16}
-                            color={colors.white}
-                          />
-                          <Text className=" font-pbold text-xs text-gray-100">
-                            {sortMap[selectedOrder as sortMapType]}
-                          </Text>
-                        </View>
+                        <FilterBadge
+                          text={sortMap[selectedOrder as sortMapType]}
+                          onPress={handleOpenFilterModal}
+                          Icon={
+                            <MaterialCommunityIcons
+                              name={
+                                selectedDirection === 'asc'
+                                  ? 'sort-reverse-variant'
+                                  : 'sort-variant'
+                              }
+                              size={16}
+                              color={colors.white}
+                            />
+                          }
+                        />
                       )}
                     </View>
                   )

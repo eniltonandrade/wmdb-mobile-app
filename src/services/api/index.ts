@@ -12,7 +12,7 @@ export type ApiListResponse<T> = {
 
 export const api = axios.create({
   // baseURL: 'https://wmdb-api-v2.onrender.com/',
-  baseURL: 'http://192.168.0.2:3333/',
+  baseURL: 'http://192.168.0.6:3333/',
   // baseURL: 'http:/9.62.36.197:3333/',
 })
 

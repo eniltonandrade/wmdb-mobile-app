@@ -44,19 +44,19 @@ export const AGGREGATION_SORTING_OPTIONS = [
 
 export const RATING_SOURCES_OPTIONS = [
   {
-    name: 'Nota IMDB',
+    name: 'IMDB',
     key: 'imdb_rating',
   },
   {
-    name: 'Nota TMDB',
+    name: 'TMDB',
     key: 'tmdb_rating',
   },
   {
-    name: 'Nota Rotten Tomatoes',
+    name: 'Rotten Tomatoes',
     key: 'rotten_tomatoes_rating',
   },
   {
-    name: 'Nota Metacritic',
+    name: 'Metacritic',
     key: 'metacritic_rating',
   },
 ]

@@ -10,9 +10,7 @@ export type PreferredRatingType =
 
 export type QueryParams = {
   preferred_rating: PreferredRatingType
-  gender?: number
   page?: number
-  job?: string
   sort_by: SortType
 }
 

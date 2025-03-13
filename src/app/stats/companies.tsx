@@ -38,7 +38,7 @@ export default function CompanyStats() {
     preferred_rating: 'imdb_rating',
   })
 
-  async function fetchCastStatsFn({ pageParam }: { pageParam: number }) {
+  async function fetchCompanyStatsFn({ pageParam }: { pageParam: number }) {
     const res = await fetchCompanyStats({
       page: pageParam,
       params,
@@ -72,8 +72,8 @@ export default function CompanyStats() {
     isLoading,
     fetchNextPage,
   } = useInfiniteQuery({
-    queryKey: ['api', 'stats', 'crew', ...Object.values(params)],
-    queryFn: fetchCastStatsFn,
+    queryKey: ['api', 'stats', 'companies', ...Object.values(params)],
+    queryFn: fetchCompanyStatsFn,
     retry: false,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
@@ -114,7 +114,7 @@ export default function CompanyStats() {
         <View className="px-4 my-4 flex-1">
           {/* Header */}
           <View className="flex flex-row items-center gap-2 mb-4">
-            <TouchableOpacity onPress={() => router.back()}>
+            <TouchableOpacity onPress={router.back}>
               <Feather name="arrow-left" size={24} color={colors.white} />
             </TouchableOpacity>
             <Text className="text-2xl text-white font-pbold ">Estúdios</Text>
@@ -125,34 +125,33 @@ export default function CompanyStats() {
           ) : (
             <View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View className="bg-gray-900 flex-row py-1 px-2 rounded-md items-center space-x-2 mr-2 mb-4">
-                  <Ionicons name="stats-chart-sharp" color={colors.white} />
-                  <Text className=" font-pbold text-xs text-gray-100">
-                    {total} Estúdios
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  activeOpacity={0.7}
+                <FilterBadge
+                  text={`${total} Estúdios`}
+                  removable={false}
+                  Icon={
+                    <Ionicons name="stats-chart-sharp" color={colors.white} />
+                  }
+                />
+                <FilterBadge
+                  text={sortMap[selectedItem as sortMapType]}
                   onPress={handleOpenOrderSelectionModal}
-                  className="bg-gray-900 flex-row rounded-md py-1 px-2 items-center space-x-2 mb-4 h-[26px]"
-                >
-                  <MaterialCommunityIcons
-                    name={
-                      selectedOrder === 'asc'
-                        ? 'sort-reverse-variant'
-                        : 'sort-variant'
-                    }
-                    size={16}
-                    color={colors.white}
-                  />
-                  <Text className=" font-pbold text-xs text-gray-100">
-                    {sortMap[selectedItem as sortMapType]}
-                  </Text>
-                </TouchableOpacity>
+                  Icon={
+                    <MaterialCommunityIcons
+                      name={
+                        selectedOrder === 'asc'
+                          ? 'sort-reverse-variant'
+                          : 'sort-variant'
+                      }
+                      size={16}
+                      color={colors.white}
+                    />
+                  }
+                />
                 <FilterBadge
                   text={ratingSourceMap[params.preferred_rating]}
                   removable={false}
                   onPress={handleOpenRatingSourceSelectionModal}
+                  Icon={<Ionicons name="star" color={colors.white} />}
                 />
               </ScrollView>
             </View>
@@ -228,16 +227,28 @@ export default function CompanyStats() {
                           {item.name}
                         </Text>
 
-                        <Text className="text-gray-400 text-xs font-psemibold">
-                          Filmes Assistidos: {item.count}
-                        </Text>
+                        {selectedItem === 'average' ? (
+                          <Text className="text-gray-400 text-xs font-psemibold">
+                            Filmes Assistidos: {item.count}
+                          </Text>
+                        ) : (
+                          <Text className="text-gray-400 text-xs font-psemibold">
+                            Média: {item.average.toFixed(1)}
+                          </Text>
+                        )}
                       </View>
 
-                      <Text
-                        className={`text-xl font-bold ${getRatingColor(item.average)}`}
-                      >
-                        {item.average.toFixed(1)}
-                      </Text>
+                      {selectedItem === 'average' ? (
+                        <Text
+                          className={`text-xl font-bold ${getRatingColor(item.average)}`}
+                        >
+                          {item.average.toFixed(1)}
+                        </Text>
+                      ) : (
+                        <Text className={`text-xl font-bold text-green-500`}>
+                          {item.count}
+                        </Text>
+                      )}
                     </View>
                   </TouchableOpacity>
                 </Link>

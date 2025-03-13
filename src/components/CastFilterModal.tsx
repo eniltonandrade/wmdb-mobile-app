@@ -84,9 +84,11 @@ export default function CastFiltersModal({
 
   return (
     <Modal ref={modalRef} heightPercentage="85%">
-      <ScrollView showsVerticalScrollIndicator={false} className="flex-1 px-4">
-        <Text className="text-xl font-pbold text-gray-100 mb-4">Filtros</Text>
-        <View>
+      <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+        <View className="border-b-2 border-gray-800 pb-4 mb-4 px-4">
+          <Text className="text-gray-50 font-pbold text-xl">Filtro</Text>
+        </View>
+        <View className=" px-4">
           <Text className="text-base font-psemibold text-gray-100 mb-2">
             Direção
           </Text>
@@ -116,7 +118,7 @@ export default function CastFiltersModal({
             })}
           </View>
         </View>
-        <View className="my-2">
+        <View className="my-2 px-4">
           <Text className="text-base font-psemibold text-gray-100 mb-2">
             Ordenar Por:
           </Text>
@@ -155,7 +157,7 @@ export default function CastFiltersModal({
             })}
           </View>
         </View>
-        <View className="my-2">
+        <View className="my-2 px-4">
           <Text className="text-base font-psemibold text-gray-100 mb-2">
             Notas de:
           </Text>
@@ -202,7 +204,7 @@ export default function CastFiltersModal({
             })}
           </View>
         </View>
-        <View className="my-2">
+        <View className="my-2 px-4">
           <Text className="text-base font-psemibold text-gray-100 mb-2">
             Gênero:
           </Text>

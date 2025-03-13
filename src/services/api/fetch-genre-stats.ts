@@ -1,9 +1,33 @@
 import { api, ApiListResponse } from '.'
+import { SortType } from './fetch-cast-stats'
 import { GenreStats } from './models/genre-stats'
 
-export async function fetchGenreStats() {
+export type PreferredRatingType =
+  | 'imdb_rating'
+  | 'tmdb_rating'
+  | 'metacritic_rating'
+  | 'rotten_tomatoes_rating'
+
+export type QueryParams = {
+  preferred_rating: PreferredRatingType
+  page?: number
+  sort_by: SortType
+}
+
+interface FetchCrewStatsProps {
+  params?: QueryParams | null
+  page: number
+}
+
+export async function fetchGenreStats({ page, params }: FetchCrewStatsProps) {
   const { data } = await api.get<ApiListResponse<GenreStats>>(
-    'user/history/report/genre?sort_by=count.desc&preferred_rating=imdb_rating',
+    'user/history/report/genre',
+    {
+      params: {
+        ...params,
+        page,
+      },
+    },
   )
   return data
 }
