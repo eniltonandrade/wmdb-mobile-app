@@ -1,126 +1,145 @@
-import { FontAwesome } from '@expo/vector-icons'
-import { router } from 'expo-router'
+import { useQuery } from '@tanstack/react-query'
+import { Link } from 'expo-router'
 import {
-  Platform,
   SafeAreaView,
   ScrollView,
-  StatusBar,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native'
-import colors from 'tailwindcss/colors'
 
 import TimeWidget from '@/components/TimeWidget'
 import Avatar from '@/components/ui/Avatar'
+import { Container } from '@/components/ui/Container'
+import { Heading } from '@/components/ui/Heading'
 import YearlyChart from '@/components/YearlyChart'
 import { useSession } from '@/contexts/authContext'
+import { getUserHistoryStats } from '@/services/api/get-user-history-stats'
 
 export default function Profile() {
   const { user } = useSession()
 
-  const androidPaddingCorrection =
-    Platform.OS === 'android' ? StatusBar.currentHeight : 0
+  const { data } = useQuery({
+    queryKey: ['api', 'report', 'user', 'history'],
+    queryFn: () =>
+      getUserHistoryStats({
+        preferred_rating: 'imdb_rating',
+      }),
+  })
 
   return (
-    <SafeAreaView
-      className="bg-primary"
-      style={{ paddingTop: androidPaddingCorrection }}
-    >
-      <ScrollView
-        className="flex space-y-4 pt-8"
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <View className="flex-row justify-between items-center px-4 my-4">
-          <View>
-            <Text className="text-2xl text-white font-pbold ">Perfil</Text>
+    <Container>
+      <SafeAreaView>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <View className="flex-row justify-between items-center px-4 my-4">
+            <View>
+              <Text className="text-2xl text-white font-pbold ">Perfil</Text>
+            </View>
           </View>
-        </View>
-        <View className="flex-row w-100 items-center px-4 my-4 space-x-4">
-          <Avatar size="lg" uri="https://github.com/eniltonandrade.png" />
-          <View className="flex-1">
-            <Text className="text-gray-50 text-xl font-pbold">
-              {user?.name}
-            </Text>
-            {/* Movie Stats */}
-            <View className="flex-row  mt-2 space-x-6">
-              <View className="items-start">
-                <Text className="text-gray-400 text-xs font-pregular">
-                  Total de Filmes
-                </Text>
-                <Text className="text-gray-50 text-lg font-pbold">120</Text>
-              </View>
-              <View className="items-start">
-                <Text className="text-gray-400 text-xs font-pregular">
-                  Nota Média
-                </Text>
-                <Text className="text-gray-50 text-lg font-pbold">6.87</Text>
+          <View className="flex-row w-100 items-center px-4 mb-4 space-x-4">
+            <Avatar size="lg" uri="https://github.com/eniltonandrade.png" />
+            <View className="flex-1">
+              <Text className="text-gray-50 text-xl font-pbold">
+                {user?.name}
+              </Text>
+              {/* Movie Stats */}
+              <View className="flex-row  mt-2 space-x-6">
+                <View className="items-start">
+                  <Text className="text-gray-400 text-xs font-pregular">
+                    Total de Filmes
+                  </Text>
+                  <Text className="text-gray-50 text-lg font-pbold">
+                    {data?.movieCount}
+                  </Text>
+                </View>
+                <View className="items-start">
+                  <Text className="text-gray-400 text-xs font-pregular">
+                    Nota Média
+                  </Text>
+                  <Text className="text-gray-50 text-lg font-pbold">
+                    {data?.averageRating}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
-        </View>
 
-        <Text className="flex text-gray-100 font-pbold items-center justify-center px-4">
-          Tempo assistindo
-        </Text>
-        <TimeWidget totalRunTime={105324} />
-
-        <Text className="flex text-gray-100 font-pbold items-center justify-center mb-4 px-4">
-          Filmes assistidos por ano
-        </Text>
-
-        <YearlyChart />
-
-        <Text className="flex text-gray-100 font-pbold items-center justify-center px-4">
-          Estatísticas
-        </Text>
-
-        <View className="px-4">
-          {/* Stats Links */}
-          <View className="space-y-3">
-            <TouchableOpacity
-              className="bg-gray-800 p-4 rounded-lg flex-row items-center space-x-4"
-              onPress={() => {}}
-            >
-              <FontAwesome name="user" size={16} color={colors.green[500]} />
-              <Text className="text-white font-semibold">Atores e Atrizes</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              className="bg-gray-800 p-4 rounded-lg flex-row items-center space-x-4"
-              onPress={() => {}}
-            >
-              <FontAwesome
-                name="video-camera"
-                size={16}
-                color={colors.green[500]}
-              />
-              <Text className="text-white font-semibold">Diretores</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              className="bg-gray-800 p-4 rounded-lg flex-row items-center space-x-4"
-              onPress={() => router.push('/stats/genres')}
-            >
-              <FontAwesome name="film" size={16} color={colors.green[500]} />
-              <Text className="text-white font-semibold">Gêneros</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              className="bg-gray-800 p-4 rounded-lg flex-row items-center space-x-4"
-              onPress={() => router.push('/stats/genres')}
-            >
-              <FontAwesome
-                name="building"
-                size={16}
-                color={colors.green[500]}
-              />
-              <Text className="text-white font-semibold">Empresas</Text>
-            </TouchableOpacity>
+          <View className="px-2 space-y-4">
+            <Heading size="lg">Tempo assistindo</Heading>
+            {data && data.totalRuntime > 0 && (
+              <TimeWidget totalRunTime={data.totalRuntime} />
+            )}
           </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+
+          <View className="px-2 space-y-4">
+            <Heading size="lg">Filmes assistidos por ano</Heading>
+            <YearlyChart />
+          </View>
+
+          <View className="px-2 mt-4">
+            {/* Stats Links */}
+            <View className="space-y-3">
+              <Heading size="lg">Estatísticas</Heading>
+              <Link
+                href="/stats/cast"
+                className="bg-gray-900 p-4 rounded-lg"
+                asChild
+              >
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  className=" flex-row items-center space-x-4"
+                >
+                  <Text className="text-white font-semibold">
+                    Atores e Atrizes
+                  </Text>
+                </TouchableOpacity>
+              </Link>
+
+              <Link
+                href="/stats/crew"
+                className="bg-gray-900 p-4 rounded-lg"
+                asChild
+              >
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  className=" flex-row items-center space-x-4"
+                >
+                  <Text className="text-white font-semibold">Diretores</Text>
+                </TouchableOpacity>
+              </Link>
+
+              <Link
+                href="/stats/genres"
+                className="bg-gray-900 p-4 rounded-lg"
+                asChild
+              >
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  className=" flex-row items-center space-x-4"
+                >
+                  <Text className="text-white font-semibold">Gêneros</Text>
+                </TouchableOpacity>
+              </Link>
+
+              <Link
+                href="/stats/companies"
+                className="bg-gray-900 p-4 rounded-lg"
+                asChild
+              >
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  className=" flex-row items-center space-x-4"
+                >
+                  <Text className="text-white font-semibold">Estúdios</Text>
+                </TouchableOpacity>
+              </Link>
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </Container>
   )
 }

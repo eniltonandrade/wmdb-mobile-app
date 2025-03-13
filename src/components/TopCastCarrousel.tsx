@@ -1,6 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons'
 import { useQuery } from '@tanstack/react-query'
-import { router } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 
@@ -37,17 +37,19 @@ const TopCastCarrousel = () => {
 
   return (
     <View className="mb-4">
-      <TouchableOpacity
-        activeOpacity={0.7}
-        className="flex-row w-full px-4 pb-4 text-xs items-center"
-      >
-        <Text className="flex text-gray-100 text-lg font-pbold ">
-          Favoritos
-        </Text>
-        <Text className="flex text-gray-400 text-xs font-pregular ml-2">
-          Atores e Atrizes
-        </Text>
-      </TouchableOpacity>
+      <Link asChild href="/stats/cast">
+        <TouchableOpacity
+          activeOpacity={0.7}
+          className="flex-row w-full px-4 pb-4 text-xs items-center"
+        >
+          <Text className="flex text-gray-100 text-lg font-pbold ">
+            Favoritos
+          </Text>
+          <Text className="flex text-gray-400 text-xs font-pregular ml-2">
+            Atores e Atrizes
+          </Text>
+        </TouchableOpacity>
+      </Link>
       {data ? (
         <FlatList
           data={data.casts.slice(0, 10)}
@@ -76,7 +78,7 @@ const TopCastCarrousel = () => {
                 <Avatar
                   size="lg"
                   uri={tmdbImage(item.profile_path || '')}
-                  className="relative mb-2 bg-gray-800"
+                  className="relative mb-2 bg-gray-900"
                 />
 
                 <View className="bg-gray-900 w-[35px] h-[35px] absolute bottom-0 left-0 rounded-full items-center justify-center ">

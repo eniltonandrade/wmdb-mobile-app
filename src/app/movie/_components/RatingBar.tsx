@@ -30,7 +30,7 @@ export default function RatingBar({
     <Animated.View entering={FadeInDown.duration(600)}>
       <View className="w-full px-4 my-6 flex flex-row space-x-4" {...rest}>
         <View className="flex-row items-center space-x-2">
-          <View className="bg-gray-800 p-2 rounded-md">
+          <View className="bg-gray-900 p-2 rounded-md">
             <TmdbLogo height={24} width={24} />
           </View>
           <Text className="text-gray-100 font-pbold text-lg">
@@ -40,7 +40,7 @@ export default function RatingBar({
 
         {Ratings.map((rating) => (
           <View className="flex-row items-center space-x-2" key={rating.Source}>
-            <View className="bg-gray-800 p-2 rounded-md">
+            <View className="bg-gray-900 p-2 rounded-md">
               {mapper[rating.Source]}
             </View>
             <Text className="text-gray-100 font-pbold text-lg">

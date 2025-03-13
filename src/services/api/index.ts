@@ -12,10 +12,16 @@ export type ApiListResponse<T> = {
 
 export const api = axios.create({
   // baseURL: 'https://wmdb-api-v2.onrender.com/',
-  baseURL: 'http://9.62.36.197:3333/',
+  baseURL: 'http://192.168.0.2:3333/',
+  // baseURL: 'http:/9.62.36.197:3333/',
 })
 
-// api.interceptors.request.use(async (config) => {
-//   // await new Promise((resolve) => setTimeout(resolve, 14000))
-//   return config
-// })
+// api.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     console.log(error.response)
+//     if (error.response.status === 401) {
+//       router.replace('/sign-in')
+//     }
+//   },
+// )

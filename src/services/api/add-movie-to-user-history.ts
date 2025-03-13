@@ -16,6 +16,12 @@ export type AddMovieToHistoryProps = {
     | undefined
 }
 
+export type MovieCreated = {
+  created: boolean
+  movieId: string
+  historyId: string
+}
+
 const SOURCES = {
   IMDB: 'Internet Movie Database',
   ROTTEN_TOMATOES: 'Rotten Tomatoes',
@@ -27,14 +33,7 @@ export async function addMovieToUserHistory({
   rating,
   watchedDate,
   ratings,
-}: AddMovieToHistoryProps): Promise<HistoryDetails> {
-  const {
-    genres,
-    production_companies: productionCompanies,
-    casts: { cast, crew },
-    ...data
-  } = movie
-
+}: AddMovieToHistoryProps): Promise<MovieCreated> {
   const imdbRating = ratings?.find(
     (item) => item.Source === SOURCES.IMDB,
   )?.Value
@@ -47,9 +46,9 @@ export async function addMovieToUserHistory({
     (item) => item.Source === SOURCES.METACRITIC,
   )?.Value
 
-  const response = await api.post('movies', {
+  const response = await api.post<ApiResponse<MovieCreated>>('movies', {
     movie: {
-      ...data,
+      ...movie,
       tmdb_rating: convertRating(String(movie.vote_average)),
       imdb_rating: imdbRating ? convertRating(imdbRating) : undefined,
       rotten_tomatoes_rating: rottenTomatoesRating
@@ -61,13 +60,9 @@ export async function addMovieToUserHistory({
     },
   })
 
-  const movieId = response.data.movie.id
+  const { movieId, created } = response.data.result
 
-  const onlyValidCrew = crew.filter(
-    (c) => c.job === 'Director' || c.job === 'Screenplay',
-  )
-
-  const newHistory = await api.post<ApiResponse<HistoryDetails>>(
+  const historyResponse = await api.post<ApiResponse<HistoryDetails>>(
     `user/history/movies`,
     {
       history: {
@@ -78,25 +73,9 @@ export async function addMovieToUserHistory({
     },
   )
 
-  if (response.data.movie.created) {
-    await Promise.all([
-      api.post(`movies/genres/${movieId}`, {
-        genres,
-      }),
-
-      api.post(`movies/companies/${movieId}`, {
-        production_companies: productionCompanies,
-      }),
-    ])
-
-    await api.post(`movies/crew/${movieId}`, {
-      crew: onlyValidCrew,
-    })
-
-    await api.post(`movies/cast/${movieId}`, {
-      cast,
-    })
+  return {
+    movieId,
+    created,
+    historyId: historyResponse.data.result.id,
   }
-
-  return newHistory.data.result
 }

@@ -1,10 +1,7 @@
 import { Feather } from '@expo/vector-icons'
 import { useQuery } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
-import { router } from 'expo-router'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import Toast from 'react-native-toast-message'
 import colors from 'tailwindcss/colors'
 
 import { MoviesCarrousel } from '@/components/MoviesCarrousel'
@@ -14,11 +11,7 @@ import { fetchUseHistory } from '@/services/api/fetch-user-history'
 import { Heading } from './ui/Heading'
 
 export default function RecentHistory() {
-  const {
-    data,
-    isLoading: isRecentHistoryLoading,
-    error: recentHistoryError,
-  } = useQuery({
+  const { data, isLoading: isRecentHistoryLoading } = useQuery({
     queryKey: ['api', 'history'],
     queryFn: () =>
       fetchUseHistory({
@@ -29,21 +22,6 @@ export default function RecentHistory() {
       }),
   })
 
-  useEffect(() => {
-    if (recentHistoryError?.message) {
-      console.log(recentHistoryError)
-      if (recentHistoryError instanceof AxiosError) {
-        Toast.show({
-          type: 'error',
-          text1: `Não foi possível acessar a API.`,
-          text2: recentHistoryError?.response?.data.message,
-        })
-        if (recentHistoryError.response?.status === 401) {
-          router.replace('/sign-in')
-        }
-      }
-    }
-  }, [recentHistoryError])
   return (
     <>
       <TouchableOpacity

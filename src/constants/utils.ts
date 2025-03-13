@@ -1,4 +1,4 @@
-const SORT_LIST = {
+export const SORT_LIST = {
   direction: [
     { name: 'Crescente', key: 'asc' },
     { name: 'Decrescente', key: 'desc' },
@@ -31,4 +31,49 @@ const SORT_LIST = {
   ],
 }
 
-export default { SORT_LIST }
+export const AGGREGATION_SORTING_OPTIONS = [
+  {
+    name: 'Total de Filmes Assistidos',
+    key: 'count',
+  },
+  {
+    name: 'Média das Notas',
+    key: 'average',
+  },
+]
+
+export const RATING_SOURCES_OPTIONS = [
+  {
+    name: 'Nota IMDB',
+    key: 'imdb_rating',
+  },
+  {
+    name: 'Nota TMDB',
+    key: 'tmdb_rating',
+  },
+  {
+    name: 'Nota Rotten Tomatoes',
+    key: 'rotten_tomatoes_rating',
+  },
+  {
+    name: 'Nota Metacritic',
+    key: 'metacritic_rating',
+  },
+]
+
+export const sortMap = {
+  count: 'Total de Filmes',
+  average: 'Nota Média',
+}
+
+export type sortMapType = keyof typeof sortMap
+
+export const ratingSourceMap = RATING_SOURCES_OPTIONS.reduce(
+  (acc, { key, name }) => {
+    acc[key] = name
+    return acc
+  },
+  {} as Record<string, string>,
+)
+
+export type ratingSourceMapType = keyof typeof ratingSourceMap

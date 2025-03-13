@@ -1,10 +1,10 @@
-import { View, Image, ImageProps } from 'react-native'
-import React from 'react'
 import { Feather } from '@expo/vector-icons'
+import React from 'react'
+import { Image, ImageProps, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 
 export type AvatarProps = {
-  uri: string
+  uri: string | null
   size: 'sm' | 'md' | 'lg'
 } & ImageProps
 
@@ -23,11 +23,12 @@ export default function Avatar({ uri, size, ...props }: AvatarProps) {
           source={{ uri }}
           height={SIZES[size]}
           width={SIZES[size]}
-          className="rounded-full bg-gray-800"
+          className="rounded-full bg-gray-900"
           alt="avatar"
         />
       ) : (
         <View
+          {...props}
           className={`rounded-full bg-gray-900 items-center justify-center`}
           style={{ height: SIZES[size], width: SIZES[size] }}
         >

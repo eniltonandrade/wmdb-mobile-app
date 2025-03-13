@@ -34,7 +34,7 @@ export default function MovieActionsModal({
             </Text>
           </View>
           <TouchableOpacity
-            className="bg-gray-800 p-2 rounded-lg"
+            className="bg-gray-900 p-2 rounded-lg"
             onPress={() => modalRef.current?.close()}
           >
             <FontAwesome name="close" color={colors.gray[100]} size={18} />

@@ -1,5 +1,5 @@
-import { Text, Pressable } from 'react-native'
 import React, { ComponentProps } from 'react'
+import { Pressable, Text } from 'react-native'
 import Animated, { FadeInRight } from 'react-native-reanimated'
 
 type BadgeProps = {

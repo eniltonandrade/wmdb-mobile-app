@@ -1,74 +1,82 @@
 import { useFont } from '@shopify/react-native-skia'
 import { useQuery } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
-import { router } from 'expo-router'
-import { useEffect } from 'react'
+import { useMemo } from 'react'
 import { View } from 'react-native'
-import Toast from 'react-native-toast-message'
 import colors from 'tailwindcss/colors'
 import { Bar, CartesianChart } from 'victory-native'
 
 import { fetchMovieCountByWatchedYear } from '@/services/api/fetch-movie-count-by-watched-year'
 
+import { Skeleton } from './Skeleton'
+
 export default function YearlyChart() {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const font = useFont(require('../assets/fonts/Poppins-Regular.ttf'))
 
-  const { data, error: recentHistoryError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['api', 'report', 'movies', 'count', 'year'],
     queryFn: () => fetchMovieCountByWatchedYear(),
   })
 
-  useEffect(() => {
-    if (recentHistoryError?.message) {
-      console.log(recentHistoryError.message)
-      if (recentHistoryError instanceof AxiosError) {
-        console.log(recentHistoryError.response?.data)
-        Toast.show({
-          type: 'error',
-          text1: `Não foi possível acessar a API.`,
-          text2: recentHistoryError?.response?.data.message,
-        })
-        if (recentHistoryError.response?.status === 401) {
-          router.replace('/sign-in')
-        }
-      }
-    }
-  }, [recentHistoryError])
+  const filledData = useMemo(() => {
+    if (!data) return []
+    const currentYear = new Date().getFullYear()
+    const startYear = currentYear - 9 // Last 10 years including the current year
 
-  if (!data) {
-    return null
-  }
+    const yearMap = new Map(data.map((d) => [d.year, d]))
+
+    const filledData = []
+    for (let year = startYear; year <= currentYear; year++) {
+      filledData.push(yearMap.get(year) || { year, count: null, average: 0 })
+    }
+
+    return filledData
+  }, [data])
 
   return (
-    <View className="h-[150px]">
-      <CartesianChart
-        data={data}
-        domainPadding={{ right: 40, left: 10, top: 15 }}
-        padding={{ left: 0 }}
-        xKey="year"
-        yKeys={['count']}
-        axisOptions={{
-          font,
-          labelColor: 'white',
-          labelOffset: {
-            x: 8,
-            y: 8,
-          },
-          formatYLabel: () => '',
-        }}
-      >
-        {({ points, chartBounds }) => (
-          <Bar
-            points={points.count}
-            chartBounds={chartBounds}
-            color={colors.green[500]}
-            animate={{ type: 'timing', duration: 1000 }}
-            roundedCorners={{ topLeft: 5, topRight: 5 }}
-            labels={{ font, position: 'top', color: 'white' }}
-          />
-        )}
-      </CartesianChart>
+    <View className="h-[150px] mt-4">
+      {isLoading && !data ? (
+        <View className="flex-row space-x-2 items-end">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              height={Math.random() * (150 - 50) + 50}
+              className={`w-6`}
+            />
+          ))}
+        </View>
+      ) : (
+        <View className="w-full h-[160px] ml-[-25px] ">
+          <CartesianChart
+            data={filledData}
+            domainPadding={{ right: 15, left: 20, top: 20, bottom: 1 }}
+            padding={{ left: 0 }}
+            domain={{ x: [2016, 2025] }}
+            xKey="year"
+            yKeys={['count']}
+            axisOptions={{
+              font,
+              labelColor: 'white',
+              labelOffset: {
+                x: 8,
+                y: 8,
+              },
+              formatYLabel: () => '',
+            }}
+          >
+            {({ points, chartBounds }) => (
+              <Bar
+                points={points.count}
+                chartBounds={chartBounds}
+                color={colors.green[500]}
+                animate={{ type: 'timing', duration: 1000 }}
+                roundedCorners={{ topLeft: 3, topRight: 3 }}
+                labels={{ font, position: 'top', color: 'white' }}
+              />
+            )}
+          </CartesianChart>
+        </View>
+      )}
     </View>
   )
 }

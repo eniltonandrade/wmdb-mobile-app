@@ -6,7 +6,7 @@ type Props = {
   totalRunTime: number
 }
 
-export default function TimeWidget({ totalRunTime = 0 }: Props) {
+export default function TimeWidget({ totalRunTime }: Props) {
   const MINUTES_IN_HOUR = 60
   const HOURS_IN_DAY = 24
   const DAYS_IN_MONTH = 30 // Approximate

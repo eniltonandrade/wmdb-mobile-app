@@ -10,8 +10,8 @@ import Animated, {
 import colors from 'tailwindcss/colors'
 
 type SkeletonProps = {
-  width: number
-  height: number
+  width?: number
+  height?: number
 }
 
 export function Skeleton({

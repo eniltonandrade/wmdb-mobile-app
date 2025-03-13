@@ -1,5 +1,3 @@
-import 'react-native-reanimated'
-
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useFonts } from 'expo-font'
@@ -26,7 +24,6 @@ export default function RootLayout() {
     'Poppins-SemiBold': require('../assets/fonts/Poppins-SemiBold.ttf'),
     'Poppins-Thin': require('../assets/fonts/Poppins-Thin.ttf'),
   })
-
   const toastConfig = {
     success: ({ ...rest }) => (
       <BaseToast
@@ -102,6 +99,19 @@ export default function RootLayout() {
                   name="stats/genres"
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                  name="stats/cast"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="stats/crew"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="stats/companies"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="movies" options={{ headerShown: false }} />
               </Stack>
             </AppProvider>
           </SessionProvider>

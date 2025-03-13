@@ -1,4 +1,4 @@
-import 'react-native-reanimated'
+import '../../reanimateConfig'
 
 import { Redirect, router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -12,11 +12,14 @@ import { useSession } from '@/contexts/authContext'
 const Welcome = () => {
   const { user, session, isLoading } = useSession()
 
+  // console.log('user', user)
+  // console.log('session', session)
+
   if (isLoading && !user) {
     return <LogoLoading />
   }
 
-  if (user && session) {
+  if (user && user?.name && session) {
     return <Redirect href="/home" />
   }
 

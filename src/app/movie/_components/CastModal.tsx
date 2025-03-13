@@ -28,7 +28,7 @@ export default function CastModal({ modalRef, cast }: CastModalProps) {
           keyExtractor={(item) => String(item.cast_id)}
           renderItem={({ item }) => {
             return (
-              <View className="bg-gray-800 rounded-lg w-full flex-row px-4 py-2 mb-4 space-x-4 items-center">
+              <View className="bg-gray-900 rounded-lg w-full flex-row px-4 py-2 mb-4 space-x-4 items-center">
                 <Avatar size="md" uri={tmdbImage(item.profile_path)} />
                 <View className="flex-1">
                   <Text className="text-gray-100  font-pbold">{item.name}</Text>

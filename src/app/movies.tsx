@@ -1,6 +1,9 @@
-import { Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { router } from 'expo-router'
+import { useGlobalSearchParams } from 'expo-router/build/hooks'
 import { useRef, useState } from 'react'
-import { Pressable, SafeAreaView, Text, View } from 'react-native'
+import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+import { Pressable } from 'react-native-gesture-handler'
 import colors from 'tailwindcss/colors'
 
 import {
@@ -10,13 +13,29 @@ import {
 import { Container } from '@/components/ui/Container'
 import { type queryParams } from '@/services/api/fetch-user-history'
 
-export default function History() {
+export default function Movies() {
+  const { genre_id, name, company_id } = useGlobalSearchParams<{
+    genre_id?: string
+    company_id?: string
+    name: string
+    count: string
+    average: string
+  }>()
+
+  const initialParams = {
+    sort_by: 'watched_date.desc',
+    ...Object.fromEntries(
+      Object.entries({ genre_id, company_id }).filter(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ([_, value]) => value !== undefined,
+      ),
+    ),
+  } as queryParams // Type assertion to satisfy TypeScript
+
   const movieHistoryListRef = useRef<MovieHistoryListRef>(null)
   const [displayMethod, setDisplayMethod] = useState<'LIST' | 'GRID'>('LIST')
 
-  const [params, setParams] = useState<queryParams>({
-    sort_by: 'watched_date.desc',
-  })
+  const [params, setParams] = useState<queryParams>(initialParams)
 
   function handleOpenFilterModal() {
     movieHistoryListRef.current?.openFilterModal()
@@ -25,12 +44,16 @@ export default function History() {
   function toggleViewMethod() {
     setDisplayMethod(displayMethod === 'GRID' ? 'LIST' : 'GRID')
   }
+
   return (
     <Container>
       <SafeAreaView className="flex-1">
         <View className="flex-row justify-between items-center px-4 my-4">
-          <View>
-            <Text className="text-2xl text-white font-pbold ">History</Text>
+          <View className="flex flex-row items-center gap-2">
+            <TouchableOpacity onPress={router.back}>
+              <Feather name="arrow-left" size={24} color={colors.white} />
+            </TouchableOpacity>
+            <Text className="text-2xl text-white font-pbold ">{name}</Text>
           </View>
           <View className="flex-row space-x-4">
             <Pressable onPress={toggleViewMethod}>
@@ -54,6 +77,7 @@ export default function History() {
         <MovieHistoryList
           ref={movieHistoryListRef}
           displayMethod={displayMethod}
+          selectedName={name}
           params={params}
           setParams={setParams}
         />

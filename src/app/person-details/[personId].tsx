@@ -120,7 +120,7 @@ export default function PersonDetails() {
                     source={{
                       uri: tmdbImage(personDetails.profile_path, 'w154'),
                     }}
-                    className="rounded-md bg-gray-800 max-w-sm"
+                    className="rounded-md bg-gray-900 max-w-sm"
                     resizeMode={'cover'}
                     height={160}
                     alt={personDetails.name}

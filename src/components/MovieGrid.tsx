@@ -1,4 +1,5 @@
 import { Feather, FontAwesome } from '@expo/vector-icons'
+import { Link } from 'expo-router'
 import {
   ActivityIndicator,
   FlatList,
@@ -17,7 +18,6 @@ type MovieGridsProps = {
   items: HistoryDetails[]
   fetchNextPage: () => void
   openMovieActions: (id: string) => void
-  handleNavigate: (id: number) => void
   listHeader?: JSX.Element
   isFullyLoaded: boolean
 }
@@ -26,7 +26,6 @@ const MovieGrid = ({
   items,
   openMovieActions,
   fetchNextPage,
-  handleNavigate,
   listHeader,
   isFullyLoaded,
 }: MovieGridsProps) => {
@@ -60,39 +59,42 @@ const MovieGrid = ({
       onEndReachedThreshold={0.1}
       renderItem={({ item }) => (
         <View className="w-[33%] mb-4 px-2">
-          <TouchableOpacity
+          <Link
+            href={`/movie/${item.movie.tmdbId}`}
+            asChild
             className="relative"
-            onPress={() => handleNavigate(item.movie.tmdbId)}
           >
-            {item.movie.posterPath && (
-              <Image
-                source={{ uri: tmdbImage(item.movie.posterPath, 'w500') }}
-                className="rounded-md bg-gray-800"
-                resizeMode={'cover'}
-                height={160}
-                alt={item.movie.title}
-              />
-            )}
-            <View className="absolute bg-black/70 right-1 top-1 px-1 py-0.5 rounded-md">
-              <Text className="text-gray-50 text-xs font-pbold">
-                {item.movie.tmdbRating?.toFixed(1) || '0.0'}
-              </Text>
-            </View>
-            {item.rating?.toString() && (
-              <View className="absolute bg-secondary-100 items-center justify-center right-3 bottom-[-6] h-7 w-7 rounded-full border-primary border-4 z-10">
-                <Text className="text-gray-50 text-xs font-pmedium  text-shad">
-                  {item.rating}
+            <TouchableOpacity activeOpacity={0.7}>
+              {item.movie.posterPath && (
+                <Image
+                  source={{ uri: tmdbImage(item.movie.posterPath, 'w500') }}
+                  className="rounded-md bg-gray-900"
+                  resizeMode={'cover'}
+                  height={160}
+                  alt={item.movie.title}
+                />
+              )}
+              <View className="absolute bg-black/70 right-1 top-1 px-1 py-0.5 rounded-md">
+                <Text className="text-gray-50 text-xs font-pbold">
+                  {item.movie.tmdbRating?.toFixed(1) || '0.0'}
                 </Text>
               </View>
-            )}
-            {item.date && (
-              <View className="absolute bg-secondary-200 items-center justify-center right-[-4] bottom-[-6] h-7 w-7 rounded-full border-primary border-4">
-                <Text className="text-gray-50 text-xs font-pmedium  text-shad">
-                  <FontAwesome name="eye" />
-                </Text>
-              </View>
-            )}
-          </TouchableOpacity>
+              {item.rating?.toString() && (
+                <View className="absolute bg-secondary-100 items-center justify-center right-3 bottom-[-6] h-7 w-7 rounded-full border-primary border-4 z-10">
+                  <Text className="text-gray-50 text-xs font-pmedium  text-shad">
+                    {item.rating}
+                  </Text>
+                </View>
+              )}
+              {item.date && (
+                <View className="absolute bg-secondary-200 items-center justify-center right-[-4] bottom-[-6] h-7 w-7 rounded-full border-primary border-4">
+                  <Text className="text-gray-50 text-xs font-pmedium  text-shad">
+                    <FontAwesome name="eye" />
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          </Link>
           <View className="mt-2 flex-row items-start">
             <View className="flex flex-col">
               <Text

@@ -22,7 +22,7 @@ export default function UserActions({
     <View className="w-full flex flex-row space-x-4 mt-4 ">
       <View className="flex-row items-center space-x-2">
         <TouchableOpacity
-          className={`bg-gray-800 p-2 rounded-md`}
+          className={`bg-gray-900 p-2 rounded-md`}
           activeOpacity={0.8}
           onPress={handleOpenHistoryModal}
         >
@@ -45,7 +45,7 @@ export default function UserActions({
       {watchedDate && (
         <View className="flex-row items-center space-x-2">
           <TouchableOpacity
-            className={`bg-gray-800 p-2 rounded-md`}
+            className={`bg-gray-900 p-2 rounded-md`}
             activeOpacity={0.8}
             onPress={handleOpenUserRatingModal}
           >

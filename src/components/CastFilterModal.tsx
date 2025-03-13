@@ -4,24 +4,26 @@ import { useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 
 import { SORT_LIST } from '@/constants/utils'
-import { useApp } from '@/contexts/appContext'
-import { queryParams, SortType } from '@/services/api/fetch-user-history'
+import {
+  PreferredRatingType,
+  QueryParams,
+  SortType,
+} from '@/services/api/fetch-cast-stats'
 
 import Button from './ui/Button'
 import { Modal } from './ui/Modal'
 
-type HistoryFiltersModalProps = {
+type CastFiltersModalProps = {
   modalRef: React.RefObject<BottomSheetModalMethods>
-  setParams: React.Dispatch<React.SetStateAction<queryParams>>
-  selectedFilters: queryParams
+  setParams: React.Dispatch<React.SetStateAction<QueryParams>>
+  selectedFilters: QueryParams
 }
 
-export default function HistoryFiltersModal({
+export default function CastFiltersModal({
   modalRef,
   selectedFilters,
   setParams,
-}: HistoryFiltersModalProps) {
-  const { genres } = useApp()
+}: CastFiltersModalProps) {
   const [filters, setFilters] = useState(selectedFilters)
 
   const [selectedField, selectedOrder] = filters.sort_by.split('.')
@@ -33,15 +35,17 @@ export default function HistoryFiltersModal({
 
   function cleanFilters() {
     setFilters({
-      sort_by: 'watched_date.desc',
+      sort_by: 'count.desc',
+      preferred_rating: 'imdb_rating',
     })
     setParams({
-      sort_by: 'watched_date.desc',
+      sort_by: 'count.desc',
+      preferred_rating: 'imdb_rating',
     })
     modalRef.current?.dismiss()
   }
 
-  function handleSelect(section: string, key: string) {
+  function handleSelect(section: string, key: string | number) {
     if (section === 'order') {
       const sortBy = (key + '.' + selectedOrder) as SortType
       setFilters((prev) => {
@@ -60,11 +64,19 @@ export default function HistoryFiltersModal({
         }
       })
     }
-    if (section === 'genre') {
+    if (section === 'preferred_rating') {
       setFilters((prev) => {
         return {
           ...prev,
-          genre_id: key,
+          preferred_rating: key as PreferredRatingType,
+        }
+      })
+    }
+    if (section === 'gender') {
+      setFilters((prev) => {
+        return {
+          ...prev,
+          gender: Number(key),
         }
       })
     }
@@ -109,7 +121,16 @@ export default function HistoryFiltersModal({
             Ordenar Por:
           </Text>
           <View className="flex-row flex-wrap items-center">
-            {SORT_LIST.order.map((dir) => {
+            {[
+              {
+                name: 'Nota',
+                key: 'average',
+              },
+              {
+                name: 'Total',
+                key: 'count',
+              },
+            ].map((dir) => {
               const isSelected = selectedField === dir.key
               return (
                 <Pressable
@@ -136,15 +157,32 @@ export default function HistoryFiltersModal({
         </View>
         <View className="my-2">
           <Text className="text-base font-psemibold text-gray-100 mb-2">
-            Gêneros:
+            Notas de:
           </Text>
           <View className="flex-row flex-wrap items-center">
-            {genres.map((genre) => {
-              const isSelected = filters.genre_id === genre.id
+            {[
+              {
+                name: 'Nota IMDB',
+                key: 'imdb_rating',
+              },
+              {
+                name: 'Nota TMDB',
+                key: 'tmdb_rating',
+              },
+              {
+                name: 'Nota Rotten Tomatoes',
+                key: 'rotten_tomatoes_rating',
+              },
+              {
+                name: 'Nota Metacritic',
+                key: 'metacritic_rating',
+              },
+            ].map((rating) => {
+              const isSelected = filters.preferred_rating === rating.key
               return (
                 <Pressable
-                  onPress={() => handleSelect('genre', genre.id)}
-                  key={genre.id}
+                  onPress={() => handleSelect('preferred_rating', rating.key)}
+                  key={rating.key}
                   className={clsx(
                     `border border-gray-100 rounded-lg p-2 mr-2 mb-2`,
                     {
@@ -157,7 +195,46 @@ export default function HistoryFiltersModal({
                       'text-primary': isSelected,
                     })}
                   >
-                    {genre.name}
+                    {rating.name}
+                  </Text>
+                </Pressable>
+              )
+            })}
+          </View>
+        </View>
+        <View className="my-2">
+          <Text className="text-base font-psemibold text-gray-100 mb-2">
+            Gênero:
+          </Text>
+          <View className="flex-row flex-wrap items-center">
+            {[
+              {
+                name: 'Atores',
+                key: 2,
+              },
+              {
+                name: 'Atrizes',
+                key: 1,
+              },
+            ].map((gender) => {
+              const isSelected = filters.gender === gender.key
+              return (
+                <Pressable
+                  onPress={() => handleSelect('gender', gender.key)}
+                  key={gender.key}
+                  className={clsx(
+                    `border border-gray-100 rounded-lg p-2 mr-2 mb-2`,
+                    {
+                      'bg-secondary border-secondary-100': isSelected,
+                    },
+                  )}
+                >
+                  <Text
+                    className={clsx(`text-xs font-pregular text-gray-100`, {
+                      'text-primary': isSelected,
+                    })}
+                  >
+                    {gender.name}
                   </Text>
                 </Pressable>
               )

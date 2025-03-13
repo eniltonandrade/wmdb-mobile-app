@@ -42,13 +42,14 @@ type MovieHistoryListProps = {
   displayMethod: 'LIST' | 'GRID'
   setParams: React.Dispatch<React.SetStateAction<queryParams>>
   header?: JSX.Element
+  selectedName?: string
 }
 export type MovieHistoryListRef = {
   openFilterModal: () => void
 }
 
 const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
-  ({ params, setParams, displayMethod, header }, ref) => {
+  ({ params, setParams, displayMethod, header, selectedName }, ref) => {
     const filterModalRef = useRef<BottomSheetModal>(null)
     const movieActionsModalRef = useRef<BottomSheetModal>(null)
 
@@ -104,11 +105,6 @@ const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
       return data?.pages.at(0)?.total
     }, [data])
 
-    function handleNavigate(id: number) {
-      router.setParams({ id: String(id) })
-      router.push(`/movie/${id}`)
-    }
-
     const selectedParamKeys = Object.keys(params).filter((p) => p !== 'sort_by')
     const [selectedOrder, selectedDirection] = params.sort_by.split('.')
 
@@ -121,7 +117,7 @@ const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
         {selectedParamKeys && (
           <View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View className="bg-gray-800 flex-row py-1 px-2 rounded-md items-center space-x-2 ml-4 mb-4">
+              <View className="bg-gray-900 flex-row py-1 px-2 rounded-md items-center space-x-2 ml-4 mb-4">
                 <Ionicons name="stats-chart-sharp" color={colors.white} />
                 <Text className=" font-pbold text-xs text-gray-100">
                   {total}
@@ -131,7 +127,7 @@ const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
                 return (
                   <View key={param}>
                     {param === 'genre_id' && (
-                      <View className="bg-gray-800 flex-row py-1 px-2 rounded-md items-center space-x-2 ml-2 mb-4 ">
+                      <View className="bg-gray-900 flex-row py-1 px-2 rounded-md items-center space-x-2 ml-2 mb-4 ">
                         <Ionicons name="filter" color={colors.white} />
                         <Text className=" font-pbold text-xs text-gray-100">
                           {
@@ -155,8 +151,28 @@ const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
                         </Pressable>
                       </View>
                     )}
+                    {param === 'company_id' && (
+                      <View className="bg-gray-900 flex-row py-1 px-2 rounded-md items-center space-x-2 ml-2 mb-4 ">
+                        <Ionicons name="filter" color={colors.white} />
+                        <Text className=" font-pbold text-xs text-gray-100">
+                          {selectedName}
+                        </Text>
+                        <Pressable
+                          className="bg-gray-900 rounded-md"
+                          onPress={() =>
+                            handleRemoveFilter(param as queryParamsKeys)
+                          }
+                        >
+                          <Ionicons
+                            name="close"
+                            size={18}
+                            color={colors.white}
+                          />
+                        </Pressable>
+                      </View>
+                    )}
                     {param === 'sort_by' && (
-                      <View className="bg-gray-800 flex-row py-1 px-2 rounded-md items-center space-x-2 ml-2 mb-4 ">
+                      <View className="bg-gray-900 flex-row py-1 px-2 rounded-md items-center space-x-2 ml-2 mb-4 ">
                         <MaterialCommunityIcons
                           name={
                             selectedDirection === 'asc'
@@ -181,7 +197,6 @@ const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
           {histories && displayMethod === 'GRID' && (
             <MovieGrid
               fetchNextPage={fetchNextPage}
-              handleNavigate={handleNavigate}
               openMovieActions={handleOpenMovieActionsModal}
               items={histories}
               isFullyLoaded={total === histories.length}
@@ -193,7 +208,7 @@ const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
             <MovieList
               fetchNextPage={fetchNextPage}
               openMovieActions={handleOpenMovieActionsModal}
-              handleNavigate={handleNavigate}
+              isFullyLoaded={total === histories.length}
               items={histories}
             />
           )}

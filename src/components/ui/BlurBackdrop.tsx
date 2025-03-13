@@ -1,10 +1,10 @@
-import { StyleSheet } from 'react-native'
 import { BlurView } from 'expo-blur'
 import React from 'react'
+import { StyleSheet } from 'react-native'
 import Animated, {
   Extrapolation,
-  SharedValue,
   interpolate,
+  SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 

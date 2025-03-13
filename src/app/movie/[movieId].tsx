@@ -28,6 +28,7 @@ import {
   AddMovieToHistoryProps,
   addMovieToUserHistory,
 } from '@/services/api/add-movie-to-user-history'
+import { createMovieRelationships } from '@/services/api/create-movie-relationships'
 import { getMovieByExternalId } from '@/services/api/get-movie-by-external-id'
 import { getUserHistoryByMovieId } from '@/services/api/get-user-history-by-movie'
 import { getImdbMovieDetails } from '@/services/omdb/get-imdb-movie-details'
@@ -92,10 +93,17 @@ export default function Movie() {
   const addToHistoryMutation = useMutation({
     mutationFn: async (data: AddMovieToHistoryProps) =>
       await addMovieToUserHistory(data),
-    onSuccess: () =>
+    onSuccess: ({ created, movieId }) => {
+      if (created) {
+        createMovieRelationships({
+          movie: movie!,
+          movieId,
+        })
+      }
       queryClient.invalidateQueries({
         queryKey: ['api', 'history'],
-      }),
+      })
+    },
   })
 
   useEffect(() => {
@@ -470,7 +478,7 @@ export default function Movie() {
       <UserRatingModal
         modalRef={userRatingModalRef}
         movieId={storedMovieData?.movie?.id}
-        historyId={history?.id || addToHistoryMutation.data?.id}
+        historyId={history?.id || addToHistoryMutation.data?.historyId}
         userRating={userRating || 0}
         onChangeRating={setUserRating}
       />
