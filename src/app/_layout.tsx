@@ -88,10 +88,6 @@ export default function RootLayout() {
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="index" options={{ headerShown: false }} />
                 <Stack.Screen
-                  name="movie/[movieId]"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
                   name="person-details/[personId]"
                   options={{ headerShown: false }}
                 />

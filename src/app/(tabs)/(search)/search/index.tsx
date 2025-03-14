@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { router, useLocalSearchParams } from 'expo-router'
+import { Link, router, useLocalSearchParams } from 'expo-router'
 import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import {
@@ -92,30 +92,36 @@ export default function Search() {
                     />
                   </TouchableOpacity>
                 )}
-
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={() => handleNavigate(item.id)}
-                  className="flex-1 border-b-[1px] border-gray-800 pb-4"
+                <Link
+                  href={{
+                    pathname: '/(tabs)/(home)/movie/[movieId]',
+                    params: { movieId: item.id },
+                  }}
+                  asChild
                 >
-                  <Text className="text-gray-400 text-md font-pregular">
-                    {new Date(item.release_date).getFullYear()}
-                  </Text>
-                  <Text
-                    className="text-gray-100 font-pbold text-base leading-5 mb-2"
-                    numberOfLines={2}
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    className="flex-1 border-b-[1px] border-gray-800 pb-4"
                   >
-                    {item.title}
-                  </Text>
-                  <View className="mt-2 flex-row space-x-3 absolute bottom-4">
-                    <View className="flex-row items-center space-x-2">
-                      <TmdbLogo height={22} width={22} />
-                      <Text className="text-gray-100 text-md font-pextrabold">
-                        {item.vote_average.toFixed(1)}
-                      </Text>
+                    <Text className="text-gray-400 text-md font-pregular">
+                      {new Date(item.release_date).getFullYear()}
+                    </Text>
+                    <Text
+                      className="text-gray-100 font-pbold text-base leading-5 mb-2"
+                      numberOfLines={2}
+                    >
+                      {item.title}
+                    </Text>
+                    <View className="mt-2 flex-row space-x-3 absolute bottom-4">
+                      <View className="flex-row items-center space-x-2">
+                        <TmdbLogo height={22} width={22} />
+                        <Text className="text-gray-100 text-md font-pextrabold">
+                          {item.vote_average.toFixed(1)}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
+                  </TouchableOpacity>
+                </Link>
               </View>
             )}
           />

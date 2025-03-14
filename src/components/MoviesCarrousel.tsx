@@ -1,5 +1,5 @@
 import { FontAwesome } from '@expo/vector-icons'
-import { router } from 'expo-router'
+import { Link } from 'expo-router'
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 
@@ -25,11 +25,6 @@ export function MoviesCarrousel({
   movies = [],
   emptyListText,
 }: MovieCarrouselProps) {
-  function handleNavigate(id: number) {
-    router.setParams({ id: String(id) })
-    router.push(`/movie/${id}`)
-  }
-
   return (
     <View className="space-y-4 mb-4">
       <FlatList
@@ -53,39 +48,44 @@ export function MoviesCarrousel({
         renderItem={({ item }) => {
           return (
             <View className="w-[130px] mr-4 space-y-2">
-              <TouchableOpacity
-                className="relative"
-                onPress={() => handleNavigate(item.tmdbId)}
+              <Link
+                href={{
+                  pathname: '/(tabs)/(home)/movie/[movieId]',
+                  params: { movieId: item.tmdbId },
+                }}
+                asChild
               >
-                {item.posterPath && (
-                  <Image
-                    source={{ uri: tmdbImage(item.posterPath, 'w500') }}
-                    className="rounded-md bg-gray-900"
-                    resizeMode={'cover'}
-                    height={210}
-                    alt={item.title}
-                  />
-                )}
-                <View className="absolute bg-black/70 right-1 top-1 px-1 py-0.5 rounded-md">
-                  <Text className="text-gray-50 text-xs font-pbold">
-                    {item.rating?.toFixed(1) || '0.0'}
-                  </Text>
-                </View>
-                {item.userRating?.toString() && (
-                  <View className="absolute bg-secondary-100 items-center justify-center right-3 bottom-[-6] h-7 w-7 rounded-full border-primary border-4 z-10">
-                    <Text className="text-gray-50 text-xs font-pmedium  text-shad">
-                      {item.userRating}
+                <TouchableOpacity className="relative">
+                  {item.posterPath && (
+                    <Image
+                      source={{ uri: tmdbImage(item.posterPath, 'w500') }}
+                      className="rounded-md bg-gray-900"
+                      resizeMode={'cover'}
+                      height={210}
+                      alt={item.title}
+                    />
+                  )}
+                  <View className="absolute bg-black/70 right-1 top-1 px-1 py-0.5 rounded-md">
+                    <Text className="text-gray-50 text-xs font-pbold">
+                      {item.rating?.toFixed(1) || '0.0'}
                     </Text>
                   </View>
-                )}
-                {item.isWatched && (
-                  <View className="absolute bg-secondary-200 items-center justify-center right-[-4] bottom-[-6] h-7 w-7 rounded-full border-primary border-4">
-                    <Text className="text-gray-50 text-xs font-pmedium  text-shad">
-                      <FontAwesome name="eye" />
-                    </Text>
-                  </View>
-                )}
-              </TouchableOpacity>
+                  {item.userRating?.toString() && (
+                    <View className="absolute bg-secondary-100 items-center justify-center right-3 bottom-[-6] h-7 w-7 rounded-full border-primary border-4 z-10">
+                      <Text className="text-gray-50 text-xs font-pmedium  text-shad">
+                        {item.userRating}
+                      </Text>
+                    </View>
+                  )}
+                  {item.isWatched && (
+                    <View className="absolute bg-secondary-200 items-center justify-center right-[-4] bottom-[-6] h-7 w-7 rounded-full border-primary border-4">
+                      <Text className="text-gray-50 text-xs font-pmedium  text-shad">
+                        <FontAwesome name="eye" />
+                      </Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              </Link>
               <View>
                 <Text
                   numberOfLines={2}

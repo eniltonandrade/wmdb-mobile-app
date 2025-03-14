@@ -21,6 +21,11 @@ import colors from 'tailwindcss/colors'
 
 import AnimatedHeader from '@/components/AnimatedHeader'
 import Loading from '@/components/Loading'
+import AddToHistoryModal from '@/components/movie-details/AddToHistoryModal'
+import CastModal from '@/components/movie-details/CastModal'
+import RatingBar from '@/components/movie-details/RatingBar'
+import UserActions from '@/components/movie-details/UserActions'
+import UserRatingModal from '@/components/movie-details/UserRatingModal'
 import Avatar from '@/components/ui/Avatar'
 import Badge from '@/components/ui/Badge'
 import { queryClient } from '@/lib/react-query'
@@ -34,12 +39,6 @@ import { getUserHistoryByMovieId } from '@/services/api/get-user-history-by-movi
 import { getImdbMovieDetails } from '@/services/omdb/get-imdb-movie-details'
 import { getMovieDetails } from '@/services/tmdb/movies'
 import { tmdbImage } from '@/utils/image'
-
-import AddToHistoryModal from './_components/AddToHistoryModal'
-import CastModal from './_components/CastModal'
-import RatingBar from './_components/RatingBar'
-import UserActions from './_components/UserActions'
-import UserRatingModal from './_components/UserRatingModal'
 
 /*
     TODO: Esconder ícone de adicionar a lista quando filme já foi assistido

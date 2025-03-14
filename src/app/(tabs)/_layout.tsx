@@ -2,6 +2,11 @@ import { FontAwesome } from '@expo/vector-icons'
 import { Tabs } from 'expo-router'
 import React from 'react'
 
+export const unstable_settings = {
+  // Ensure any route can link back to `/`
+  initialRouteName: 'index',
+}
+
 export default function TabLayout() {
   return (
     <Tabs
@@ -20,7 +25,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="(home)"
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
@@ -29,7 +34,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="history"
+        name="(history)"
         options={{
           title: 'Historia',
           headerShown: false,
@@ -39,7 +44,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="search/[query]"
+        name="(search)"
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
@@ -48,7 +53,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="(profile)"
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
