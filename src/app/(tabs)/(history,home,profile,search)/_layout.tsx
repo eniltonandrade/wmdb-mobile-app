@@ -86,6 +86,18 @@ export default function StackLayout({ segment }: { segment: string }) {
             headerShown: false,
           }}
         />
+        <Stack.Screen name="stats/genres" options={{ headerShown: false }} />
+        <Stack.Screen name="stats/cast" options={{ headerShown: false }} />
+        <Stack.Screen name="stats/crew" options={{ headerShown: false }} />
+        <Stack.Screen name="stats/companies" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="stats/released-year"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="stats/watched-year"
+          options={{ headerShown: false }}
+        />
       </Stack>
     )
   }

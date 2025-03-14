@@ -1,10 +1,9 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { Link, router } from 'expo-router'
-import { useMemo, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import {
-  ActivityIndicator,
   FlatList,
   SafeAreaView,
   ScrollView,
@@ -20,7 +19,7 @@ import { Skeleton } from '@/components/Skeleton'
 import { Container } from '@/components/ui/Container'
 import FilterBadge from '@/components/ui/FilterBadge'
 import {
-  AGGREGATION_SORTING_OPTIONS,
+  AGGREGATION_SORTING_OPTIONS_YEAR,
   RATING_SOURCES_OPTIONS,
   ratingSourceMap,
   sortMap,
@@ -28,50 +27,24 @@ import {
 } from '@/constants/utils'
 import { SortType } from '@/services/api/fetch-cast-stats'
 import {
-  fetchGenreStats,
-  PreferredRatingType,
+  fetchWatchedYearStats,
   QueryParams,
-} from '@/services/api/fetch-genre-stats'
+} from '@/services/api/fetch-watched-year-stats'
+import { PreferredRatingType } from '@/services/api/models/common'
 
-export default function GenreStats() {
+export default function WatchedYearStats() {
   const orderSelectionModalRef = useRef<BottomSheetModal>(null)
   const ratingSelectionModalRef = useRef<BottomSheetModal>(null)
 
   const [params, setParams] = useState<QueryParams>({
-    sort_by: 'count.desc',
+    sort_by: 'year.desc',
     preferred_rating: 'imdb_rating',
   })
 
-  async function fetchGenreStatsFn({ pageParam }: { pageParam: number }) {
-    const res = await fetchGenreStats({
-      page: pageParam,
-      params,
-    })
-    return res
-  }
-
-  const {
-    data: genreData,
-    isLoading,
-    fetchNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['api', 'stats', 'genres', ...Object.values(params)],
-    queryFn: fetchGenreStatsFn,
-    retry: false,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, pages) => {
-      if (lastPage.results.length < 20) return undefined
-      return pages.length + 1
-    },
+  const { data, isLoading } = useQuery({
+    queryKey: ['api', 'stats', 'years', 'watched', ...Object.values(params)],
+    queryFn: () => fetchWatchedYearStats({ params }),
   })
-
-  const data = useMemo(() => {
-    return genreData?.pages.map((page) => page.results).flat()
-  }, [genreData])
-
-  const total = useMemo(() => {
-    return genreData?.pages.at(0)?.total
-  }, [genreData])
 
   const getRatingColor = (average: number) => {
     if (average >= 7) return 'text-green-400'
@@ -108,20 +81,20 @@ export default function GenreStats() {
     ratingSelectionModalRef.current?.present()
   }
 
-  const isFullyLoaded = total === data?.length
-
-  const [selectedItem, selectedOrder] = params.sort_by.split('.')
+  const [selectedItem, selectedOrder] = params.sort_by?.split('.')
 
   return (
     <Container>
       <SafeAreaView className="flex-grow">
-        <View className="px-4 my-4 flex-1">
+        <View className="px-4 mt-4 flex-1">
           {/* Header */}
           <View className="flex flex-row items-center gap-2 mb-4">
             <TouchableOpacity onPress={router.back}>
               <Feather name="arrow-left" size={24} color={colors.white} />
             </TouchableOpacity>
-            <Text className="text-2xl text-white font-pbold ">Gêneros</Text>
+            <Text className="text-2xl text-white font-pbold ">
+              Assistido em:
+            </Text>
           </View>
 
           {isLoading ? (
@@ -130,7 +103,7 @@ export default function GenreStats() {
             <View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <FilterBadge
-                  text={`${total} Gêneros`}
+                  text={`${data?.results.length}`}
                   removable={false}
                   Icon={
                     <Ionicons name="stats-chart-sharp" color={colors.white} />
@@ -171,21 +144,9 @@ export default function GenreStats() {
             </>
           ) : (
             <FlatList
-              data={data}
-              keyExtractor={(item) => item.id}
-              onEndReached={() => fetchNextPage()}
+              data={data?.results}
+              keyExtractor={(item) => String(item.year)}
               showsVerticalScrollIndicator={false}
-              ListFooterComponent={
-                <>
-                  {!isFullyLoaded && (
-                    <ActivityIndicator
-                      size="small"
-                      className="mt-2"
-                      color={colors.green[500]}
-                    />
-                  )}
-                </>
-              }
               contentContainerStyle={{
                 paddingBottom: 32,
               }}
@@ -194,8 +155,8 @@ export default function GenreStats() {
                   href={{
                     pathname: '/movies',
                     params: {
-                      genre_id: item.id,
-                      name: item.name,
+                      watched_year: item.year,
+                      name: `Assistido em: ${item.year}`,
                       count: item.count,
                       average: item.average,
                     },
@@ -218,7 +179,7 @@ export default function GenreStats() {
                           className="text-white text-lg font-psemibold "
                           numberOfLines={2}
                         >
-                          {item.name}
+                          {item.year}
                         </Text>
 
                         {selectedItem === 'average' ? (
@@ -255,7 +216,7 @@ export default function GenreStats() {
         currentSelection={params.sort_by}
         modalRef={orderSelectionModalRef}
         onChange={handleOrderDirectionChange}
-        items={AGGREGATION_SORTING_OPTIONS}
+        items={AGGREGATION_SORTING_OPTIONS_YEAR}
       />
       <FilterSelectionModal
         filterTitle="Notas por:"

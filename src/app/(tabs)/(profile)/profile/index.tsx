@@ -84,7 +84,7 @@ export default function Profile() {
             <View className="space-y-3">
               <Heading size="lg">Estatísticas</Heading>
               <Link
-                href="/stats/cast"
+                href="/(tabs)/(profile)/stats/cast"
                 className="bg-gray-900 p-4 rounded-lg"
                 asChild
               >
@@ -99,7 +99,7 @@ export default function Profile() {
               </Link>
 
               <Link
-                href="/stats/crew"
+                href="/(tabs)/(profile)/stats/crew"
                 className="bg-gray-900 p-4 rounded-lg"
                 asChild
               >
@@ -112,7 +112,7 @@ export default function Profile() {
               </Link>
 
               <Link
-                href="/stats/genres"
+                href="/(tabs)/(profile)/stats/genres"
                 className="bg-gray-900 p-4 rounded-lg"
                 asChild
               >
@@ -125,7 +125,7 @@ export default function Profile() {
               </Link>
 
               <Link
-                href="/stats/companies"
+                href="/(tabs)/(profile)/stats/companies"
                 className="bg-gray-900 p-4 rounded-lg"
                 asChild
               >
@@ -137,7 +137,7 @@ export default function Profile() {
                 </TouchableOpacity>
               </Link>
               <Link
-                href="/stats/released-year"
+                href="/(tabs)/(profile)/stats/released-year"
                 className="bg-gray-900 p-4 rounded-lg"
                 asChild
               >
@@ -151,7 +151,7 @@ export default function Profile() {
                 </TouchableOpacity>
               </Link>
               <Link
-                href="/stats/watched-year"
+                href="/(tabs)/(profile)/stats/watched-year"
                 className="bg-gray-900 p-4 rounded-lg"
                 asChild
               >

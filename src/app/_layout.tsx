@@ -91,30 +91,7 @@ export default function RootLayout() {
                   name="person-details/[personId]"
                   options={{ headerShown: false }}
                 />
-                <Stack.Screen
-                  name="stats/genres"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="stats/cast"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="stats/crew"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="stats/companies"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="stats/released-year"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="stats/watched-year"
-                  options={{ headerShown: false }}
-                />
+
                 <Stack.Screen name="movies" options={{ headerShown: false }} />
               </Stack>
             </AppProvider>
