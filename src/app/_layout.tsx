@@ -87,11 +87,6 @@ export default function RootLayout() {
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="person-details/[personId]"
-                  options={{ headerShown: false }}
-                />
-
                 <Stack.Screen name="movies" options={{ headerShown: false }} />
               </Stack>
             </AppProvider>

@@ -1,6 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons'
 import { useQuery } from '@tanstack/react-query'
-import { Link, router } from 'expo-router'
+import { Link } from 'expo-router'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 
@@ -30,14 +30,9 @@ const TopCastCarrousel = () => {
     queryFn: () => getCastStats(params),
   })
 
-  function handleNavigateToPersonDetails(id: number) {
-    router.setParams({ id: String(id) })
-    router.push(`/person-details/${id}`)
-  }
-
   return (
     <View className="mb-4">
-      <Link asChild href="/stats/cast">
+      <Link asChild href="/(tabs)/(profile)/stats/cast">
         <TouchableOpacity
           activeOpacity={0.7}
           className="flex-row w-full px-4 pb-4 text-xs items-center"
@@ -71,22 +66,27 @@ const TopCastCarrousel = () => {
           horizontal
           renderItem={({ item, index }) => (
             <View className="w-[90px] mr-4">
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => handleNavigateToPersonDetails(item.tmdbId)}
+              <Link
+                asChild
+                href={{
+                  pathname: '/(tabs)/(home)/person/[personId]',
+                  params: { personId: item.tmdbId },
+                }}
               >
-                <Avatar
-                  size="lg"
-                  uri={tmdbImage(item.profile_path || '')}
-                  className="relative mb-2 bg-gray-900"
-                />
+                <TouchableOpacity activeOpacity={0.7}>
+                  <Avatar
+                    size="lg"
+                    uri={tmdbImage(item.profile_path || '')}
+                    className="relative mb-2 bg-gray-900"
+                  />
 
-                <View className="bg-gray-900 w-[35px] h-[35px] absolute bottom-0 left-0 rounded-full items-center justify-center ">
-                  <Text className="text-white text-xl leading-none font-pbold text-center">
-                    {index + 1}º
-                  </Text>
-                </View>
-              </TouchableOpacity>
+                  <View className="bg-gray-900 w-[35px] h-[35px] absolute bottom-0 left-0 rounded-full items-center justify-center ">
+                    <Text className="text-white text-xl leading-none font-pbold text-center">
+                      {index + 1}º
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </Link>
               <Text className="text-gray-100 text-xs font-psemibold text-center mb-1">
                 {item.name}
               </Text>

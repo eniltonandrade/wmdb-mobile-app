@@ -31,6 +31,12 @@ export default function StackLayout({ segment }: { segment: string }) {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="person/[personId]"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
     )
   }
@@ -45,6 +51,12 @@ export default function StackLayout({ segment }: { segment: string }) {
         />
         <Stack.Screen
           name="movie/[movieId]"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="person/[personId]"
           options={{
             headerShown: false,
           }}
@@ -67,6 +79,12 @@ export default function StackLayout({ segment }: { segment: string }) {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="person/[personId]"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
     )
   }
@@ -82,6 +100,12 @@ export default function StackLayout({ segment }: { segment: string }) {
         />
         <Stack.Screen
           name="movie/[movieId]"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="person/[personId]"
           options={{
             headerShown: false,
           }}
