@@ -111,6 +111,14 @@ export default function RootLayout() {
                   name="stats/companies"
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                  name="stats/released-year"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="stats/watched-year"
+                  options={{ headerShown: false }}
+                />
                 <Stack.Screen name="movies" options={{ headerShown: false }} />
               </Stack>
             </AppProvider>

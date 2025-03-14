@@ -21,6 +21,7 @@ import { Skeleton } from '@/components/Skeleton'
 import { Container } from '@/components/ui/Container'
 import FilterBadge from '@/components/ui/FilterBadge'
 import {
+  AGGREGATION_SORTING_OPTIONS,
   RATING_SOURCES_OPTIONS,
   ratingSourceMap,
   sortMap,
@@ -266,6 +267,7 @@ export default function CompanyStats() {
         currentSelection={params.sort_by}
         modalRef={orderSelectionModalRef}
         onChange={handleOrderDirectionChange}
+        items={AGGREGATION_SORTING_OPTIONS}
       />
       <FilterSelectionModal
         filterTitle="Notas por:"

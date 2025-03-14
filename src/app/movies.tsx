@@ -14,18 +14,26 @@ import { Container } from '@/components/ui/Container'
 import { type queryParams } from '@/services/api/fetch-user-history'
 
 export default function Movies() {
-  const { genre_id, name, company_id } = useGlobalSearchParams<{
-    genre_id?: string
-    company_id?: string
-    name: string
-    count: string
-    average: string
-  }>()
+  const { genre_id, name, company_id, release_year, watched_year } =
+    useGlobalSearchParams<{
+      genre_id?: string
+      release_year?: string
+      watched_year?: string
+      company_id?: string
+      name: string
+      count: string
+      average: string
+    }>()
 
   const initialParams = {
     sort_by: 'watched_date.desc',
     ...Object.fromEntries(
-      Object.entries({ genre_id, company_id }).filter(
+      Object.entries({
+        release_year,
+        genre_id,
+        company_id,
+        watched_year,
+      }).filter(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         ([_, value]) => value !== undefined,
       ),

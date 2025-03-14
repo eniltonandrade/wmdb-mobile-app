@@ -21,6 +21,7 @@ import Avatar from '@/components/ui/Avatar'
 import { Container } from '@/components/ui/Container'
 import FilterBadge from '@/components/ui/FilterBadge'
 import {
+  AGGREGATION_SORTING_OPTIONS,
   GENDER_OPTIONS,
   genderMap,
   RATING_SOURCES_OPTIONS,
@@ -288,6 +289,7 @@ export default function CrewStats() {
         currentSelection={params.sort_by}
         modalRef={orderSelectionModalRef}
         onChange={handleOrderDirectionChange}
+        items={AGGREGATION_SORTING_OPTIONS}
       />
       <FilterSelectionModal
         filterTitle="Gênero"

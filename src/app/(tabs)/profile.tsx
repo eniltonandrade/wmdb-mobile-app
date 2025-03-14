@@ -79,7 +79,7 @@ export default function Profile() {
             <YearlyChart />
           </View>
 
-          <View className="px-2 mt-4">
+          <View className="px-2 mt-4 mb-8">
             {/* Stats Links */}
             <View className="space-y-3">
               <Heading size="lg">Estatísticas</Heading>
@@ -134,6 +134,32 @@ export default function Profile() {
                   className=" flex-row items-center space-x-4"
                 >
                   <Text className="text-white font-semibold">Estúdios</Text>
+                </TouchableOpacity>
+              </Link>
+              <Link
+                href="/stats/released-year"
+                className="bg-gray-900 p-4 rounded-lg"
+                asChild
+              >
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  className=" flex-row items-center space-x-4"
+                >
+                  <Text className="text-white font-semibold">
+                    Anos de Lançamento
+                  </Text>
+                </TouchableOpacity>
+              </Link>
+              <Link
+                href="/stats/watched-year"
+                className="bg-gray-900 p-4 rounded-lg"
+                asChild
+              >
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  className=" flex-row items-center space-x-4"
+                >
+                  <Text className="text-white font-semibold">Assistido em</Text>
                 </TouchableOpacity>
               </Link>
             </View>

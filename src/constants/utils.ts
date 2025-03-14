@@ -42,6 +42,21 @@ export const AGGREGATION_SORTING_OPTIONS = [
   },
 ]
 
+export const AGGREGATION_SORTING_OPTIONS_YEAR = [
+  {
+    name: 'Por Ano',
+    key: 'year',
+  },
+  {
+    name: 'Total de Filmes Assistidos',
+    key: 'count',
+  },
+  {
+    name: 'Média das Notas',
+    key: 'average',
+  },
+]
+
 export const RATING_SOURCES_OPTIONS = [
   {
     name: 'IMDB',
@@ -87,6 +102,7 @@ export const genderMap = GENDER_OPTIONS.reduce(
 export type genderMapType = keyof typeof genderMap
 
 export const sortMap = {
+  year: 'Por Ano',
   count: 'Total',
   average: 'Nota Média',
 }
