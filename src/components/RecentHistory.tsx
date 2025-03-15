@@ -1,5 +1,6 @@
 import { Feather } from '@expo/vector-icons'
 import { useQuery } from '@tanstack/react-query'
+import { Link } from 'expo-router'
 import React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import colors from 'tailwindcss/colors'
@@ -24,16 +25,18 @@ export default function RecentHistory() {
 
   return (
     <>
-      <TouchableOpacity
-        activeOpacity={0.7}
-        className="flex-row w-full px-4 pb-4 "
-      >
-        <Heading size="lg">Recentes</Heading>
+      <Link href="/(tabs)/(history)/history" asChild>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          className="flex-row w-full px-4 pb-4 "
+        >
+          <Heading size="lg">Recentes</Heading>
 
-        <View className="flex items-center justify-center ml-2">
-          <Feather name="arrow-right" size={16} color={colors.gray[100]} />
-        </View>
-      </TouchableOpacity>
+          <View className="flex items-center justify-center ml-2">
+            <Feather name="arrow-right" size={16} color={colors.gray[100]} />
+          </View>
+        </TouchableOpacity>
+      </Link>
 
       {data && !isRecentHistoryLoading ? (
         <MoviesCarrousel

@@ -227,7 +227,7 @@ export default function CastStats() {
                 renderItem={({ item, index }) => (
                   <Link
                     href={{
-                      pathname: `/person-details/[personId]`,
+                      pathname: `/(tabs)/(home)/person/[personId]`,
                       params: {
                         personId: item.tmdbId,
                       },

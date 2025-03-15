@@ -24,7 +24,7 @@ export default function Welcome() {
   }
 
   return (
-    <View className="flex justify-between items-start flex-row mb-6 px-4 ">
+    <View className="flex justify-between items-start flex-row my-6  px-4 ">
       <View>
         <Text className="font-pmedium text-sm text-gray-100">Bem Vindo,</Text>
         <Text className="text-2xl font-psemibold text-white">
