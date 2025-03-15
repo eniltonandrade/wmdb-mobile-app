@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons'
 import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Platform, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
@@ -8,6 +8,9 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import colors from 'tailwindcss/colors'
+
+const androidPaddingCorrection =
+  Platform.OS === 'android' ? StatusBar.currentHeight : 50
 
 type AnimatedHeaderProps = {
   title: string
@@ -48,7 +51,7 @@ export default function AnimatedHeader({
           borderBottomWidth: 1,
           paddingHorizontal: 16,
           paddingBottom: 8,
-          paddingTop: 50,
+          paddingTop: androidPaddingCorrection,
           zIndex: 1000,
         },
       ]}

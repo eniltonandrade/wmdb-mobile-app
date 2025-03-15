@@ -3,6 +3,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { useEffect } from 'react'
+import { StatusBar } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import Toast, { BaseToast } from 'react-native-toast-message'
 import colors from 'tailwindcss/colors'
@@ -72,6 +73,11 @@ export default function RootLayout() {
   }
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
       <BottomSheetModalProvider>
         <QueryClientProvider client={queryClient}>
           <SessionProvider>
@@ -79,7 +85,7 @@ export default function RootLayout() {
               <Stack
                 screenOptions={{
                   contentStyle: {
-                    backgroundColor: colors.gray[900],
+                    backgroundColor: '#111827',
                   },
                   animation: 'ios_from_left',
                 }}

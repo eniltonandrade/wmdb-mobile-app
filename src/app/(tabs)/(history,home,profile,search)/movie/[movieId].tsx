@@ -2,7 +2,7 @@ import { Feather } from '@expo/vector-icons'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { LinearGradient } from 'expo-linear-gradient'
-import { router, useLocalSearchParams } from 'expo-router'
+import { Link, router, useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useRef, useState } from 'react'
 import {
   FlatList,
@@ -122,11 +122,6 @@ export default function Movie() {
 
   function handleOpenUserRatingModal() {
     userRatingModalRef.current?.present()
-  }
-
-  function handleNavigateToPersonDetails(id: number) {
-    router.setParams({ id: String(id) })
-    router.push(`/person-details/${id}`)
   }
 
   async function handleAddToMovieToUserHistory(date: Date) {
@@ -323,25 +318,32 @@ export default function Movie() {
                 )}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => handleNavigateToPersonDetails(item.id)}
-                    key={item.name}
-                    className="mr-4 flex flex-row space-x-4 items-center"
+                  <Link
+                    asChild
+                    href={{
+                      pathname: '/(tabs)/(home)/person/[personId]',
+                      params: { personId: item.id },
+                    }}
                   >
-                    <Avatar size="sm" uri={tmdbImage(item.profile_path)} />
-                    <View className="w-[120px]">
-                      <Text className="text-gray-100 text-xs font-pbold ">
-                        {item.name}
-                      </Text>
-                      <Text
-                        className="text-gray-400 text-xs font-pregular"
-                        numberOfLines={2}
-                      >
-                        {item.job}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      key={item.name}
+                      className="mr-4 flex flex-row space-x-4 items-center"
+                    >
+                      <Avatar size="sm" uri={tmdbImage(item.profile_path)} />
+                      <View className="w-[120px]">
+                        <Text className="text-gray-100 text-xs font-pbold ">
+                          {item.name}
+                        </Text>
+                        <Text
+                          className="text-gray-400 text-xs font-pregular"
+                          numberOfLines={2}
+                        >
+                          {item.job}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </Link>
                 )}
                 contentContainerStyle={{
                   paddingRight: 8,
@@ -369,25 +371,32 @@ export default function Movie() {
                 data={movie.casts.cast.slice(0, 10)}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => handleNavigateToPersonDetails(item.id)}
-                    key={item.name}
-                    className="mr-2 flex space-y-2 items-center w-[75] justify-start text-center"
+                  <Link
+                    asChild
+                    href={{
+                      pathname: '/(tabs)/(home)/person/[personId]',
+                      params: { personId: item.id },
+                    }}
                   >
-                    <Avatar size="md" uri={tmdbImage(item.profile_path)} />
-                    <View>
-                      <Text className="text-gray-100 text-xs font-pbold text-center">
-                        {item.name}
-                      </Text>
-                      <Text
-                        className="text-gray-400 text-xs font-pregular text-center"
-                        numberOfLines={2}
-                      >
-                        {item.character}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      key={item.name}
+                      className="mr-2 flex space-y-2 items-center w-[75] justify-start text-center"
+                    >
+                      <Avatar size="md" uri={tmdbImage(item.profile_path)} />
+                      <View>
+                        <Text className="text-gray-100 text-xs font-pbold text-center">
+                          {item.name}
+                        </Text>
+                        <Text
+                          className="text-gray-400 text-xs font-pregular text-center"
+                          numberOfLines={2}
+                        >
+                          {item.character}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </Link>
                 )}
                 contentContainerStyle={{
                   paddingRight: 8,

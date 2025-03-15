@@ -1,7 +1,6 @@
 import '../../reanimateConfig'
 
 import { Redirect, router } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
 import { ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -38,8 +37,6 @@ const Welcome = () => {
           />
         </View>
       </ScrollView>
-
-      <StatusBar backgroundColor="#161622" style="light" />
     </SafeAreaView>
   )
 }
