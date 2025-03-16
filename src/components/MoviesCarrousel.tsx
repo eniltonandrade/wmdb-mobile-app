@@ -50,7 +50,7 @@ export function MoviesCarrousel({
             <View className="w-[130px] mr-4 space-y-2">
               <Link
                 href={{
-                  pathname: '/(tabs)/(home)/movie/[movieId]',
+                  pathname: '/movie/[movieId]',
                   params: { movieId: item.tmdbId },
                 }}
                 asChild

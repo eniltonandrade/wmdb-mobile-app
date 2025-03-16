@@ -25,7 +25,7 @@ export default function RecentHistory() {
 
   return (
     <>
-      <Link href="/(tabs)/(history)/history" asChild>
+      <Link href="/(tabs)/history" asChild>
         <TouchableOpacity
           activeOpacity={0.7}
           className="flex-row w-full px-4 pb-4 "

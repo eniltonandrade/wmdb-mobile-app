@@ -10,6 +10,7 @@ import {
   ImageBackground,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Pressable,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -185,9 +186,8 @@ export default function Movie() {
       />
       <ScrollView
         onScroll={handleScroll}
-        contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
-        className="flex-grow bg-primary"
+        className="bg-primary flex-grow"
       >
         {!isMovieLoading && movie && (
           <View className="flex-1 w-full">
@@ -201,7 +201,11 @@ export default function Movie() {
               alt={movie?.title}
             >
               <View className="z-50 top-4 mx-4 flex flex-row justify-between items-center mt-8">
-                <TouchableOpacity onPress={handleGoBack}>
+                <TouchableOpacity
+                  onPress={handleGoBack}
+                  className="p-1"
+                  activeOpacity={0.7}
+                >
                   <Feather name="arrow-left" size={24} color={colors.white} />
                 </TouchableOpacity>
                 {!history?.date && (
@@ -311,21 +315,20 @@ export default function Movie() {
                 })}
               </ScrollView>
             </View>
-            <View className="mb-4">
+            <View className="mb-4 z-50">
               <Text className="text-gray-100 font-pbold text-lg mb-4 px-4">
                 Equipe Técnica
               </Text>
               <FlatList
                 data={movie.casts.crew.filter(
-                  (crew) =>
-                    crew.job === 'Director' || crew.job === 'Screenplay',
+                  (crew) => crew.job === 'Director',
                 )}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
                   <Link
                     asChild
                     href={{
-                      pathname: '/(tabs)/(home)/person/[personId]',
+                      pathname: '/person/[personId]',
                       params: { personId: item.id },
                     }}
                   >
@@ -359,9 +362,8 @@ export default function Movie() {
               />
             </View>
 
-            <View className="mb-4">
-              <TouchableOpacity
-                activeOpacity={0.8}
+            <View className="mb-4 z-50">
+              <Pressable
                 onPress={handleOpenCastModal}
                 className="flex flex-row space-x-2 items-center mb-4 px-4"
               >
@@ -370,22 +372,23 @@ export default function Movie() {
                 </Text>
 
                 <Feather name="arrow-right" color={colors.white} size={16} />
-              </TouchableOpacity>
+              </Pressable>
               <FlatList
                 data={movie.casts.cast.slice(0, 10)}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
                   <Link
                     asChild
+                    className="z-50"
                     href={{
-                      pathname: '/(tabs)/(home)/person/[personId]',
+                      pathname: '/person/[personId]',
                       params: { personId: item.id },
                     }}
                   >
                     <TouchableOpacity
-                      activeOpacity={0.8}
-                      key={item.name}
-                      className="mr-2 flex space-y-2 items-center w-[75] justify-start text-center"
+                      activeOpacity={0.7}
+                      key={item.id}
+                      className="mr-2 flex space-y-2 items-center w-[75] justify-start text-cente z-50"
                     >
                       <Avatar size="md" uri={tmdbImage(item.profile_path)} />
                       <View>

@@ -232,7 +232,7 @@ export default function CrewStats() {
                 renderItem={({ item, index }) => (
                   <Link
                     href={{
-                      pathname: '/(tabs)/(home)/person/[personId]',
+                      pathname: '/person/[personId]',
                       params: {
                         personId: item.tmdbId,
                       },

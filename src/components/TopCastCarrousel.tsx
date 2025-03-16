@@ -32,7 +32,7 @@ const TopCastCarrousel = () => {
 
   return (
     <View className="mb-4">
-      <Link asChild href="/(tabs)/(home)/stats/cast">
+      <Link asChild href="/stats/cast">
         <TouchableOpacity
           activeOpacity={0.7}
           className="flex-row w-full px-4 pb-4 text-xs items-center"
@@ -69,7 +69,7 @@ const TopCastCarrousel = () => {
               <Link
                 asChild
                 href={{
-                  pathname: '/(tabs)/(home)/person/[personId]',
+                  pathname: '/person/[personId]',
                   params: { personId: item.tmdbId },
                 }}
               >

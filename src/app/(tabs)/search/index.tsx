@@ -94,7 +94,7 @@ export default function Search() {
                 )}
                 <Link
                   href={{
-                    pathname: '/(tabs)/(home)/movie/[movieId]',
+                    pathname: '/movie/[movieId]',
                     params: { movieId: item.id },
                   }}
                   asChild

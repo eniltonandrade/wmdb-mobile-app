@@ -44,19 +44,19 @@ export default function AnimatedHeader({
         {
           position: 'absolute',
           top: 0,
-          left: 0,
-          right: 0,
+          width: '100%',
+          maxHeight: 350,
           backgroundColor: colors.gray['900'],
           borderBottomColor: colors.gray['800'],
           borderBottomWidth: 1,
           paddingHorizontal: 16,
           paddingBottom: 8,
           paddingTop: androidPaddingCorrection,
-          zIndex: 1000,
+          zIndex: 10,
         },
       ]}
     >
-      <View className="items-center flex-row space-x-4  justify-between overflow-hidden">
+      <View className="items-center flex-row space-x-4 justify-between overflow-hidden max-h-[160px] z-10">
         <TouchableOpacity onPress={goBack}>
           <Feather name="arrow-left" size={24} color={colors.white} />
         </TouchableOpacity>
