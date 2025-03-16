@@ -32,7 +32,7 @@ const TopCastCarrousel = () => {
 
   return (
     <View className="mb-4">
-      <Link asChild href="/(tabs)/(profile)/stats/cast">
+      <Link asChild href="/(tabs)/(home)/stats/cast">
         <TouchableOpacity
           activeOpacity={0.7}
           className="flex-row w-full px-4 pb-4 text-xs items-center"

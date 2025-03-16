@@ -159,42 +159,46 @@ export default function CrewStats() {
               </View>
             </View>
             <View>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <FilterBadge
-                  text={`${total} Items`}
-                  removable={false}
-                  Icon={
-                    <Ionicons name="stats-chart-sharp" color={colors.white} />
-                  }
-                />
-                <FilterBadge
-                  text={sortMap[selectedItem as sortMapType]}
-                  onPress={handleOpenOrderSelectionModal}
-                  Icon={
-                    <MaterialCommunityIcons
-                      name={
-                        selectedOrder === 'asc'
-                          ? 'sort-reverse-variant'
-                          : 'sort-variant'
-                      }
-                      size={16}
-                      color={colors.white}
-                    />
-                  }
-                />
-                <FilterBadge
-                  text={ratingSourceMap[params.preferred_rating]}
-                  removable={false}
-                  onPress={handleOpenRatingSourceSelectionModal}
-                  Icon={<Ionicons name="star" color={colors.white} />}
-                />
-                <FilterBadge
-                  text={genderMap[selectedGender]}
-                  removable={false}
-                  onPress={handleOpenGenderSelectionModal}
-                  Icon={<Ionicons name="person" color={colors.white} />}
-                />
-              </ScrollView>
+              {!isLoading ? (
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <FilterBadge
+                    text={`${total} Items`}
+                    removable={false}
+                    Icon={
+                      <Ionicons name="stats-chart-sharp" color={colors.white} />
+                    }
+                  />
+                  <FilterBadge
+                    text={sortMap[selectedItem as sortMapType]}
+                    onPress={handleOpenOrderSelectionModal}
+                    Icon={
+                      <MaterialCommunityIcons
+                        name={
+                          selectedOrder === 'asc'
+                            ? 'sort-reverse-variant'
+                            : 'sort-variant'
+                        }
+                        size={16}
+                        color={colors.white}
+                      />
+                    }
+                  />
+                  <FilterBadge
+                    text={ratingSourceMap[params.preferred_rating]}
+                    removable={false}
+                    onPress={handleOpenRatingSourceSelectionModal}
+                    Icon={<Ionicons name="star" color={colors.white} />}
+                  />
+                  <FilterBadge
+                    text={genderMap[selectedGender]}
+                    removable={false}
+                    onPress={handleOpenGenderSelectionModal}
+                    Icon={<Ionicons name="person" color={colors.white} />}
+                  />
+                </ScrollView>
+              ) : (
+                <Skeleton className="w-full h-[36px] my-4" />
+              )}
             </View>
 
             {/* Crew List */}

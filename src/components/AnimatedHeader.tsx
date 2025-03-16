@@ -10,7 +10,7 @@ import Animated, {
 import colors from 'tailwindcss/colors'
 
 const androidPaddingCorrection =
-  Platform.OS === 'android' ? StatusBar.currentHeight : 50
+  Platform.OS === 'android' ? StatusBar.currentHeight! + 10 : 50
 
 type AnimatedHeaderProps = {
   title: string
@@ -56,7 +56,7 @@ export default function AnimatedHeader({
         },
       ]}
     >
-      <View className="items-center flex-row space-x-4 pb-1  justify-between overflow-hidden">
+      <View className="items-center flex-row space-x-4  justify-between overflow-hidden">
         <TouchableOpacity onPress={goBack}>
           <Feather name="arrow-left" size={24} color={colors.white} />
         </TouchableOpacity>

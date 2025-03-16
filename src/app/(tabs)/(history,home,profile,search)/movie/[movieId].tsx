@@ -157,14 +157,6 @@ export default function Movie() {
     }
   }, [addToHistoryMutation.error])
 
-  const showToast = () => {
-    Toast.show({
-      type: 'error',
-      text1: 'Hello',
-      text2: 'This is some something 👋',
-    })
-  }
-
   function handleGoBack() {
     router.back()
   }
@@ -244,15 +236,27 @@ export default function Movie() {
                     {movie.title}
                   </Text>
                   <View className="flex-row items-center space-x-4 mt-2 ">
-                    <TouchableOpacity
-                      className="bg-secondary-100 rounded-md py-1 px-2"
-                      activeOpacity={0.8}
-                      onPress={showToast}
+                    <Link
+                      asChild
+                      href={{
+                        pathname: '/movies',
+                        params: {
+                          release_year: new Date(
+                            movie.release_date,
+                          ).getFullYear(),
+                          name: `Lançado em: ${new Date(movie.release_date).getFullYear()}`,
+                        },
+                      }}
                     >
-                      <Text className="text-white font-psemibold text-xs">
-                        {new Date(movie.release_date).getFullYear()}
-                      </Text>
-                    </TouchableOpacity>
+                      <TouchableOpacity
+                        className="bg-secondary-100 rounded-md py-1 px-2"
+                        activeOpacity={0.7}
+                      >
+                        <Text className="text-white font-psemibold text-xs">
+                          {new Date(movie.release_date).getFullYear()}
+                        </Text>
+                      </TouchableOpacity>
+                    </Link>
                     <Text className="text-xs font-pregular text-gray-100">
                       {movie.runtime} minutos
                     </Text>

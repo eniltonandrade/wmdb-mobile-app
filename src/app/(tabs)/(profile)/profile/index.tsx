@@ -17,7 +17,7 @@ import { useSession } from '@/contexts/authContext'
 import { getUserHistoryStats } from '@/services/api/get-user-history-stats'
 
 export default function Profile() {
-  const { user } = useSession()
+  const { user, signOut } = useSession()
 
   const { data } = useQuery({
     queryKey: ['api', 'report', 'user', 'history'],
@@ -69,9 +69,8 @@ export default function Profile() {
 
           <View className="px-2 space-y-4">
             <Heading size="lg">Tempo assistindo</Heading>
-            {data && data.totalRuntime > 0 && (
-              <TimeWidget totalRunTime={data.totalRuntime} />
-            )}
+
+            <TimeWidget totalRunTime={data?.totalRuntime} />
           </View>
 
           <View className="px-2 space-y-4">
@@ -79,7 +78,7 @@ export default function Profile() {
             <YearlyChart />
           </View>
 
-          <View className="px-2 mt-4 mb-8">
+          <View className="px-2 mt-4 my-8">
             {/* Stats Links */}
             <View className="space-y-3">
               <Heading size="lg">Estatísticas</Heading>
@@ -162,6 +161,15 @@ export default function Profile() {
                   <Text className="text-white font-semibold">Assistido em</Text>
                 </TouchableOpacity>
               </Link>
+              <View className="h-[2px] w-full bg-gray-800 rounded" />
+
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={signOut}
+                className=" flex-row items-center space-x-4 justify-center bg-red-600 p-4 rounded-lg"
+              >
+                <Text className="text-white font-semibold">Sair</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>

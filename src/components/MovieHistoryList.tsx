@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Pressable, ScrollView, Text, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 
 import { useApp } from '@/contexts/appContext'
@@ -23,6 +23,7 @@ import Loading from './Loading'
 import MovieActionsModal from './MovieActionsModal'
 import MovieGrid from './MovieGrid'
 import MovieList from './MovieList'
+import FilterBadge from './ui/FilterBadge'
 
 type queryParamsKeys = keyof queryParams
 
@@ -116,76 +117,65 @@ const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
       <>
         {selectedParamKeys && (
           <View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View className="bg-gray-900 flex-row py-1 px-2 rounded-md items-center space-x-2 ml-4 mb-4">
-                <Ionicons name="stats-chart-sharp" color={colors.white} />
-                <Text className=" font-pbold text-xs text-gray-100">
-                  {total}
-                </Text>
-              </View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="pl-4"
+            >
+              <FilterBadge
+                text={`${total} Filmes`}
+                onPress={handleOpenFilterModal}
+                Icon={
+                  <Ionicons name="stats-chart-sharp" color={colors.white} />
+                }
+              />
+
               {Object.keys(params).map((param) => {
                 return (
                   <View key={param}>
                     {param === 'genre_id' && (
-                      <View className="bg-gray-900 flex-row py-1 px-2 rounded-md items-center space-x-2 ml-2 mb-4 ">
-                        <Ionicons name="filter" color={colors.white} />
-                        <Text className=" font-pbold text-xs text-gray-100">
-                          {
-                            genres.find(
-                              (genre) =>
-                                genre.id === params[param as queryParamsKeys],
-                            )?.name
-                          }
-                        </Text>
-                        <Pressable
-                          className="bg-gray-900 rounded-md"
-                          onPress={() =>
-                            handleRemoveFilter(param as queryParamsKeys)
-                          }
-                        >
-                          <Ionicons
-                            name="close"
-                            size={18}
-                            color={colors.white}
-                          />
-                        </Pressable>
-                      </View>
+                      <FilterBadge
+                        Icon={<Ionicons name="filter" color={colors.white} />}
+                        removable={true}
+                        onPress={handleOpenFilterModal}
+                        onRemoval={() =>
+                          handleRemoveFilter(param as queryParamsKeys)
+                        }
+                        text={
+                          genres.find(
+                            (genre) =>
+                              genre.id === params[param as queryParamsKeys],
+                          )?.name
+                        }
+                      />
                     )}
                     {param === 'company_id' && (
-                      <View className="bg-gray-900 flex-row py-1 px-2 rounded-md items-center space-x-2 ml-2 mb-4 ">
-                        <Ionicons name="filter" color={colors.white} />
-                        <Text className=" font-pbold text-xs text-gray-100">
-                          {selectedName}
-                        </Text>
-                        <Pressable
-                          className="bg-gray-900 rounded-md"
-                          onPress={() =>
-                            handleRemoveFilter(param as queryParamsKeys)
-                          }
-                        >
-                          <Ionicons
-                            name="close"
-                            size={18}
-                            color={colors.white}
-                          />
-                        </Pressable>
-                      </View>
+                      <FilterBadge
+                        Icon={<Ionicons name="filter" color={colors.white} />}
+                        removable={true}
+                        onPress={handleOpenFilterModal}
+                        onRemoval={() =>
+                          handleRemoveFilter(param as queryParamsKeys)
+                        }
+                        text={selectedName}
+                      />
                     )}
                     {param === 'sort_by' && (
-                      <View className="bg-gray-900 flex-row py-1 px-2 rounded-md items-center space-x-2 ml-2 mb-4 ">
-                        <MaterialCommunityIcons
-                          name={
-                            selectedDirection === 'asc'
-                              ? 'sort-reverse-variant'
-                              : 'sort-variant'
-                          }
-                          size={16}
-                          color={colors.white}
-                        />
-                        <Text className=" font-pbold text-xs text-gray-100">
-                          {sortMap[selectedOrder as sortMapType]}
-                        </Text>
-                      </View>
+                      <FilterBadge
+                        onPress={handleOpenFilterModal}
+                        Icon={
+                          <MaterialCommunityIcons
+                            name={
+                              selectedDirection === 'asc'
+                                ? 'sort-reverse-variant'
+                                : 'sort-variant'
+                            }
+                            size={16}
+                            color={colors.white}
+                          />
+                        }
+                        text={sortMap[selectedOrder as sortMapType]}
+                      />
                     )}
                   </View>
                 )

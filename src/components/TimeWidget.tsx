@@ -3,10 +3,10 @@ import CircularProgress from 'react-native-circular-progress-indicator'
 import colors from 'tailwindcss/colors'
 
 type Props = {
-  totalRunTime: number
+  totalRunTime?: number
 }
 
-export default function TimeWidget({ totalRunTime }: Props) {
+export default function TimeWidget({ totalRunTime = 0 }: Props) {
   const MINUTES_IN_HOUR = 60
   const HOURS_IN_DAY = 24
   const DAYS_IN_MONTH = 30 // Approximate

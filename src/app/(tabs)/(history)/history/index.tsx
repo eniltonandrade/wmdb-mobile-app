@@ -30,7 +30,7 @@ export default function History() {
       <SafeAreaView className="flex-1">
         <View className="flex-row justify-between items-center px-4 my-4">
           <View>
-            <Text className="text-2xl text-white font-pbold ">History</Text>
+            <Text className="text-2xl text-white font-pbold ">Histórico</Text>
           </View>
           <View className="flex-row space-x-4">
             <Pressable onPress={toggleViewMethod}>

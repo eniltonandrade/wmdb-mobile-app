@@ -37,6 +37,18 @@ export default function StackLayout({ segment }: { segment: string }) {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="stats/cast"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="stats/released-year"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
     )
   }
@@ -61,6 +73,12 @@ export default function StackLayout({ segment }: { segment: string }) {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="stats/released-year"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
     )
   }
@@ -81,6 +99,12 @@ export default function StackLayout({ segment }: { segment: string }) {
         />
         <Stack.Screen
           name="person/[personId]"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="stats/released-year"
           options={{
             headerShown: false,
           }}

@@ -2,8 +2,9 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
+import * as SystemUI from 'expo-system-ui'
 import { useEffect } from 'react'
-import { StatusBar } from 'react-native'
+import { StatusBar, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import Toast, { BaseToast } from 'react-native-toast-message'
 import colors from 'tailwindcss/colors'
@@ -14,6 +15,7 @@ import { SessionProvider } from '@/contexts/authContext'
 import { queryClient } from '../lib/react-query'
 
 export default function RootLayout() {
+  SystemUI.setBackgroundColorAsync('#030712')
   const [fontsLoaded, error] = useFonts({
     'Poppins-Black': require('../assets/fonts/Poppins-Black.ttf'),
     'Poppins-Bold': require('../assets/fonts/Poppins-Bold.ttf'),
@@ -82,19 +84,37 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <SessionProvider>
             <AppProvider>
-              <Stack
-                screenOptions={{
-                  contentStyle: {
-                    backgroundColor: '#111827',
-                  },
-                  animation: 'ios_from_left',
-                }}
-              >
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen name="movies" options={{ headerShown: false }} />
-              </Stack>
+              <View className="flex-1 bg-primary">
+                <Stack
+                  screenOptions={{
+                    contentStyle: {
+                      backgroundColor: '#111827',
+                    },
+                  }}
+                >
+                  <Stack.Screen
+                    name="(auth)"
+                    options={{
+                      headerShown: false,
+                      contentStyle: {
+                        backgroundColor: '#111827',
+                      },
+                    }}
+                  />
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{
+                      headerShown: false,
+                      contentStyle: { backgroundColor: '#111827' },
+                    }}
+                  />
+                  <Stack.Screen name="index" options={{ headerShown: false }} />
+                  <Stack.Screen
+                    name="movies"
+                    options={{ headerShown: false }}
+                  />
+                </Stack>
+              </View>
             </AppProvider>
           </SessionProvider>
         </QueryClientProvider>
