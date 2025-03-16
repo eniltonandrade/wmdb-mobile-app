@@ -52,15 +52,18 @@ export default function AnimatedHeader({
           paddingHorizontal: 16,
           paddingBottom: 8,
           paddingTop: androidPaddingCorrection,
-          zIndex: 10,
+          zIndex: 999,
         },
       ]}
     >
-      <View className="items-center flex-row space-x-4 justify-between overflow-hidden max-h-[160px] z-10">
-        <TouchableOpacity onPress={goBack}>
+      <View className="items-center flex-row space-x-4 justify-start overflow-hidden max-h-[160px] z-10">
+        <TouchableOpacity
+          onPress={goBack}
+          className="h-10 w-10 items-center justify-center"
+        >
           <Feather name="arrow-left" size={24} color={colors.white} />
         </TouchableOpacity>
-        <Text className="text-gray-100 font-pbold">{title}</Text>
+        <Text className="text-gray-100 text-lg font-psemibold">{title}</Text>
         {rightButton || <View></View>}
       </View>
     </Animated.View>

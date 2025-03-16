@@ -84,7 +84,10 @@ export default function PersonDetails() {
     >
       <View className="flex-row justify-between items-center px-4 my-4">
         <View className="flex flex-row items-center gap-2">
-          <TouchableOpacity onPress={handleGoBack}>
+          <TouchableOpacity
+            onPress={handleGoBack}
+            className="h-10 w-10 intems-center justify-center"
+          >
             <Feather name="arrow-left" size={24} color={colors.white} />
           </TouchableOpacity>
           <Text className="text-2xl text-white font-pbold ">

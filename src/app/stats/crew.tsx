@@ -150,7 +150,10 @@ export default function CrewStats() {
             {/* Header */}
             <View className="flex flex-row items-center justify-between gap-2 my-4">
               <View className="flex flex-row items-center ">
-                <TouchableOpacity onPress={() => router.back()}>
+                <TouchableOpacity
+                  onPress={() => router.back()}
+                  className="w-10 h-10 items-center justify-center"
+                >
                   <Feather name="arrow-left" size={24} color={colors.white} />
                 </TouchableOpacity>
                 <Text className="ml-2 text-2xl text-white font-pbold ">

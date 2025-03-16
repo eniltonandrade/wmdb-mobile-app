@@ -8,15 +8,17 @@ import {
   FlatList,
   Image,
   ImageBackground,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
   Pressable,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native'
-import Animated, { FadeInDown, useSharedValue } from 'react-native-reanimated'
+import Animated, {
+  FadeInDown,
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from 'react-native-reanimated'
 import Toast from 'react-native-toast-message'
 import colors from 'tailwindcss/colors'
 
@@ -55,10 +57,9 @@ export default function Movie() {
 
   const scrollY = useSharedValue<number>(0.5)
 
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetY = event.nativeEvent.contentOffset.y
-    scrollY.value = offsetY
-  }
+  const handleScroll = useAnimatedScrollHandler((event) => {
+    scrollY.value = event.contentOffset.y
+  })
 
   const { data: movie, isLoading: isMovieLoading } = useQuery({
     queryKey: ['tmdb', movieId],
@@ -172,316 +173,309 @@ export default function Movie() {
 
   return (
     <>
-      <AnimatedHeader
-        scrollY={scrollY}
-        title={movie?.title || 'loading'}
-        goBack={handleGoBack}
-        rightButton={
-          !history?.date && (
-            <TouchableOpacity>
-              <Feather name="bookmark" size={24} color={colors.white} />
-            </TouchableOpacity>
-          )
-        }
-      />
-      <ScrollView
-        onScroll={handleScroll}
-        showsVerticalScrollIndicator={false}
-        className="bg-primary flex-grow"
-      >
-        {!isMovieLoading && movie && (
-          <View className="flex-1 w-full">
-            {/* Top Header */}
-            <ImageBackground
-              className="w-full h-[200px]"
-              resizeMode="cover"
-              source={{
-                uri: tmdbImage(movie.backdrop_path, 'w500'),
-              }}
-              alt={movie?.title}
-            >
-              <View className="z-50 top-4 mx-4 flex flex-row justify-between items-center mt-8">
-                <TouchableOpacity
-                  onPress={handleGoBack}
-                  className="p-1"
-                  activeOpacity={0.7}
-                >
-                  <Feather name="arrow-left" size={24} color={colors.white} />
-                </TouchableOpacity>
-                {!history?.date && (
-                  <TouchableOpacity>
-                    <Feather name="bookmark" size={24} color={colors.white} />
-                  </TouchableOpacity>
-                )}
-              </View>
-              <LinearGradient
-                colors={['rgba(4, 0, 25, 0)', '#030712']}
-                className="absolute z-0 w-full top-0 h-[200px]"
-              />
-            </ImageBackground>
-            {/* Movie Title and Details */}
-            <View className="mx-4 -mt-20 flex-row space-x-4">
-              <Animated.View entering={FadeInDown.duration(600)}>
-                <Image
-                  source={{
-                    uri: tmdbImage(movie.poster_path!, 'w154'),
-                  }}
-                  alt={movie?.title}
-                  resizeMode="cover"
-                  className="w-[120px] h-[180px] rounded-md "
-                />
-              </Animated.View>
-              <Animated.View entering={FadeInDown.duration(400).delay(300)}>
-                <View className="flex-grow justify-end">
-                  <Text
-                    className="text-2xl text-white font-pbold max-w-[200px]"
-                    numberOfLines={3}
+      <View className="flex-1 bg-primary">
+        <Animated.ScrollView
+          onScroll={handleScroll}
+          showsVerticalScrollIndicator={false}
+          className=" flex-grow"
+        >
+          {!isMovieLoading && movie && (
+            <View className="flex-1 w-full">
+              {/* Top Header */}
+              <ImageBackground
+                className="w-full h-[200px]"
+                resizeMode="cover"
+                source={{
+                  uri: tmdbImage(movie.backdrop_path, 'w500'),
+                }}
+                alt={movie?.title}
+              >
+                <View className="z-50 top-4 mx-4 flex flex-row justify-between items-center mt-8">
+                  <TouchableOpacity
+                    onPress={handleGoBack}
+                    className="h-10 w-10 bg-gray-800/50 rounded-md items-center justify-center"
+                    activeOpacity={0.7}
                   >
-                    {movie.title}
-                  </Text>
-                  <View className="flex-row items-center space-x-4 mt-2 ">
+                    <Feather name="arrow-left" size={24} color={colors.white} />
+                  </TouchableOpacity>
+                  {!history?.date && (
+                    <TouchableOpacity>
+                      <Feather name="bookmark" size={24} color={colors.white} />
+                    </TouchableOpacity>
+                  )}
+                </View>
+                <LinearGradient
+                  colors={['rgba(4, 0, 25, 0)', '#030712']}
+                  className="absolute z-0 w-full top-0 h-[200px]"
+                />
+              </ImageBackground>
+              {/* Movie Title and Details */}
+              <View className="mx-4 -mt-20 flex-row space-x-4">
+                <Animated.View entering={FadeInDown.duration(600)}>
+                  <Image
+                    source={{
+                      uri: tmdbImage(movie.poster_path!, 'w154'),
+                    }}
+                    alt={movie?.title}
+                    resizeMode="cover"
+                    className="w-[120px] h-[180px] rounded-md "
+                  />
+                </Animated.View>
+                <Animated.View entering={FadeInDown.duration(400).delay(300)}>
+                  <View className="flex-grow justify-end">
+                    <Text
+                      className="text-2xl text-white font-pbold max-w-[200px]"
+                      numberOfLines={3}
+                    >
+                      {movie.title}
+                    </Text>
+                    <View className="flex-row items-center space-x-4 mt-2 ">
+                      <Link
+                        asChild
+                        href={{
+                          pathname: '/movies',
+                          params: {
+                            release_year: new Date(
+                              movie.release_date,
+                            ).getFullYear(),
+                            name: `Lançado em: ${new Date(movie.release_date).getFullYear()}`,
+                          },
+                        }}
+                      >
+                        <TouchableOpacity
+                          className="bg-secondary-100 rounded-md py-1 px-2"
+                          activeOpacity={0.7}
+                        >
+                          <Text className="text-white font-psemibold text-xs">
+                            {new Date(movie.release_date).getFullYear()}
+                          </Text>
+                        </TouchableOpacity>
+                      </Link>
+                      <Text className="text-xs font-pregular text-gray-100">
+                        {movie.runtime} minutos
+                      </Text>
+                    </View>
+
+                    <UserActions
+                      userRating={userRating}
+                      handleOpenHistoryModal={handleOpenAddToHistoryModal}
+                      handleOpenUserRatingModal={handleOpenUserRatingModal}
+                      watchedDate={watchedDate}
+                    />
+                  </View>
+                </Animated.View>
+              </View>
+              {/* Rating Bar */}
+              {omdbData && (
+                <RatingBar
+                  Ratings={omdbData?.Ratings}
+                  tmdbRating={movie.vote_average}
+                />
+              )}
+
+              {/* Movie Title and Details */}
+              <View className="px-4 mb-4">
+                <Text className="text-gray-100 font-pbold text-lg mb-2 ">
+                  Sinopse
+                </Text>
+                <Text
+                  numberOfLines={5}
+                  className="text-gray-100 font-pregular text-xs"
+                >
+                  {movie.overview}
+                </Text>
+              </View>
+              <View className="px-4 mb-4">
+                <Text className="text-gray-100 font-pbold text-lg mb-2 ">
+                  Gêneros
+                </Text>
+
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {movie.genres.map((genre, index) => {
+                    return (
+                      <Badge
+                        key={genre.id}
+                        index={index}
+                        onPress={() => {
+                          console.log('pressed')
+                        }}
+                        title={genre.name}
+                      />
+                    )
+                  })}
+                </ScrollView>
+              </View>
+              <View className="mb-4 relative z-50">
+                <Text className="text-gray-100 font-pbold text-lg mb-4 px-4">
+                  Equipe Técnica
+                </Text>
+                <FlatList
+                  data={movie.casts.crew.filter(
+                    (crew) => crew.job === 'Director',
+                  )}
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item }) => (
                     <Link
                       asChild
                       href={{
-                        pathname: '/movies',
-                        params: {
-                          release_year: new Date(
-                            movie.release_date,
-                          ).getFullYear(),
-                          name: `Lançado em: ${new Date(movie.release_date).getFullYear()}`,
-                        },
+                        pathname: '/person/[personId]',
+                        params: { personId: item.id },
                       }}
                     >
                       <TouchableOpacity
-                        className="bg-secondary-100 rounded-md py-1 px-2"
-                        activeOpacity={0.7}
+                        activeOpacity={0.8}
+                        key={item.name}
+                        className="mr-4 flex flex-row space-x-4 items-center"
                       >
-                        <Text className="text-white font-psemibold text-xs">
-                          {new Date(movie.release_date).getFullYear()}
-                        </Text>
+                        <Avatar size="sm" uri={tmdbImage(item.profile_path)} />
+                        <View className="w-[120px]">
+                          <Text className="text-gray-100 text-xs font-pbold ">
+                            {item.name}
+                          </Text>
+                          <Text
+                            className="text-gray-400 text-xs font-pregular"
+                            numberOfLines={2}
+                          >
+                            {item.job}
+                          </Text>
+                        </View>
                       </TouchableOpacity>
                     </Link>
-                    <Text className="text-xs font-pregular text-gray-100">
-                      {movie.runtime} minutos
-                    </Text>
-                  </View>
+                  )}
+                  contentContainerStyle={{
+                    paddingRight: 8,
+                    flexGrow: 1,
+                    paddingLeft: 16,
+                  }}
+                  horizontal={true}
+                  keyExtractor={(item) => item.name + item.job}
+                />
+              </View>
 
-                  <UserActions
-                    userRating={userRating}
-                    handleOpenHistoryModal={handleOpenAddToHistoryModal}
-                    handleOpenUserRatingModal={handleOpenUserRatingModal}
-                    watchedDate={watchedDate}
-                  />
-                </View>
-              </Animated.View>
-            </View>
-            {/* Rating Bar */}
-            {omdbData && (
-              <RatingBar
-                Ratings={omdbData?.Ratings}
-                tmdbRating={movie.vote_average}
-              />
-            )}
+              <View className="mb-4 relative">
+                <Pressable
+                  onPress={handleOpenCastModal}
+                  className="flex flex-row space-x-2 items-center mb-4 px-4"
+                >
+                  <Text className="text-gray-100 font-pbold text-lg ">
+                    Elenco
+                  </Text>
 
-            {/* Movie Title and Details */}
-            <View className="px-4 mb-4">
-              <Text className="text-gray-100 font-pbold text-lg mb-2 ">
-                Sinopse
-              </Text>
-              <Text
-                numberOfLines={5}
-                className="text-gray-100 font-pregular text-xs"
-              >
-                {movie.overview}
-              </Text>
-            </View>
-            <View className="px-4 mb-4">
-              <Text className="text-gray-100 font-pbold text-lg mb-2 ">
-                Gêneros
-              </Text>
-
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {movie.genres.map((genre, index) => {
-                  return (
-                    <Badge
-                      key={genre.id}
-                      index={index}
-                      onPress={() => {
-                        console.log('pressed')
+                  <Feather name="arrow-right" color={colors.white} size={16} />
+                </Pressable>
+                <FlatList
+                  data={movie.casts.cast.slice(0, 10)}
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item }) => (
+                    <Link
+                      asChild
+                      className="z-50"
+                      href={{
+                        pathname: '/person/[personId]',
+                        params: { personId: item.id },
                       }}
-                      title={genre.name}
-                    />
-                  )
-                })}
-              </ScrollView>
-            </View>
-            <View className="mb-4 z-50">
-              <Text className="text-gray-100 font-pbold text-lg mb-4 px-4">
-                Equipe Técnica
-              </Text>
-              <FlatList
-                data={movie.casts.crew.filter(
-                  (crew) => crew.job === 'Director',
-                )}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => (
-                  <Link
-                    asChild
-                    href={{
-                      pathname: '/person/[personId]',
-                      params: { personId: item.id },
-                    }}
-                  >
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      key={item.name}
-                      className="mr-4 flex flex-row space-x-4 items-center"
                     >
-                      <Avatar size="sm" uri={tmdbImage(item.profile_path)} />
-                      <View className="w-[120px]">
-                        <Text className="text-gray-100 text-xs font-pbold ">
-                          {item.name}
-                        </Text>
-                        <Text
-                          className="text-gray-400 text-xs font-pregular"
-                          numberOfLines={2}
-                        >
-                          {item.job}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </Link>
-                )}
-                contentContainerStyle={{
-                  paddingRight: 8,
-                  flexGrow: 1,
-                  paddingLeft: 16,
-                }}
-                horizontal={true}
-                keyExtractor={(item) => item.name + item.job}
-              />
-            </View>
-
-            <View className="mb-4 z-50">
-              <Pressable
-                onPress={handleOpenCastModal}
-                className="flex flex-row space-x-2 items-center mb-4 px-4"
-              >
-                <Text className="text-gray-100 font-pbold text-lg ">
-                  Elenco
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        key={item.id}
+                        className="mr-2 flex space-y-2 items-center w-[75] justify-start text-cente z-50"
+                      >
+                        <Avatar size="md" uri={tmdbImage(item.profile_path)} />
+                        <View>
+                          <Text className="text-gray-100 text-xs font-pbold text-center">
+                            {item.name}
+                          </Text>
+                          <Text
+                            className="text-gray-400 text-xs font-pregular text-center"
+                            numberOfLines={2}
+                          >
+                            {item.character}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </Link>
+                  )}
+                  contentContainerStyle={{
+                    paddingRight: 8,
+                    paddingLeft: 16,
+                    flexGrow: 1,
+                  }}
+                  horizontal={true}
+                  keyExtractor={(item) => item.name + item.character}
+                />
+              </View>
+              {/* companies */}
+              <View className="px-4 mb-4">
+                <Text className="text-gray-100 font-pbold text-lg mb-2 ">
+                  Estúdios
                 </Text>
 
-                <Feather name="arrow-right" color={colors.white} size={16} />
-              </Pressable>
-              <FlatList
-                data={movie.casts.cast.slice(0, 10)}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => (
-                  <Link
-                    asChild
-                    className="z-50"
-                    href={{
-                      pathname: '/person/[personId]',
-                      params: { personId: item.id },
-                    }}
-                  >
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      key={item.id}
-                      className="mr-2 flex space-y-2 items-center w-[75] justify-start text-cente z-50"
-                    >
-                      <Avatar size="md" uri={tmdbImage(item.profile_path)} />
-                      <View>
-                        <Text className="text-gray-100 text-xs font-pbold text-center">
-                          {item.name}
-                        </Text>
-                        <Text
-                          className="text-gray-400 text-xs font-pregular text-center"
-                          numberOfLines={2}
-                        >
-                          {item.character}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </Link>
-                )}
-                contentContainerStyle={{
-                  paddingRight: 8,
-                  paddingLeft: 16,
-                  flexGrow: 1,
-                }}
-                horizontal={true}
-                keyExtractor={(item) => item.name + item.character}
-              />
-            </View>
-            {/* companies */}
-            <View className="px-4 mb-4">
-              <Text className="text-gray-100 font-pbold text-lg mb-2 ">
-                Estúdios
-              </Text>
-
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {movie.production_companies.map((company, index) => {
-                  return (
-                    <Badge
-                      key={company.id}
-                      index={index}
-                      onPress={() => {
-                        console.log('pressed')
-                      }}
-                      title={company.name}
-                    />
-                  )
-                })}
-              </ScrollView>
-            </View>
-            {/* Details */}
-            <View className="px-4 mt-4 flex-row space-x-2 pb-10">
-              <View className="mb-2 flex-auto">
-                <View className="mb-2">
-                  <Text className="text-gray-100 font-psemibold ">
-                    Título Original
-                  </Text>
-                  <Text className="text-gray-400">{movie.original_title}</Text>
-                </View>
-                <View>
-                  <Text className="text-gray-100 font-psemibold ">
-                    Data de Lançamento
-                  </Text>
-                  <Text className="text-gray-400 ">{movie.release_date}</Text>
-                </View>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {movie.production_companies.map((company, index) => {
+                    return (
+                      <Badge
+                        key={company.id}
+                        index={index}
+                        onPress={() => {
+                          console.log('pressed')
+                        }}
+                        title={company.name}
+                      />
+                    )
+                  })}
+                </ScrollView>
               </View>
-              <View className="mb-2 flex-auto">
-                <View className="mb-2">
-                  <Text className="text-gray-100 font-psemibold ">
-                    Orçamento
-                  </Text>
-                  <Text className="text-gray-400 ">
-                    {movie.budget.toLocaleString('pt-BR', {
-                      style: 'currency',
-                      currency: 'BRL',
-                    })}
-                  </Text>
+              {/* Details */}
+              <View className="px-4 mt-4 flex-row space-x-2 pb-10">
+                <View className="mb-2 flex-auto">
+                  <View className="mb-2">
+                    <Text className="text-gray-100 font-psemibold ">
+                      Título Original
+                    </Text>
+                    <Text className="text-gray-400">
+                      {movie.original_title}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text className="text-gray-100 font-psemibold ">
+                      Data de Lançamento
+                    </Text>
+                    <Text className="text-gray-400 ">{movie.release_date}</Text>
+                  </View>
                 </View>
-                <View>
-                  <Text className="text-gray-100 font-psemibold ">
-                    Faturamento
-                  </Text>
-                  <Text className="text-gray-400 font-pregular ">
-                    {movie.revenue.toLocaleString('pt-BR', {
-                      style: 'currency',
-                      currency: 'BRL',
-                    })}
-                  </Text>
+                <View className="mb-2 flex-auto">
+                  <View className="mb-2">
+                    <Text className="text-gray-100 font-psemibold ">
+                      Orçamento
+                    </Text>
+                    <Text className="text-gray-400 ">
+                      {movie.budget.toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      })}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text className="text-gray-100 font-psemibold ">
+                      Faturamento
+                    </Text>
+                    <Text className="text-gray-400 font-pregular ">
+                      {movie.revenue.toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      })}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
-        )}
-      </ScrollView>
+          )}
+        </Animated.ScrollView>
+      </View>
       {movie?.casts.cast && (
         <CastModal modalRef={castModalRef} cast={movie?.casts.cast} />
       )}
+
       <AddToHistoryModal
         modalRef={addToHistoryModalRef}
         onSave={handleAddToMovieToUserHistory}
@@ -496,6 +490,18 @@ export default function Movie() {
         historyId={history?.id || addToHistoryMutation.data?.historyId}
         userRating={userRating || 0}
         onChangeRating={setUserRating}
+      />
+      <AnimatedHeader
+        scrollY={scrollY}
+        title={movie?.title || 'loading'}
+        goBack={handleGoBack}
+        rightButton={
+          !history?.date && (
+            <TouchableOpacity>
+              <Feather name="bookmark" size={24} color={colors.white} />
+            </TouchableOpacity>
+          )
+        }
       />
     </>
   )

@@ -134,6 +134,10 @@ export default function RootLayout() {
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen
+                    name="stats/genres"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
                     name="stats/released-year"
                     options={{ headerShown: false }}
                   />
