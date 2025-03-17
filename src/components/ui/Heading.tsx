@@ -11,7 +11,7 @@ export function Heading({ children, size = 'md' }: HeadingProps) {
   return (
     <Text
       className={clsx(
-        'flex text-gray-100 font-pbold items-center justify-center',
+        'flex text-gray-50 font-pbold items-center justify-center',
         {
           'text-lg': size === 'lg',
           'text-sm': size === 'sm',

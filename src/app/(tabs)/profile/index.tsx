@@ -42,7 +42,7 @@ export default function Profile() {
           <View className="flex-row w-100 items-center px-4 mb-4 space-x-4">
             <Avatar size="lg" uri="https://github.com/eniltonandrade.png" />
             <View className="flex-1">
-              <Text className="text-gray-50 text-xl font-pbold">
+              <Text className="text-white text-xl font-pbold">
                 {user?.name}
               </Text>
               {/* Movie Stats */}
@@ -51,7 +51,7 @@ export default function Profile() {
                   <Text className="text-gray-400 text-xs font-pregular">
                     Total de Filmes
                   </Text>
-                  <Text className="text-gray-50 text-lg font-pbold">
+                  <Text className="text-white text-lg font-pbold">
                     {data?.movieCount}
                   </Text>
                 </View>
@@ -59,7 +59,7 @@ export default function Profile() {
                   <Text className="text-gray-400 text-xs font-pregular">
                     Nota Média
                   </Text>
-                  <Text className="text-gray-50 text-lg font-pbold">
+                  <Text className="text-white text-lg font-pbold">
                     {data?.averageRating}
                   </Text>
                 </View>

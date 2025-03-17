@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons'
+import { Feather, Ionicons } from '@expo/vector-icons'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -39,6 +39,7 @@ import {
 import { createMovieRelationships } from '@/services/api/create-movie-relationships'
 import { getMovieByExternalId } from '@/services/api/get-movie-by-external-id'
 import { getUserHistoryByMovieId } from '@/services/api/get-user-history-by-movie'
+import { updateMovie, UpdateMovieProps } from '@/services/api/update-movie'
 import { getImdbMovieDetails } from '@/services/omdb/get-imdb-movie-details'
 import { getMovieDetails } from '@/services/tmdb/movies'
 import { tmdbImage } from '@/utils/image'
@@ -107,6 +108,31 @@ export default function Movie() {
     },
   })
 
+  const updateMovieMutation = useMutation({
+    mutationFn: async (data: UpdateMovieProps) => await updateMovie(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['api', 'history'],
+      })
+      Toast.show({
+        type: 'success',
+        text1: 'Filme Atualizado!',
+      })
+    },
+  })
+
+  async function handleUpdateMovie() {
+    if (movie && storedMovieData) {
+      await updateMovieMutation.mutateAsync({
+        backdrop_path: movie.backdrop_path,
+        poster_path: movie.poster_path,
+        movieId: storedMovieData?.movie.id,
+        ratings: omdbData?.Ratings,
+        tmdb_rating: movie.vote_average,
+      })
+    }
+  }
+
   useEffect(() => {
     if (historyStatus === 'success' && history && history.date) {
       setWatchedDate(new Date(history.date))
@@ -163,7 +189,7 @@ export default function Movie() {
     router.back()
   }
 
-  if (!movie || !omdbData) {
+  if (!movie || !omdbData || !history) {
     return <Loading />
   }
 
@@ -203,6 +229,20 @@ export default function Movie() {
                       <Feather name="bookmark" size={24} color={colors.white} />
                     </TouchableOpacity>
                   )}
+                  <TouchableOpacity
+                    onPress={handleUpdateMovie}
+                    disabled={updateMovieMutation.isPending}
+                  >
+                    <Ionicons
+                      name="refresh"
+                      size={20}
+                      color={
+                        updateMovieMutation.isPending
+                          ? colors.gray[800]
+                          : colors.white
+                      }
+                    />
+                  </TouchableOpacity>
                 </View>
                 <LinearGradient
                   colors={['rgba(4, 0, 25, 0)', '#030712']}
@@ -251,7 +291,7 @@ export default function Movie() {
                           </Text>
                         </TouchableOpacity>
                       </Link>
-                      <Text className="text-xs font-pregular text-gray-100">
+                      <Text className="text-xs font-pregular text-gray-50">
                         {movie.runtime} minutos
                       </Text>
                     </View>
@@ -275,18 +315,18 @@ export default function Movie() {
 
               {/* Movie Title and Details */}
               <View className="px-4 mb-4">
-                <Text className="text-gray-100 font-pbold text-lg mb-2 ">
+                <Text className="text-gray-50 font-pbold text-lg mb-2 ">
                   Sinopse
                 </Text>
                 <Text
                   numberOfLines={5}
-                  className="text-gray-100 font-pregular text-xs"
+                  className="text-gray-50 font-pregular text-xs"
                 >
                   {movie.overview}
                 </Text>
               </View>
               <View className="px-4 mb-4">
-                <Text className="text-gray-100 font-pbold text-lg mb-2 ">
+                <Text className="text-gray-50 font-pbold text-lg mb-2 ">
                   Gêneros
                 </Text>
 
@@ -306,7 +346,7 @@ export default function Movie() {
                 </ScrollView>
               </View>
               <View className="mb-4 relative z-50">
-                <Text className="text-gray-100 font-pbold text-lg mb-4 px-4">
+                <Text className="text-gray-50 font-pbold text-lg mb-4 px-4">
                   Equipe Técnica
                 </Text>
                 <FlatList
@@ -329,7 +369,7 @@ export default function Movie() {
                       >
                         <Avatar size="sm" uri={tmdbImage(item.profile_path)} />
                         <View className="w-[120px]">
-                          <Text className="text-gray-100 text-xs font-pbold ">
+                          <Text className="text-gray-50 text-xs font-pbold ">
                             {item.name}
                           </Text>
                           <Text
@@ -357,7 +397,7 @@ export default function Movie() {
                   onPress={handleOpenCastModal}
                   className="flex flex-row space-x-2 items-center mb-4 px-4"
                 >
-                  <Text className="text-gray-100 font-pbold text-lg ">
+                  <Text className="text-gray-50 font-pbold text-lg ">
                     Elenco
                   </Text>
 
@@ -382,7 +422,7 @@ export default function Movie() {
                       >
                         <Avatar size="md" uri={tmdbImage(item.profile_path)} />
                         <View>
-                          <Text className="text-gray-100 text-xs font-pbold text-center">
+                          <Text className="text-gray-50 text-xs font-pbold text-center">
                             {item.name}
                           </Text>
                           <Text
@@ -406,7 +446,7 @@ export default function Movie() {
               </View>
               {/* companies */}
               <View className="px-4 mb-4">
-                <Text className="text-gray-100 font-pbold text-lg mb-2 ">
+                <Text className="text-gray-50 font-pbold text-lg mb-2 ">
                   Estúdios
                 </Text>
 
@@ -429,7 +469,7 @@ export default function Movie() {
               <View className="px-4 mt-4 flex-row space-x-2 pb-10">
                 <View className="mb-2 flex-auto">
                   <View className="mb-2">
-                    <Text className="text-gray-100 font-psemibold ">
+                    <Text className="text-gray-50 font-psemibold ">
                       Título Original
                     </Text>
                     <Text className="text-gray-400">
@@ -437,7 +477,7 @@ export default function Movie() {
                     </Text>
                   </View>
                   <View>
-                    <Text className="text-gray-100 font-psemibold ">
+                    <Text className="text-gray-50 font-psemibold ">
                       Data de Lançamento
                     </Text>
                     <Text className="text-gray-400 ">{movie.release_date}</Text>
@@ -445,7 +485,7 @@ export default function Movie() {
                 </View>
                 <View className="mb-2 flex-auto">
                   <View className="mb-2">
-                    <Text className="text-gray-100 font-psemibold ">
+                    <Text className="text-gray-50 font-psemibold ">
                       Orçamento
                     </Text>
                     <Text className="text-gray-400 ">
@@ -456,7 +496,7 @@ export default function Movie() {
                     </Text>
                   </View>
                   <View>
-                    <Text className="text-gray-100 font-psemibold ">
+                    <Text className="text-gray-50 font-psemibold ">
                       Faturamento
                     </Text>
                     <Text className="text-gray-400 font-pregular ">

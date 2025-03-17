@@ -86,10 +86,10 @@ export default function CastFiltersModal({
     <Modal ref={modalRef} heightPercentage="85%">
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
         <View className="border-b-2 border-gray-800 pb-4 mb-4 px-4">
-          <Text className="text-gray-50 font-pbold text-xl">Filtro</Text>
+          <Text className="text-white font-pbold text-xl">Filtro</Text>
         </View>
         <View className=" px-4">
-          <Text className="text-base font-psemibold text-gray-100 mb-2">
+          <Text className="text-base font-psemibold text-gray-50 mb-2">
             Direção
           </Text>
           <View className="flex-row items-center space-x-2">
@@ -107,7 +107,7 @@ export default function CastFiltersModal({
                   )}
                 >
                   <Text
-                    className={clsx(`text-xs font-pregular text-gray-100`, {
+                    className={clsx(`text-xs font-pregular text-gray-50`, {
                       'text-primary': isSelected,
                     })}
                   >
@@ -119,7 +119,7 @@ export default function CastFiltersModal({
           </View>
         </View>
         <View className="my-2 px-4">
-          <Text className="text-base font-psemibold text-gray-100 mb-2">
+          <Text className="text-base font-psemibold text-gray-50 mb-2">
             Ordenar Por:
           </Text>
           <View className="flex-row flex-wrap items-center">
@@ -146,7 +146,7 @@ export default function CastFiltersModal({
                   )}
                 >
                   <Text
-                    className={clsx(`text-xs font-pregular text-gray-100`, {
+                    className={clsx(`text-xs font-pregular text-gray-50`, {
                       'text-primary': isSelected,
                     })}
                   >
@@ -158,7 +158,7 @@ export default function CastFiltersModal({
           </View>
         </View>
         <View className="my-2 px-4">
-          <Text className="text-base font-psemibold text-gray-100 mb-2">
+          <Text className="text-base font-psemibold text-gray-50 mb-2">
             Notas de:
           </Text>
           <View className="flex-row flex-wrap items-center">
@@ -193,7 +193,7 @@ export default function CastFiltersModal({
                   )}
                 >
                   <Text
-                    className={clsx(`text-xs font-pregular text-gray-100`, {
+                    className={clsx(`text-xs font-pregular text-gray-50`, {
                       'text-primary': isSelected,
                     })}
                   >
@@ -205,7 +205,7 @@ export default function CastFiltersModal({
           </View>
         </View>
         <View className="my-2 px-4">
-          <Text className="text-base font-psemibold text-gray-100 mb-2">
+          <Text className="text-base font-psemibold text-gray-50 mb-2">
             Gênero:
           </Text>
           <View className="flex-row flex-wrap items-center">
@@ -232,7 +232,7 @@ export default function CastFiltersModal({
                   )}
                 >
                   <Text
-                    className={clsx(`text-xs font-pregular text-gray-100`, {
+                    className={clsx(`text-xs font-pregular text-gray-50`, {
                       'text-primary': isSelected,
                     })}
                   >

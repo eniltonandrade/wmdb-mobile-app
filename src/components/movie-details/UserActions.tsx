@@ -1,6 +1,7 @@
 import { Feather } from '@expo/vector-icons'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { Link } from 'expo-router'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import colors from 'tailwindcss/colors'
@@ -33,13 +34,24 @@ export default function UserActions({
           />
         </TouchableOpacity>
         {watchedDate ? (
-          <Text className="text-gray-100 font-pbold text-sm">
-            {format(watchedDate, "dd'/'MM'/'yy", {
-              locale: ptBR,
-            })}
-          </Text>
+          <Link
+            asChild
+            href={{
+              pathname: '/movies',
+              params: {
+                watched_year: new Date(watchedDate).getFullYear(),
+                name: `Assistido em: ${new Date(watchedDate).getFullYear()}`,
+              },
+            }}
+          >
+            <Text className="text-gray-50 font-pbold text-sm">
+              {format(watchedDate, "dd'/'MM'/'yy", {
+                locale: ptBR,
+              })}
+            </Text>
+          </Link>
         ) : (
-          <Text className="text-gray-100 font-pregular text-sm">Adicionar</Text>
+          <Text className="text-gray-50 font-pregular text-sm">Adicionar</Text>
         )}
       </View>
       {watchedDate && (
@@ -56,11 +68,11 @@ export default function UserActions({
             />
           </TouchableOpacity>
           {userRating ? (
-            <Text className="text-gray-100 font-pbold text-lg">
+            <Text className="text-gray-50 font-pbold text-lg">
               {userRating.toFixed(1)}
             </Text>
           ) : (
-            <Text className="text-gray-100 font-pregular text-md">Avaliar</Text>
+            <Text className="text-gray-50 font-pregular text-md">Avaliar</Text>
           )}
         </View>
       )}

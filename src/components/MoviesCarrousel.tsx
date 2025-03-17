@@ -66,20 +66,20 @@ export function MoviesCarrousel({
                     />
                   )}
                   <View className="absolute bg-black/70 right-1 top-1 px-1 py-0.5 rounded-md">
-                    <Text className="text-gray-50 text-xs font-pbold">
+                    <Text className="text-white text-xs font-pbold">
                       {item.rating?.toFixed(1) || '0.0'}
                     </Text>
                   </View>
                   {item.userRating?.toString() && (
                     <View className="absolute bg-secondary-100 items-center justify-center right-3 bottom-[-6] h-7 w-7 rounded-full border-primary border-4 z-10">
-                      <Text className="text-gray-50 text-xs font-pmedium  text-shad">
+                      <Text className="text-white text-xs font-pmedium  text-shad">
                         {item.userRating}
                       </Text>
                     </View>
                   )}
                   {item.isWatched && (
                     <View className="absolute bg-secondary-200 items-center justify-center right-[-4] bottom-[-6] h-7 w-7 rounded-full border-primary border-4">
-                      <Text className="text-gray-50 text-xs font-pmedium  text-shad">
+                      <Text className="text-white text-xs font-pmedium  text-shad">
                         <FontAwesome name="eye" />
                       </Text>
                     </View>
@@ -89,7 +89,7 @@ export function MoviesCarrousel({
               <View>
                 <Text
                   numberOfLines={2}
-                  className="text-gray-100 font-psemibold text-xs"
+                  className="text-gray-50 font-psemibold text-xs"
                 >
                   {item.title}
                 </Text>

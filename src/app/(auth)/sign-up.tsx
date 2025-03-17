@@ -146,7 +146,7 @@ const SignUp = () => {
           />
 
           <View className="flex justify-center pt-5 flex-row gap-2">
-            <Text className="text-lg text-gray-100 font-pregular">
+            <Text className="text-lg text-gray-50 font-pregular">
               Não tem uma conta?
             </Text>
             <Link

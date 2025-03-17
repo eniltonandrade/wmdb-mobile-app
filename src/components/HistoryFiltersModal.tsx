@@ -73,9 +73,9 @@ export default function HistoryFiltersModal({
   return (
     <Modal ref={modalRef} heightPercentage="85%">
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1 px-4">
-        <Text className="text-xl font-pbold text-gray-100 mb-4">Filtros</Text>
+        <Text className="text-xl font-pbold text-gray-50 mb-4">Filtros</Text>
         <View>
-          <Text className="text-base font-psemibold text-gray-100 mb-2">
+          <Text className="text-base font-psemibold text-gray-50 mb-2">
             Direção
           </Text>
           <View className="flex-row items-center space-x-2">
@@ -93,7 +93,7 @@ export default function HistoryFiltersModal({
                   )}
                 >
                   <Text
-                    className={clsx(`text-xs font-pregular text-gray-100`, {
+                    className={clsx(`text-xs font-pregular text-gray-50`, {
                       'text-primary': isSelected,
                     })}
                   >
@@ -105,7 +105,7 @@ export default function HistoryFiltersModal({
           </View>
         </View>
         <View className="my-2">
-          <Text className="text-base font-psemibold text-gray-100 mb-2">
+          <Text className="text-base font-psemibold text-gray-50 mb-2">
             Ordenar Por:
           </Text>
           <View className="flex-row flex-wrap items-center">
@@ -123,7 +123,7 @@ export default function HistoryFiltersModal({
                   )}
                 >
                   <Text
-                    className={clsx(`text-xs font-pregular text-gray-100`, {
+                    className={clsx(`text-xs font-pregular text-gray-50`, {
                       'text-primary': isSelected,
                     })}
                   >
@@ -135,7 +135,7 @@ export default function HistoryFiltersModal({
           </View>
         </View>
         <View className="my-2">
-          <Text className="text-base font-psemibold text-gray-100 mb-2">
+          <Text className="text-base font-psemibold text-gray-50 mb-2">
             Gêneros:
           </Text>
           <View className="flex-row flex-wrap items-center">
@@ -153,7 +153,7 @@ export default function HistoryFiltersModal({
                   )}
                 >
                   <Text
-                    className={clsx(`text-xs font-pregular text-gray-100`, {
+                    className={clsx(`text-xs font-pregular text-gray-50`, {
                       'text-primary': isSelected,
                     })}
                   >

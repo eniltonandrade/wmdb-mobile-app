@@ -39,7 +39,7 @@ export default function LogoLoading() {
         height={70}
         width={70}
       />
-      <Text className="text-gray-100 font-pmedium mt-4">
+      <Text className="text-gray-50 font-pmedium mt-4">
         Conectando no servidor.
       </Text>
     </View>

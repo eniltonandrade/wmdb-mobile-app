@@ -47,7 +47,7 @@ const MovieGrid = ({
       ListEmptyComponent={
         <View className="flex-1 items-center justify-center">
           <FontAwesome name="search" color={colors.gray[400]} size={36} />
-          <Text className="text-gray-100 font-pbold my-4">
+          <Text className="text-gray-50 font-pbold my-4">
             Nenhum filme encontrado.
           </Text>
         </View>
@@ -75,20 +75,20 @@ const MovieGrid = ({
                 />
               )}
               <View className="absolute bg-black/70 right-1 top-1 px-1 py-0.5 rounded-md">
-                <Text className="text-gray-50 text-xs font-pbold">
+                <Text className="text-white text-xs font-pbold">
                   {item.movie.tmdbRating?.toFixed(1) || '0.0'}
                 </Text>
               </View>
               {item.rating?.toString() && (
                 <View className="absolute bg-secondary-100 items-center justify-center right-3 bottom-[-6] h-7 w-7 rounded-full border-primary border-4 z-10">
-                  <Text className="text-gray-50 text-xs font-pmedium  text-shad">
+                  <Text className="text-white text-xs font-pmedium  text-shad">
                     {item.rating}
                   </Text>
                 </View>
               )}
               {item.date && (
                 <View className="absolute bg-secondary-200 items-center justify-center right-[-4] bottom-[-6] h-7 w-7 rounded-full border-primary border-4">
-                  <Text className="text-gray-50 text-xs font-pmedium  text-shad">
+                  <Text className="text-white text-xs font-pmedium  text-shad">
                     <FontAwesome name="eye" />
                   </Text>
                 </View>
@@ -99,7 +99,7 @@ const MovieGrid = ({
             <View className="flex flex-col">
               <Text
                 numberOfLines={2}
-                className="text-gray-100 font-psemibold text-xs flex-1"
+                className="text-gray-50 font-psemibold text-xs flex-1"
               >
                 {item.movie.title}
               </Text>

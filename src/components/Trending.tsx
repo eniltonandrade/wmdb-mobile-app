@@ -20,7 +20,7 @@ const Trending = () => {
         activeOpacity={0.7}
         className="flex-row w-full px-4 pb-4 "
       >
-        <Text className="flex text-gray-100 text-lg font-pbold items-center justify-center">
+        <Text className="flex text-gray-50 text-lg font-pbold items-center justify-center">
           Em Alta
         </Text>
       </TouchableOpacity>

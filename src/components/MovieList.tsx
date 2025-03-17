@@ -74,7 +74,7 @@ const MovieList = ({
                 {new Date(item.movie.releaseDate).getFullYear()}
               </Text>
               <Text
-                className="text-gray-100 font-pbold text-base leading-5 mb-2"
+                className="text-white font-pbold text-base leading-5 mb-2"
                 numberOfLines={2}
               >
                 {item.movie.title}
@@ -94,21 +94,21 @@ const MovieList = ({
                       size={18}
                       color={colors.green[500]}
                     />
-                    <Text className="text-gray-100 text-md font-pextrabold">
+                    <Text className="text-gray-50 text-md font-pextrabold">
                       {item.rating}
                     </Text>
                   </View>
                 )}
                 <View className="flex-row items-center space-x-2">
                   <TmdbLogo height={22} width={22} />
-                  <Text className="text-gray-100 text-md font-pextrabold">
+                  <Text className="text-gray-50 text-md font-pextrabold">
                     {item.movie.tmdbRating}
                   </Text>
                 </View>
                 {item.movie.imdbRating && (
                   <View className="flex-row items-center space-x-2">
                     <ImdbLogo height={22} width={22} />
-                    <Text className="text-gray-100 text-md font-pextrabold">
+                    <Text className="text-gray-50 text-md font-pextrabold">
                       {item.movie.imdbRating}
                     </Text>
                   </View>
@@ -116,7 +116,7 @@ const MovieList = ({
                 {item.movie.rottenTomatoesRating && (
                   <View className="flex-row items-center space-x-2">
                     <Tomatoes height={22} width={22} />
-                    <Text className="text-gray-100 text-md font-pextrabold">
+                    <Text className="text-gray-50 text-md font-pextrabold">
                       {item.movie.rottenTomatoesRating}
                     </Text>
                   </View>
@@ -124,7 +124,7 @@ const MovieList = ({
                 {item.movie.metacriticRating && (
                   <View className="flex-row items-center space-x-2">
                     <Metacritic height={22} width={22} />
-                    <Text className="text-gray-100 text-lg font-pextrabold">
+                    <Text className="text-gray-50 text-lg font-pextrabold">
                       {item.movie.metacriticRating}
                     </Text>
                   </View>

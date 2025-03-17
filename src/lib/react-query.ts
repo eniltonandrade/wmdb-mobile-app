@@ -4,19 +4,15 @@ import { router } from 'expo-router'
 import Toast from 'react-native-toast-message'
 
 function handleError(error: Error) {
-  const errorMessage = isAxiosError(error)
-    ? error?.response?.data.message
-    : 'Não foi possível acessar a API'
-
   if (isAxiosError(error) && error.response?.status === 401) {
     router.replace('/sign-in')
   }
 
-  console.log(isAxiosError(error) && error.response?.data)
+  console.log(isAxiosError(error) && JSON.stringify(error.response?.data))
   Toast.show({
     type: 'error',
     text1: 'Error',
-    text2: errorMessage,
+    text2: 'Algo deu errado, tente novamente mais tarde.',
   })
 }
 

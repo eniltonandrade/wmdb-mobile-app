@@ -32,7 +32,7 @@ export default function AddToHistoryModal({
   return (
     <Modal ref={modalRef} heightPercentage="27%">
       <View className="mx-4 ">
-        <Text className="text-xl font-pbold text-gray-100 mb-4">
+        <Text className="text-xl font-pbold text-gray-50 mb-4">
           {isWatched ? 'Editar' : 'Adicionar'}
         </Text>
         <DateTimePickerComponent

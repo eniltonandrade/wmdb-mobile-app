@@ -49,7 +49,7 @@ export function DateTimePickerComponent({
       <View className="w-full flex-row justify-between items-center border-b-2 border-gray-800 pb-4 ">
         {Platform.OS === 'ios' && (
           <>
-            <Text className="text-gray-100 text-base font-pregular">
+            <Text className="text-gray-50 text-base font-pregular">
               Assistido em:
             </Text>
             <View className="flex-row">
@@ -73,7 +73,7 @@ export function DateTimePickerComponent({
         )}
         {Platform.OS === 'android' && (
           <>
-            <Text className="text-gray-100 text-base font-pregular">
+            <Text className="text-gray-50 text-base font-pregular">
               Assistido em:
             </Text>
             <View className="flex-row space-x-4">
@@ -81,7 +81,7 @@ export function DateTimePickerComponent({
                 onPress={() => setShowDate(true)}
                 className="border border-gray-100 p-2 rounded-md"
               >
-                <Text className="text-gray-100 text-lg">
+                <Text className="text-gray-50 text-lg">
                   {date.toLocaleDateString('pt-BR')}
                 </Text>
               </Pressable>
@@ -89,7 +89,7 @@ export function DateTimePickerComponent({
                 onPress={() => setShowTime(true)}
                 className="border border-gray-100 p-2 rounded-md"
               >
-                <Text className="text-gray-100 text-lg">
+                <Text className="text-gray-50 text-lg">
                   {date.toLocaleTimeString('pt-BR', {
                     hour: '2-digit',
                     minute: '2-digit',

@@ -1,5 +1,5 @@
 import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useEffect, useRef, useState } from 'react'
 import {
@@ -12,15 +12,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import Toast from 'react-native-toast-message'
 import colors from 'tailwindcss/colors'
 
 import {
   MovieHistoryList,
   MovieHistoryListRef,
 } from '@/components/MovieHistoryList'
+import { queryClient } from '@/lib/react-query'
 import { type queryParams } from '@/services/api/fetch-user-history'
 import { getPersonByExternalId } from '@/services/api/get-person-by-external-id'
 import { getPersonStats } from '@/services/api/get-person-stats'
+import { updatePerson, UpdatePersonProps } from '@/services/api/update-person'
 import { getPersonDetails } from '@/services/tmdb/person'
 import { tmdbImage } from '@/utils/image'
 
@@ -56,6 +59,30 @@ export default function PersonDetails() {
     queryFn: () => getPersonStats({ personId: personData?.person.id }),
     enabled: !!personData?.person.id,
   })
+
+  const updatePersonMutation = useMutation({
+    mutationFn: async (data: UpdatePersonProps) => await updatePerson(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['api', 'stats'],
+      })
+      Toast.show({
+        type: 'success',
+        text1: 'Pessoa atualizada!',
+      })
+    },
+  })
+
+  async function handleUpdatePerson() {
+    if (personDetails) {
+      await updatePersonMutation.mutateAsync({
+        tmdbId: personDetails.id,
+        gender: personDetails?.gender,
+        name: personDetails?.name,
+        profilePath: personDetails?.profile_path,
+      })
+    }
+  }
 
   function handleGoBack() {
     router.back()
@@ -107,6 +134,18 @@ export default function PersonDetails() {
           <Pressable onPress={handleOpenFilterModal}>
             <Ionicons name="options" size={22} color={colors.white} />
           </Pressable>
+          <TouchableOpacity
+            onPress={handleUpdatePerson}
+            disabled={updatePersonMutation.isPending}
+          >
+            <Ionicons
+              name="refresh"
+              size={20}
+              color={
+                updatePersonMutation.isPending ? colors.gray[800] : colors.white
+              }
+            />
+          </TouchableOpacity>
         </View>
       </View>
       {!isLoadingPersonData && params.personId && (

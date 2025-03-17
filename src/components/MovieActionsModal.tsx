@@ -29,7 +29,7 @@ export default function MovieActionsModal({
       <View className="p-4 space-y-4">
         <View className="flex-row items-start justify-between">
           <View className="flex-1">
-            <Text className="text-xl font-pbold text-gray-100">
+            <Text className="text-xl font-pbold text-gray-50">
               {movie?.title}
             </Text>
           </View>

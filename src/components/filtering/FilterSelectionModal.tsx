@@ -25,7 +25,7 @@ export default function FilterSelectionModal({
     <Modal ref={modalRef} heightPercentage="40%">
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
         <View className="border-b-2 border-gray-800 pb-4 mb-4 px-4">
-          <Text className="text-gray-50 font-pbold text-xl">{filterTitle}</Text>
+          <Text className="text-white font-pbold text-xl">{filterTitle}</Text>
         </View>
         {items.map((opt) => (
           <View
@@ -36,7 +36,7 @@ export default function FilterSelectionModal({
               activeOpacity={0.7}
               onPress={() => onChange(String(opt.id))}
             >
-              <Text className="text-gray-50 font-pregular text-lg ">
+              <Text className="text-white font-pregular text-lg ">
                 {opt.name}
               </Text>
             </TouchableOpacity>

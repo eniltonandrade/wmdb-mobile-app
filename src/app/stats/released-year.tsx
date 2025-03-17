@@ -172,7 +172,7 @@ export default function ReleasedYearStats() {
                     className="items-center"
                   >
                     <View className="flex-row item-center justify-center ">
-                      <Text className="text-2xl font-pbold text-gray-100 pt-2 mr-2 min-w-[40px]">
+                      <Text className="text-2xl font-pbold text-gray-50 pt-2 mr-2 min-w-[40px]">
                         {index + 1}º
                       </Text>
                     </View>

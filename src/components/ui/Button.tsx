@@ -37,7 +37,7 @@ export default function Button({
     >
       <Text
         className={clsx(`text-primary font-psemibold text-md ${textStyles}`, {
-          'text-gray-100': variant === 'outline',
+          'text-gray-50': variant === 'outline',
         })}
       >
         {title}

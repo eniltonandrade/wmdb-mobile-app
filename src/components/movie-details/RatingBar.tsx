@@ -33,7 +33,7 @@ export default function RatingBar({
           <View className="bg-gray-900 p-2 rounded-md">
             <TmdbLogo height={24} width={24} />
           </View>
-          <Text className="text-gray-100 font-pbold text-lg">
+          <Text className="text-gray-50 font-pbold text-lg">
             {tmdbRating.toFixed(1)}
           </Text>
         </View>
@@ -43,7 +43,7 @@ export default function RatingBar({
             <View className="bg-gray-900 p-2 rounded-md">
               {mapper[rating.Source]}
             </View>
-            <Text className="text-gray-100 font-pbold text-lg">
+            <Text className="text-gray-50 font-pbold text-lg">
               {rating.Value.split('/')[0]}
             </Text>
           </View>

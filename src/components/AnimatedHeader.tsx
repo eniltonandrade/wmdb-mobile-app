@@ -63,7 +63,7 @@ export default function AnimatedHeader({
         >
           <Feather name="arrow-left" size={24} color={colors.white} />
         </TouchableOpacity>
-        <Text className="text-gray-100 text-lg font-psemibold">{title}</Text>
+        <Text className="text-gray-50 text-lg font-psemibold">{title}</Text>
         {rightButton || <View></View>}
       </View>
     </Animated.View>

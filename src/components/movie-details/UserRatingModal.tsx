@@ -92,8 +92,8 @@ export default function UserRatingModal({
   return (
     <Modal ref={modalRef} heightPercentage="35%">
       <View className="mx-4 flex-1  max-w-full">
-        <Text className="text-xl font-pbold text-gray-100 mb-4">Avaliar</Text>
-        <Text className="text-md font-pregular text-gray-100 mb-4">
+        <Text className="text-xl font-pbold text-gray-50 mb-4">Avaliar</Text>
+        <Text className="text-md font-pregular text-gray-50 mb-4">
           O que achou desse filme?
         </Text>
         <View className="items-center justify-center flex-1 space-y-4 my-4">
@@ -104,7 +104,7 @@ export default function UserRatingModal({
             onChange={(value) => onChangeRating(value)}
             maxRating={10}
           />
-          <Text className="text-gray-100">Nota {userRating} de 10</Text>
+          <Text className="text-gray-50">Nota {userRating} de 10</Text>
         </View>
 
         <View className="flex-row flex-1 space-x-4  my-4">

@@ -37,7 +37,7 @@ const TopCastCarrousel = () => {
           activeOpacity={0.7}
           className="flex-row w-full px-4 pb-4 text-xs items-center"
         >
-          <Text className="flex text-gray-100 text-lg font-pbold ">
+          <Text className="flex text-gray-50 text-lg font-pbold ">
             Favoritos
           </Text>
           <Text className="flex text-gray-400 text-xs font-pregular ml-2">
@@ -87,12 +87,12 @@ const TopCastCarrousel = () => {
                   </View>
                 </TouchableOpacity>
               </Link>
-              <Text className="text-gray-100 text-xs font-psemibold text-center mb-1">
+              <Text className="text-gray-50 text-xs font-psemibold text-center mb-1">
                 {item.name}
               </Text>
-              <Text className="text-gray-400 text-xs font-plight text-center">
+              {/* <Text className="text-gray-400 text-xs font-plight text-center">
                 Total: {item.count} / Média: {item.average}
-              </Text>
+              </Text> */}
             </View>
           )}
         />

@@ -56,12 +56,12 @@ export default function CastStats() {
 
   const {
     data: castsResult,
+    error,
     isLoading,
     fetchNextPage,
   } = useInfiniteQuery({
-    queryKey: ['api', 'stats', 'crew', ...Object.values(params)],
+    queryKey: ['api', 'stats', 'cast', ...Object.values(params)],
     queryFn: fetchCastStatsFn,
-    retry: false,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.results.length < 20) return undefined
@@ -204,7 +204,7 @@ export default function CastStats() {
             </View>
 
             {/* Cast List */}
-            {isLoading ? (
+            {isLoading && !error ? (
               <>
                 <Skeleton className="w-full h-[80px] mb-4" />
                 <Skeleton className="w-full h-[80px] mb-4" />
@@ -247,7 +247,7 @@ export default function CastStats() {
                       className="items-center"
                     >
                       <View className="flex-row item-center justify-center ">
-                        <Text className="text-2xl font-pbold text-gray-100 pt-2 mr-2">
+                        <Text className="text-2xl font-pbold text-gray-50 pt-2 mr-2">
                           {index + 1}º
                         </Text>
 

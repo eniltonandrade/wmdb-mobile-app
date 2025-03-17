@@ -107,7 +107,7 @@ export default function Search() {
                       {new Date(item.release_date).getFullYear()}
                     </Text>
                     <Text
-                      className="text-gray-100 font-pbold text-base leading-5 mb-2"
+                      className="text-gray-50 font-pbold text-base leading-5 mb-2"
                       numberOfLines={2}
                     >
                       {item.title}
@@ -115,7 +115,7 @@ export default function Search() {
                     <View className="mt-2 flex-row space-x-3 absolute bottom-4">
                       <View className="flex-row items-center space-x-2">
                         <TmdbLogo height={22} width={22} />
-                        <Text className="text-gray-100 text-md font-pextrabold">
+                        <Text className="text-gray-50 text-md font-pextrabold">
                           {item.vote_average.toFixed(1)}
                         </Text>
                       </View>

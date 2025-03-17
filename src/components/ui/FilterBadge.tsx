@@ -26,7 +26,7 @@ export default function FilterBadge({
     <TouchableOpacity activeOpacity={0.7} {...rest}>
       <View className="bg-gray-900 flex-row rounded-md p-2 items-center space-x-2 mb-4 mr-2 border border-gray-500">
         {Icon}
-        <Text className=" font-psemibold text-xs text-gray-100">{text}</Text>
+        <Text className=" font-psemibold text-xs text-gray-50">{text}</Text>
         {removable && (
           <Pressable className="bg-gray-900 rounded-md" onPress={onRemoval}>
             <Ionicons name="close" size={18} color={colors.white} />
