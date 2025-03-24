@@ -21,7 +21,10 @@ import {
 } from '@/components/MovieHistoryList'
 import { queryClient } from '@/lib/react-query'
 import { type queryParams } from '@/services/api/fetch-user-history'
-import { getPersonByExternalId } from '@/services/api/get-person-by-external-id'
+import {
+  findOrCreatePerson,
+  FindOrCreatePersonProps,
+} from '@/services/api/find-or-create-person'
 import { getPersonStats } from '@/services/api/get-person-stats'
 import { updatePerson, UpdatePersonProps } from '@/services/api/update-person'
 import { getPersonDetails } from '@/services/tmdb/person'
@@ -42,10 +45,25 @@ export default function PersonDetails() {
     movieHistoryListRef.current?.openFilterModal()
   }
 
-  const { data: personData, isLoading: isLoadingPersonData } = useQuery({
-    queryKey: ['api', 'history', PersonTmdbId],
-    queryFn: () => getPersonByExternalId({ tmdbId: String(PersonTmdbId) }),
-    enabled: !!PersonTmdbId,
+  const {
+    data: personData,
+    mutate: mutatePerson,
+    isPending: isLoadingPersonData,
+  } = useMutation({
+    mutationFn: async (data: FindOrCreatePersonProps) =>
+      await findOrCreatePerson(data),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['api', 'stats'],
+      })
+      setParams((prev) => {
+        return {
+          ...prev,
+          sort_by: 'watched_date.desc',
+          personId: data.id,
+        }
+      })
+    },
   })
 
   const { data: personDetails } = useQuery({
@@ -55,10 +73,21 @@ export default function PersonDetails() {
   })
 
   const { data: personStats } = useQuery({
-    queryKey: ['api', 'person', 'stats', personData?.person.id],
-    queryFn: () => getPersonStats({ personId: personData?.person.id }),
-    enabled: !!personData?.person.id,
+    queryKey: ['api', 'person', 'stats', personData?.id],
+    queryFn: () => getPersonStats({ personId: personData?.id }),
+    enabled: !!personData?.id,
   })
+
+  useEffect(() => {
+    if (personDetails) {
+      mutatePerson({
+        gender: personDetails.gender,
+        profilePath: personDetails.profile_path,
+        id: personDetails.id,
+        name: personDetails.name,
+      })
+    }
+  }, [personDetails, mutatePerson])
 
   const updatePersonMutation = useMutation({
     mutationFn: async (data: UpdatePersonProps) => await updatePerson(data),
@@ -77,8 +106,8 @@ export default function PersonDetails() {
     if (personDetails) {
       await updatePersonMutation.mutateAsync({
         tmdbId: personDetails.id,
-        gender: personDetails?.gender,
-        name: personDetails?.name,
+        gender: personDetails.gender,
+        name: personDetails.name,
         profilePath: personDetails?.profile_path,
       })
     }
@@ -89,12 +118,12 @@ export default function PersonDetails() {
   }
 
   useEffect(() => {
-    if (personData?.person.id) {
+    if (personData?.id) {
       setParams((prev) => {
         return {
           ...prev,
           sort_by: 'watched_date.desc',
-          personId: personData?.person.id,
+          personId: personData?.id,
         }
       })
     }
@@ -113,13 +142,13 @@ export default function PersonDetails() {
         <View className="flex flex-row items-center gap-2">
           <TouchableOpacity
             onPress={handleGoBack}
-            className="h-10 w-10 intems-center justify-center"
+            className="h-10 w-5 intems-center justify-center"
           >
             <Feather name="arrow-left" size={24} color={colors.white} />
           </TouchableOpacity>
-          <Text className="text-2xl text-white font-pbold ">
-            {personData?.person.name}
-          </Text>
+          {/* <Text className="text-2xl text-white font-pbold ">
+            {personDetails?.name}
+          </Text> */}
         </View>
         <View className="flex-row space-x-4">
           <Pressable onPress={toggleViewMethod}>
@@ -134,21 +163,10 @@ export default function PersonDetails() {
           <Pressable onPress={handleOpenFilterModal}>
             <Ionicons name="options" size={22} color={colors.white} />
           </Pressable>
-          <TouchableOpacity
-            onPress={handleUpdatePerson}
-            disabled={updatePersonMutation.isPending}
-          >
-            <Ionicons
-              name="refresh"
-              size={20}
-              color={
-                updatePersonMutation.isPending ? colors.gray[800] : colors.white
-              }
-            />
-          </TouchableOpacity>
         </View>
       </View>
-      {!isLoadingPersonData && params.personId && (
+
+      {!isLoadingPersonData && params.personId && personData && (
         <MovieHistoryList
           ref={movieHistoryListRef}
           displayMethod={displayMethod}
@@ -156,30 +174,64 @@ export default function PersonDetails() {
           setParams={setParams}
           header={
             personDetails && (
-              <View className="flex flex-row gap-4 px-2 mb-8">
-                <View className="h-[160px] w-[120px] ">
+              <View className="flex-1">
+                {/* Artist Info */}
+                <View className="items-center">
                   <Image
                     source={{
-                      uri: tmdbImage(personDetails.profile_path, 'w154'),
+                      uri: tmdbImage(personDetails.profile_path, 'w500'),
                     }}
-                    className="rounded-md bg-gray-900 max-w-sm"
-                    resizeMode={'cover'}
-                    height={160}
-                    alt={personDetails.name}
+                    className="w-32 h-32 rounded-full"
+                    alt=""
                   />
+                  <View className="flex-row items-center justify-center mt-4 space-x-4">
+                    <Text className="text-white text-2xl font-pbold ">
+                      {personDetails.name}
+                    </Text>
+                    {personData && (
+                      <TouchableOpacity
+                        onPress={handleUpdatePerson}
+                        disabled={updatePersonMutation.isPending}
+                      >
+                        <Ionicons
+                          name="refresh"
+                          size={20}
+                          color={
+                            updatePersonMutation.isPending
+                              ? colors.gray[800]
+                              : colors.white
+                          }
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </View>
                 </View>
-                <View className="flex-1">
-                  <Text
-                    numberOfLines={10}
-                    className="text-white font-pregular text-xs"
-                  >
-                    Filmes Assistidos: {personStats?.person.count}
+
+                <View className="px-2 flex-row item-center justify-center space-x-2 mt-4">
+                  <View className="bg-gray-900 rounded-lg  py-2 px-6">
+                    <Text className="font-psemibold text-xs text-white">
+                      {personStats?.person.count || 0} Filmes
+                    </Text>
+                  </View>
+                  {personStats?.person.average && (
+                    <View className="bg-gray-900 py-2 px-6 rounded-lg">
+                      <Text className="font-psemibold text-xs text-white">
+                        Média {personStats?.person.average || 0}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+
+                {/* Biography */}
+                <View className="bg-gray-900 p-4 rounded-lg my-6 mx-2">
+                  <Text className="text-white text-lg font-pbold mb-2">
+                    Biografia
                   </Text>
                   <Text
                     numberOfLines={10}
-                    className="text-white font-pregular text-xs"
+                    className="text-gray-400 text-xs font-pregular"
                   >
-                    Nota média: {personStats?.person.average}
+                    {personDetails.biography || 'N/A'}
                   </Text>
                 </View>
               </View>

@@ -56,15 +56,19 @@ export default function AnimatedHeader({
         },
       ]}
     >
-      <View className="items-center flex-row space-x-4 justify-start overflow-hidden max-h-[160px] z-10">
-        <TouchableOpacity
-          onPress={goBack}
-          className="h-10 w-10 items-center justify-center"
-        >
-          <Feather name="arrow-left" size={24} color={colors.white} />
-        </TouchableOpacity>
-        <Text className="text-gray-50 text-lg font-psemibold">{title}</Text>
-        {rightButton || <View></View>}
+      <View className="flex-row w-full justify-between overflow-hidden max-h-[160px] z-10 ">
+        <View className="flex-row justify-between items-center">
+          <TouchableOpacity
+            onPress={goBack}
+            className="h-10 w-10 items-center justify-center"
+          >
+            <Feather name="arrow-left" size={24} color={colors.white} />
+          </TouchableOpacity>
+          <Text className="text-gray-50 text-lg font-psemibold">{title}</Text>
+        </View>
+        <View className="flex-row justify-between items-center">
+          {rightButton}
+        </View>
       </View>
     </Animated.View>
   )

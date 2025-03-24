@@ -189,7 +189,7 @@ export default function Movie() {
     router.back()
   }
 
-  if (!movie || !omdbData || !history) {
+  if (!movie || !omdbData) {
     return <Loading />
   }
 
@@ -203,6 +203,7 @@ export default function Movie() {
         <Animated.ScrollView
           onScroll={handleScroll}
           showsVerticalScrollIndicator={false}
+          bounces={false}
           className=" flex-grow"
         >
           {!isMovieLoading && movie && (
@@ -224,25 +225,33 @@ export default function Movie() {
                   >
                     <Feather name="arrow-left" size={24} color={colors.white} />
                   </TouchableOpacity>
-                  {!history?.date && (
-                    <TouchableOpacity>
-                      <Feather name="bookmark" size={24} color={colors.white} />
-                    </TouchableOpacity>
-                  )}
-                  <TouchableOpacity
-                    onPress={handleUpdateMovie}
-                    disabled={updateMovieMutation.isPending}
-                  >
-                    <Ionicons
-                      name="refresh"
-                      size={20}
-                      color={
-                        updateMovieMutation.isPending
-                          ? colors.gray[800]
-                          : colors.white
-                      }
-                    />
-                  </TouchableOpacity>
+                  <View className="flex flex-row space-x-4 items-center justify-center-">
+                    {!history?.date && (
+                      <TouchableOpacity>
+                        <Feather
+                          name="bookmark"
+                          size={24}
+                          color={colors.white}
+                        />
+                      </TouchableOpacity>
+                    )}
+                    {storedMovieData && (
+                      <TouchableOpacity
+                        onPress={handleUpdateMovie}
+                        disabled={updateMovieMutation.isPending}
+                      >
+                        <Ionicons
+                          name="refresh"
+                          size={20}
+                          color={
+                            updateMovieMutation.isPending
+                              ? colors.gray[800]
+                              : colors.white
+                          }
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </View>
                 </View>
                 <LinearGradient
                   colors={['rgba(4, 0, 25, 0)', '#030712']}
