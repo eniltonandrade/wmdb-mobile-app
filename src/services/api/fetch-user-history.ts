@@ -1,7 +1,7 @@
 import { api, ApiListResponse } from '.'
-import { HistoryDetails } from './models/history-details'
+import { History } from './types'
 
-export type SortType =
+export type HistoriesSortType =
   | 'release_date.asc'
   | 'release_date.desc'
   | 'watched_date.asc'
@@ -17,27 +17,30 @@ export type SortType =
   | 'rating_user.asc'
   | 'rating_user.desc'
 
-export type queryParams = {
+export type FetchUseHistoryFilters = {
   genre_id?: string
-  personId?: string
+  person_id?: string
   company_id?: string
   release_year?: string
   watched_year?: string
-  sort_by: SortType
+  sort_by: HistoriesSortType
 }
 
-interface fetchUseHistory {
-  params?: queryParams | null
+interface FetchUseHistoryRequest {
+  filters?: FetchUseHistoryFilters | null
   page: number
 }
 
-export async function fetchUseHistory(params: fetchUseHistory) {
-  const { data } = await api.get<ApiListResponse<HistoryDetails>>(
-    `user/history/movies`,
+export async function fetchUseHistory({
+  filters,
+  page,
+}: FetchUseHistoryRequest) {
+  const { data } = await api.get<ApiListResponse<History>>(
+    `/me/history/movies`,
     {
       params: {
-        ...params.params,
-        page: params.page,
+        ...filters,
+        page,
       },
     },
   )

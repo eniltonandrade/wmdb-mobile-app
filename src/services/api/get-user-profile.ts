@@ -1,4 +1,4 @@
-import { api, ApiResponse } from '.'
+import { api } from '.'
 
 export type User = {
   id: string
@@ -9,6 +9,7 @@ export type User = {
 }
 
 export async function getUserProfile() {
-  const { data } = await api.get<ApiResponse<User>>('profile')
-  return data.result
+  const { data } = await api.get<User>('/me/profile')
+
+  return data
 }

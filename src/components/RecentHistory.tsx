@@ -45,7 +45,7 @@ export default function RecentHistory() {
             tmdbId: history.movie.tmdbId,
             isWatched: !!history.date,
             posterPath: history.movie.posterPath,
-            rating: history.movie.tmdbRating,
+            rating: history.movie.averageRating,
             releaseDate: history.movie.releaseDate,
             title: history.movie.title,
             userRating: history.rating,

@@ -30,26 +30,25 @@ import {
   sortMapType,
 } from '@/constants/utils'
 import {
-  fetchCastStats,
-  PreferredRatingType,
-  QueryParams,
-  SortType,
-} from '@/services/api/fetch-cast-stats'
+  fetchPeopleInsightsList,
+  PeopleInsightListFilters,
+} from '@/services/api/fetch-people-insights-list'
+import { RatingSources, SortType } from '@/services/api/types'
 import { tmdbImage } from '@/utils/image'
 
 export default function CastStats() {
   const ratingSelectionModalRef = useRef<BottomSheetModal>(null)
   const orderSelectionModalRef = useRef<BottomSheetModal>(null)
   const genderSelectionModalRef = useRef<BottomSheetModal>(null)
-  const [params, setParams] = useState<QueryParams>({
+  const [params, setParams] = useState<PeopleInsightListFilters>({
     sort_by: 'count.desc',
-    preferred_rating: 'imdb_rating',
+    role: 'cast',
   })
 
   async function fetchCastStatsFn({ pageParam }: { pageParam: number }) {
-    const res = await fetchCastStats({
+    const res = await fetchPeopleInsightsList({
       page: pageParam,
-      params,
+      filters: params,
     })
     return res
   }
@@ -60,7 +59,7 @@ export default function CastStats() {
     isLoading,
     fetchNextPage,
   } = useInfiniteQuery({
-    queryKey: ['api', 'stats', 'cast', ...Object.values(params)],
+    queryKey: ['api', 'insight', 'cast', ...Object.values(params)],
     queryFn: fetchCastStatsFn,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
@@ -87,7 +86,7 @@ export default function CastStats() {
     setParams((prev) => {
       return {
         ...prev,
-        preferred_rating: key as PreferredRatingType,
+        selected_rating: key === 'average' ? undefined : (key as RatingSources),
       }
     })
     ratingSelectionModalRef.current?.close()
@@ -186,7 +185,13 @@ export default function CastStats() {
                     }
                   />
                   <FilterBadge
-                    text={ratingSourceMap[params.preferred_rating]}
+                    text={
+                      params.selected_rating
+                        ? ratingSourceMap[
+                            params.selected_rating as RatingSources
+                          ]
+                        : 'Média'
+                    }
                     removable={false}
                     onPress={handleOpenRatingSourceSelectionModal}
                     Icon={<Ionicons name="star" color={colors.white} />}
@@ -253,7 +258,7 @@ export default function CastStats() {
 
                         <Avatar
                           size="sm"
-                          uri={tmdbImage(item.profile_path, 'w154')}
+                          uri={tmdbImage(item.profilePath, 'w154')}
                         />
                       </View>
                       <View className="flex-1 ml-4 flex-row justify-between items-center">
@@ -263,23 +268,23 @@ export default function CastStats() {
                           </Text>
                           {params.sort_by.startsWith('average') ? (
                             <Text className="text-gray-400 text-xs font-psemibold">
-                              Filmes Assistidos: {item.count}
+                              Filmes Assistidos: {item.appearances}
                             </Text>
                           ) : (
                             <Text className="text-gray-400 text-xs font-psemibold">
-                              Média: {item.average}
+                              Média: {item.avgRating}
                             </Text>
                           )}
                         </View>
                         {params.sort_by.startsWith('average') ? (
                           <Text
-                            className={`text-xl font-bold ${getRatingColor(item.average)}`}
+                            className={`text-xl font-bold ${getRatingColor(item.avgRating)}`}
                           >
-                            {item.average.toFixed(1)}
+                            {item.avgRating.toFixed(1)}
                           </Text>
                         ) : (
                           <Text className={`text-xl font-bold text-green-500`}>
-                            {item.count}
+                            {item.appearances}
                           </Text>
                         )}
                       </View>
@@ -306,7 +311,7 @@ export default function CastStats() {
       />
       <FilterSelectionModal
         filterTitle="Notas por:"
-        currentSelection={params.preferred_rating}
+        currentSelection={params.selected_rating}
         modalRef={ratingSelectionModalRef}
         onChange={handleRatingSourceChange}
         items={RATING_SOURCES_OPTIONS}

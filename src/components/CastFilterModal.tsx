@@ -8,7 +8,7 @@ import {
   PreferredRatingType,
   QueryParams,
   SortType,
-} from '@/services/api/fetch-cast-stats'
+} from '@/services/api/fetch-people-insights-list'
 
 import Button from './ui/Button'
 import { Modal } from './ui/Modal'

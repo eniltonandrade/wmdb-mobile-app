@@ -11,9 +11,6 @@ import { useSession } from '@/contexts/authContext'
 const Welcome = () => {
   const { user, session, isLoading } = useSession()
 
-  // console.log('user', user)
-  // console.log('session', session)
-
   if (isLoading && !user) {
     return <LogoLoading />
   }

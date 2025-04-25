@@ -1,7 +1,7 @@
 import { api, ApiListResponse } from '.'
-import { Genre } from './models/genre'
+import { Genre } from './types'
 
 export async function fetchGenres() {
-  const { data } = await api.get<ApiListResponse<Genre>>('genres')
+  const { data } = await api.get<ApiListResponse<Genre>>('/genres')
   return data.results
 }

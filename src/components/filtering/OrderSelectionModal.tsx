@@ -27,9 +27,7 @@ export default function OrderSelectionModal({
     <Modal ref={modalRef} heightPercentage="40%">
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
         <View className="border-b-2 border-gray-800 pb-4 mb-4 px-4">
-          <Text className="text-white font-pbold text-xl">
-            Classificar por
-          </Text>
+          <Text className="text-white font-pbold text-xl">Classificar por</Text>
         </View>
         {items.map((opt) => (
           <View

@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import colors from 'tailwindcss/colors'
 import { Bar, CartesianChart } from 'victory-native'
 
-import { fetchMovieCountByWatchedYear } from '@/services/api/fetch-movie-count-by-watched-year'
+import { fetchWatchedYearInsightsList } from '@/services/api/fetch-watched-year-insights-list'
 
 import { Skeleton } from './Skeleton'
 
@@ -14,20 +14,25 @@ export default function YearlyChart() {
   const font = useFont(require('../assets/fonts/Poppins-Regular.ttf'))
 
   const { data, isLoading } = useQuery({
-    queryKey: ['api', 'report', 'movies', 'count', 'year'],
-    queryFn: () => fetchMovieCountByWatchedYear(),
+    queryKey: ['api', 'insight', 'years'],
+    queryFn: () =>
+      fetchWatchedYearInsightsList({
+        filters: {
+          sort_by: 'year.asc',
+        },
+      }),
   })
 
   const filledData = useMemo(() => {
-    if (!data) return []
+    if (!data?.results) return []
     const currentYear = new Date().getFullYear()
     const startYear = currentYear - 9 // Last 10 years including the current year
 
-    const yearMap = new Map(data.map((d) => [d.year, d]))
+    const yearMap = new Map(data.results.map((d) => [d.year, d]))
 
     const filledData = []
     for (let year = startYear; year <= currentYear; year++) {
-      filledData.push(yearMap.get(year) || { year, count: null, average: 0 })
+      filledData.push(yearMap.get(year) || { year, count: null, avgRating: 0 })
     }
 
     return filledData

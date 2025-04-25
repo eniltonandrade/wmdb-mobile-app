@@ -59,20 +59,24 @@ export const AGGREGATION_SORTING_OPTIONS_YEAR = [
 
 export const RATING_SOURCES_OPTIONS = [
   {
+    name: 'Média',
+    id: 'average',
+  },
+  {
     name: 'IMDB',
-    id: 'imdb_rating',
+    id: 'IMDB',
   },
   {
     name: 'TMDB',
-    id: 'tmdb_rating',
+    id: 'TMDB',
   },
   {
     name: 'Rotten Tomatoes',
-    id: 'rotten_tomatoes_rating',
+    id: 'ROTTEN_TOMATOES',
   },
   {
     name: 'Metacritic',
-    id: 'metacritic_rating',
+    id: 'METACRITIC',
   },
 ]
 
@@ -108,6 +112,14 @@ export const sortMap = {
 }
 
 export type sortMapType = keyof typeof sortMap
+
+export const roleMap = {
+  DIRECTOR: 'Diretor(a)',
+  ACTOR: 'Ator',
+  ACTRESS: 'Atriz',
+}
+
+export type roleMapType = keyof typeof roleMap
 
 export const ratingSourceMap = RATING_SOURCES_OPTIONS.reduce(
   (acc, { id, name }) => {

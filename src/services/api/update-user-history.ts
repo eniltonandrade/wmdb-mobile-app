@@ -1,7 +1,14 @@
 import { api } from '.'
 
-export type UpdateUserHistoryProps = {
+export type UpdateUserHistoryRequest = {
   historyId: string
+  date?: Date
+  review?: string | null
+  rating?: number | null
+}
+
+export type UpdateUserHistoryResponse = {
+  id: string
   date?: Date
   review?: string | null
   rating?: number | null
@@ -12,13 +19,11 @@ export async function updateUserHistory({
   date,
   rating,
   review,
-}: UpdateUserHistoryProps) {
-  const { data } = await api.put(`user/history/${historyId}`, {
-    history: {
-      date,
-      rating,
-      review,
-    },
+}: UpdateUserHistoryRequest): Promise<UpdateUserHistoryResponse> {
+  const { data } = await api.patch(`/me/history/${historyId}`, {
+    date,
+    rating,
+    review,
   })
   return data
 }

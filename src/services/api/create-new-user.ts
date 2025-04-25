@@ -10,7 +10,7 @@ export async function createNewUser({
   email,
   password,
 }: CreateNewUserRequest) {
-  await api.post(`users`, {
+  await api.post(`/sessions/register`, {
     name,
     email,
     password,

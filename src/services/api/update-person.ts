@@ -1,6 +1,6 @@
 import { api } from '.'
 
-export type UpdatePersonProps = {
+export type UpdatePersonRequest = {
   tmdbId: number
   name: string
   gender: number
@@ -12,8 +12,8 @@ export async function updatePerson({
   name,
   gender,
   profilePath,
-}: UpdatePersonProps) {
-  const { data } = await api.put(`person/${tmdbId}`, {
+}: UpdatePersonRequest) {
+  const { data } = await api.patch(`/people/${tmdbId}`, {
     person: {
       name,
       gender,

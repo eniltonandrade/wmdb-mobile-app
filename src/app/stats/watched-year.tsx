@@ -25,25 +25,24 @@ import {
   sortMap,
   sortMapType,
 } from '@/constants/utils'
-import { SortType } from '@/services/api/fetch-cast-stats'
 import {
-  fetchWatchedYearStats,
-  QueryParams,
-} from '@/services/api/fetch-watched-year-stats'
-import { PreferredRatingType } from '@/services/api/models/common'
+  fetchWatchedYearInsightsList,
+  WatchedYearInsightsListFilters,
+  YearSortType,
+} from '@/services/api/fetch-watched-year-insights-list'
+import { RatingSources } from '@/services/api/types'
 
 export default function WatchedYearStats() {
   const orderSelectionModalRef = useRef<BottomSheetModal>(null)
   const ratingSelectionModalRef = useRef<BottomSheetModal>(null)
 
-  const [params, setParams] = useState<QueryParams>({
+  const [params, setParams] = useState<WatchedYearInsightsListFilters>({
     sort_by: 'year.desc',
-    preferred_rating: 'imdb_rating',
   })
 
   const { data, isLoading } = useQuery({
     queryKey: ['api', 'stats', 'years', 'watched', ...Object.values(params)],
-    queryFn: () => fetchWatchedYearStats({ params }),
+    queryFn: () => fetchWatchedYearInsightsList({ filters: params }),
   })
 
   const getRatingColor = (average: number) => {
@@ -53,7 +52,7 @@ export default function WatchedYearStats() {
   }
 
   function handleOrderDirectionChange(direction: string, key: string) {
-    const sortBy = (key + '.' + direction) as SortType
+    const sortBy = (key + '.' + direction) as YearSortType
     setParams((prev) => {
       return {
         ...prev,
@@ -67,7 +66,7 @@ export default function WatchedYearStats() {
     setParams((prev) => {
       return {
         ...prev,
-        preferred_rating: key as PreferredRatingType,
+        selected_rating: key === 'average' ? undefined : (key as RatingSources),
       }
     })
     ratingSelectionModalRef.current?.close()
@@ -128,7 +127,11 @@ export default function WatchedYearStats() {
                   }
                 />
                 <FilterBadge
-                  text={ratingSourceMap[params.preferred_rating]}
+                  text={
+                    params.selected_rating
+                      ? ratingSourceMap[params.selected_rating as RatingSources]
+                      : 'Média'
+                  }
                   removable={false}
                   onPress={handleOpenRatingSourceSelectionModal}
                   Icon={<Ionicons name="star" color={colors.white} />}
@@ -161,7 +164,7 @@ export default function WatchedYearStats() {
                       watched_year: item.year,
                       name: `Assistido em: ${item.year}`,
                       count: item.count,
-                      average: item.average,
+                      average: item.avgRating,
                     },
                   }}
                   asChild
@@ -191,16 +194,16 @@ export default function WatchedYearStats() {
                           </Text>
                         ) : (
                           <Text className="text-gray-400 text-xs font-psemibold">
-                            Média: {item.average.toFixed(1)}
+                            Média: {item.avgRating.toFixed(1)}
                           </Text>
                         )}
                       </View>
 
                       {selectedItem === 'average' ? (
                         <Text
-                          className={`text-xl font-bold ${getRatingColor(item.average)}`}
+                          className={`text-xl font-bold ${getRatingColor(item.avgRating)}`}
                         >
-                          {item.average.toFixed(1)}
+                          {item.avgRating.toFixed(1)}
                         </Text>
                       ) : (
                         <Text className={`text-xl font-bold text-green-500`}>
@@ -223,7 +226,7 @@ export default function WatchedYearStats() {
       />
       <FilterSelectionModal
         filterTitle="Notas por:"
-        currentSelection={params.preferred_rating}
+        currentSelection={params.selected_rating}
         modalRef={ratingSelectionModalRef}
         onChange={handleRatingSourceChange}
         items={RATING_SOURCES_OPTIONS}

@@ -1,24 +1,24 @@
-import { api, ApiResponse } from '.'
-import { Person } from './models/person'
+import { api } from '.'
+import { Person } from './types'
 
-export type FindOrCreatePersonProps = {
+export type FindOrCreatePersonRequest = {
   name: string
   profilePath?: string | null
-  id: number
+  tmdbId: number
   gender: number
 }
 
 export async function findOrCreatePerson({
   gender,
   name,
-  id,
+  tmdbId,
   profilePath,
-}: FindOrCreatePersonProps) {
-  const { data } = await api.post<ApiResponse<Person>>(`person`, {
+}: FindOrCreatePersonRequest) {
+  const { data } = await api.post<Person>(`/people`, {
     gender,
     name,
-    id,
+    tmdb_id: tmdbId,
     profile_path: profilePath,
   })
-  return data.result
+  return data
 }

@@ -6,7 +6,8 @@ type SignInWithPasswordRequest = {
 }
 
 interface SignInWithPasswordResponse {
-  token: string
+  access_token: string
+  refresh_token: string
 }
 
 export async function signInWithPassword({
@@ -14,14 +15,12 @@ export async function signInWithPassword({
   password,
 }: SignInWithPasswordRequest) {
   const { data } = await api.post<SignInWithPasswordResponse>(
-    `sessions/password`,
+    '/sessions/password',
     {
       email,
       password,
     },
   )
 
-  const { token } = data
-
-  return token
+  return data
 }

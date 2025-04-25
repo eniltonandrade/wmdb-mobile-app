@@ -15,7 +15,7 @@ import colors from 'tailwindcss/colors'
 import { useApp } from '@/contexts/appContext'
 import {
   fetchUseHistory,
-  type queryParams,
+  type FetchUseHistoryFilters,
 } from '@/services/api/fetch-user-history'
 
 import HistoryFiltersModal from './HistoryFiltersModal'
@@ -25,7 +25,7 @@ import MovieGrid from './MovieGrid'
 import MovieList from './MovieList'
 import FilterBadge from './ui/FilterBadge'
 
-type queryParamsKeys = keyof queryParams
+type queryParamsKeys = keyof FetchUseHistoryFilters
 
 const sortMap = {
   rating_imdb: 'Nota IMDB',
@@ -39,9 +39,9 @@ const sortMap = {
 type sortMapType = keyof typeof sortMap
 
 type MovieHistoryListProps = {
-  params: queryParams
+  params: FetchUseHistoryFilters
   displayMethod: 'LIST' | 'GRID'
-  setParams: React.Dispatch<React.SetStateAction<queryParams>>
+  setParams: React.Dispatch<React.SetStateAction<FetchUseHistoryFilters>>
   header?: JSX.Element
   selectedName?: string
 }
@@ -60,7 +60,7 @@ const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
     async function fetchHistories({ pageParam }: { pageParam: number }) {
       const res = await fetchUseHistory({
         page: pageParam,
-        params,
+        filters: params,
       })
       return res
     }

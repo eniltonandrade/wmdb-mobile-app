@@ -32,14 +32,12 @@ import UserRatingModal from '@/components/movie-details/UserRatingModal'
 import Avatar from '@/components/ui/Avatar'
 import Badge from '@/components/ui/Badge'
 import { queryClient } from '@/lib/react-query'
-import {
-  AddMovieToHistoryProps,
-  addMovieToUserHistory,
-} from '@/services/api/add-movie-to-user-history'
+import { createMovie, CreateMovieRequest } from '@/services/api/create-movie'
 import { createMovieRelationships } from '@/services/api/create-movie-relationships'
-import { getMovieByExternalId } from '@/services/api/get-movie-by-external-id'
+import { createUserHistory } from '@/services/api/create-user-history'
+import { getMovieById } from '@/services/api/get-movie-by-id'
 import { getUserHistoryByMovieId } from '@/services/api/get-user-history-by-movie'
-import { updateMovie, UpdateMovieProps } from '@/services/api/update-movie'
+import { updateMovie, UpdateMovieRequest } from '@/services/api/update-movie'
 import { getImdbMovieDetails } from '@/services/omdb/get-imdb-movie-details'
 import { getMovieDetails } from '@/services/tmdb/movies'
 import { tmdbImage } from '@/utils/image'
@@ -51,6 +49,7 @@ import { tmdbImage } from '@/utils/image'
 export default function Movie() {
   const [watchedDate, setWatchedDate] = useState<Date | null>(null)
   const [userRating, setUserRating] = useState<number | null>()
+  const [historyIdCreated, setHistoryIdCreated] = useState<string>()
   const castModalRef = useRef<BottomSheetModal>(null)
   const addToHistoryModalRef = useRef<BottomSheetModal>(null)
   const userRatingModalRef = useRef<BottomSheetModal>(null)
@@ -70,8 +69,7 @@ export default function Movie() {
 
   const { data: storedMovieData } = useQuery({
     queryKey: ['api', 'movie', movieId],
-    queryFn: () =>
-      getMovieByExternalId({ movieId: movieId!.toString(), tmdb: true }),
+    queryFn: () => getMovieById({ id: String(movieId) }),
     enabled: !!movieId,
   })
 
@@ -80,10 +78,9 @@ export default function Movie() {
     error: historyError,
     status: historyStatus,
   } = useQuery({
-    queryKey: ['api', 'history', storedMovieData?.movie?.id],
-    queryFn: () =>
-      getUserHistoryByMovieId({ movieId: storedMovieData?.movie?.id }),
-    enabled: !!storedMovieData?.movie?.id,
+    queryKey: ['api', 'history', movieId],
+    queryFn: () => getUserHistoryByMovieId({ movieId: String(movieId) }),
+    enabled: !!movieId,
   })
 
   const { data: omdbData } = useQuery({
@@ -93,23 +90,29 @@ export default function Movie() {
   })
 
   const addToHistoryMutation = useMutation({
-    mutationFn: async (data: AddMovieToHistoryProps) =>
-      await addMovieToUserHistory(data),
-    onSuccess: ({ created, movieId }) => {
+    mutationFn: async (data: CreateMovieRequest) => await createMovie(data),
+    onSuccess: async ({ created, id: movieId }) => {
       if (created) {
-        createMovieRelationships({
+        await createMovieRelationships({
           movie: movie!,
           movieId,
+          ratings: omdbData?.Ratings,
         })
       }
+      const history = await createUserHistory({
+        movieId,
+        watchedDate: watchedDate!,
+        rating: userRating,
+      })
       queryClient.invalidateQueries({
         queryKey: ['api', 'history'],
       })
+      setHistoryIdCreated(history.historyId)
     },
   })
 
   const updateMovieMutation = useMutation({
-    mutationFn: async (data: UpdateMovieProps) => await updateMovie(data),
+    mutationFn: async (data: UpdateMovieRequest) => await updateMovie(data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['api', 'history'],
@@ -124,11 +127,9 @@ export default function Movie() {
   async function handleUpdateMovie() {
     if (movie && storedMovieData) {
       await updateMovieMutation.mutateAsync({
-        backdrop_path: movie.backdrop_path,
-        poster_path: movie.poster_path,
-        movieId: storedMovieData?.movie.id,
-        ratings: omdbData?.Ratings,
-        tmdb_rating: movie.vote_average,
+        backdropPath: movie.backdrop_path,
+        posterPath: movie.poster_path,
+        movieId: storedMovieData?.id,
       })
     }
   }
@@ -152,13 +153,22 @@ export default function Movie() {
     userRatingModalRef.current?.present()
   }
 
-  async function handleAddToMovieToUserHistory(date: Date) {
+  async function handleCreateMovie(date: Date) {
     setWatchedDate(date)
+    if (!movie) {
+      return
+    }
     await addToHistoryMutation.mutateAsync({
-      movie: movie!,
-      ratings: omdbData?.Ratings,
-      watchedDate: date,
-    })
+      id: movie.id,
+      title: movie.title,
+      originalTitle: movie.original_title,
+      posterPath: movie.poster_path,
+      backdropPath: movie.backdrop_path,
+      releaseDate: movie.release_date,
+      runtime: movie.runtime,
+      imdbId: movie.imdb_id,
+    } as CreateMovieRequest)
+
     addToHistoryModalRef.current?.dismiss()
     userRatingModalRef.current?.present()
   }
@@ -346,7 +356,13 @@ export default function Movie() {
                         key={genre.id}
                         index={index}
                         onPress={() => {
-                          console.log('pressed')
+                          router.push({
+                            pathname: '/movies',
+                            params: {
+                              genre_id: genre.id,
+                              name: genre.name,
+                            },
+                          })
                         }}
                         title={genre.name}
                       />
@@ -466,7 +482,13 @@ export default function Movie() {
                         key={company.id}
                         index={index}
                         onPress={() => {
-                          console.log('pressed')
+                          router.push({
+                            pathname: '/movies',
+                            params: {
+                              company_id: company.id,
+                              name: company.name,
+                            },
+                          })
                         }}
                         title={company.name}
                       />
@@ -527,7 +549,7 @@ export default function Movie() {
 
       <AddToHistoryModal
         modalRef={addToHistoryModalRef}
-        onSave={handleAddToMovieToUserHistory}
+        onSave={handleCreateMovie}
         date={watchedDate}
         isLoading={addToHistoryMutation.isPending}
         isWatched={!!history?.date}
@@ -535,8 +557,8 @@ export default function Movie() {
 
       <UserRatingModal
         modalRef={userRatingModalRef}
-        movieId={storedMovieData?.movie?.id}
-        historyId={history?.id || addToHistoryMutation.data?.historyId}
+        movieId={storedMovieData?.id}
+        historyId={history?.id || historyIdCreated}
         userRating={userRating || 0}
         onChangeRating={setUserRating}
       />

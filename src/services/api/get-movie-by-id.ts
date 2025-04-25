@@ -1,11 +1,11 @@
-import { api, ApiResponse } from '.'
-import { Movie } from './models/movie'
+import { api } from '.'
+import { Movie } from './types'
 
-type getMovieByIdProps = {
-  movieId?: string | null
+type getMovieByExternalIdRequest = {
+  id: string
 }
 
-export async function getMovieById({ movieId }: getMovieByIdProps) {
-  const { data } = await api.get<ApiResponse<Movie>>(`movies/${movieId}`)
-  return data.result
+export async function getMovieById({ id }: getMovieByExternalIdRequest) {
+  const { data } = await api.get<Movie>(`/movies/${id}`)
+  return data
 }

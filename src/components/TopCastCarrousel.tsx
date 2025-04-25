@@ -4,30 +4,22 @@ import { Link } from 'expo-router'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 import colors from 'tailwindcss/colors'
 
-import { getCastStats } from '@/services/api/get-cast-stats'
+import {
+  fetchPeopleRanking,
+  FetchPeopleRankingRequest,
+} from '@/services/api/fetch-people-ranking'
 import { tmdbImage } from '@/utils/image'
 
 import { Skeleton } from './Skeleton'
 import Avatar from './ui/Avatar'
 
-type Params = {
-  gender?: 1 | 2
-  sort_by: 'average.desc' | 'average.asc' | 'count.asc' | 'count.desc'
-  preferred_rating:
-    | 'imdb_rating'
-    | 'tmdb_rating'
-    | 'metacritic_rating'
-    | 'rotten_tomatoes_rating'
-}
-
 const TopCastCarrousel = () => {
-  const params: Params = {
-    preferred_rating: 'imdb_rating',
-    sort_by: 'count.desc',
+  const params: FetchPeopleRankingRequest = {
+    page: 1,
   }
   const { data } = useQuery({
-    queryKey: ['api', 'stats', 'cast', ...Object.values(params)],
-    queryFn: () => getCastStats(params),
+    queryKey: ['api', 'ranking', 'person', ...Object.values(params)],
+    queryFn: () => fetchPeopleRanking(params),
   })
 
   return (
@@ -47,7 +39,7 @@ const TopCastCarrousel = () => {
       </Link>
       {data ? (
         <FlatList
-          data={data.casts.slice(0, 10)}
+          data={data.slice(0, 10)}
           ListEmptyComponent={() => (
             <View className="flex flex-1 border w-full border-gray-600 rounded-md items-center justify-center py-4">
               <FontAwesome name="star-o" size={32} color={colors.gray[600]} />
@@ -61,7 +53,7 @@ const TopCastCarrousel = () => {
           contentContainerStyle={{
             flexGrow: 1,
             paddingLeft: 16,
-            paddingRight: data.casts.length > 0 ? 32 : 16,
+            paddingRight: data.length > 0 ? 32 : 16,
           }}
           horizontal
           renderItem={({ item, index }) => (
@@ -70,13 +62,15 @@ const TopCastCarrousel = () => {
                 asChild
                 href={{
                   pathname: '/person/[personId]',
-                  params: { personId: item.tmdbId },
+                  params: {
+                    personId: item.tmdbId,
+                  },
                 }}
               >
                 <TouchableOpacity activeOpacity={0.7}>
                   <Avatar
                     size="lg"
-                    uri={tmdbImage(item.profile_path || '')}
+                    uri={tmdbImage(item.profilePath || '')}
                     className="relative mb-2 bg-gray-900"
                   />
 
@@ -87,12 +81,15 @@ const TopCastCarrousel = () => {
                   </View>
                 </TouchableOpacity>
               </Link>
-              <Text className="text-gray-50 text-xs font-psemibold text-center mb-1">
+              <Text
+                numberOfLines={1}
+                className="text-gray-50 text-xs font-psemibold text-center mb-1"
+              >
                 {item.name}
               </Text>
-              {/* <Text className="text-gray-400 text-xs font-plight text-center">
-                Total: {item.count} / Média: {item.average}
-              </Text> */}
+              <Text className="text-gray-300 text-xs font-plight text-center">
+                Nota: {item.score}
+              </Text>
             </View>
           )}
         />

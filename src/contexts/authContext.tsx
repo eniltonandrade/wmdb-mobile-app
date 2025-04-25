@@ -86,13 +86,14 @@ export function SessionProvider(props: React.PropsWithChildren) {
   const { mutate: singInMutate, isPending: isSignInLoading } = useMutation({
     mutationFn: async (data: SignInCredentials) =>
       await signInWithPassword(data),
-    onSuccess: (token) => {
-      setSession(token)
-      api.defaults.headers.common.Authorization = `Bearer ${token}`
+    onSuccess: ({ access_token, refresh_token }) => {
+      console.log(refresh_token)
+      setSession(access_token)
+      api.defaults.headers.common.Authorization = `Bearer ${access_token}`
       router.replace('/home')
     },
     onError: (error) => {
-      console.log('ERROR', error)
+      console.log('ERROR', JSON.stringify(error))
       if (error instanceof AxiosError) {
         Toast.show({
           type: 'error',

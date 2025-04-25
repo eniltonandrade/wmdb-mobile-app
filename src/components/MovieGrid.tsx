@@ -11,11 +11,11 @@ import {
 } from 'react-native'
 import colors from 'tailwindcss/colors'
 
-import { HistoryDetails } from '@/services/api/models/history-details'
+import { History } from '@/services/api/types'
 import { tmdbImage } from '@/utils/image'
 
 type MovieGridsProps = {
-  items: HistoryDetails[]
+  items: History[]
   fetchNextPage: () => void
   openMovieActions: (id: string) => void
   listHeader?: JSX.Element
@@ -60,12 +60,12 @@ const MovieGrid = ({
       renderItem={({ item }) => (
         <View className="w-[33%] mb-4 px-2">
           <Link
-            href={`/movie/${item.movie.tmdbId}`}
+            href={`/movie/${item.movie?.tmdbId}`}
             asChild
             className="relative"
           >
             <TouchableOpacity activeOpacity={0.7}>
-              {item.movie.posterPath && (
+              {item.movie?.posterPath && (
                 <Image
                   source={{ uri: tmdbImage(item.movie.posterPath, 'w500') }}
                   className="rounded-md bg-gray-900"
@@ -76,7 +76,7 @@ const MovieGrid = ({
               )}
               <View className="absolute bg-black/70 right-1 top-1 px-1 py-0.5 rounded-md">
                 <Text className="text-white text-xs font-pbold">
-                  {item.movie.tmdbRating?.toFixed(1) || '0.0'}
+                  {item.movie?.averageRating?.toFixed(1) || '0.0'}
                 </Text>
               </View>
               {item.rating?.toString() && (
@@ -101,17 +101,17 @@ const MovieGrid = ({
                 numberOfLines={2}
                 className="text-gray-50 font-psemibold text-xs flex-1"
               >
-                {item.movie.title}
+                {item.movie?.title}
               </Text>
               <Text
                 numberOfLines={1}
                 className="text-gray-400 font-pregular text-xs flex-1"
               >
-                {item.movie?.credits?.cast?.at(0)?.character}
-                {item.movie?.credits?.crew?.at(0)?.job}
+                {item.movie?.credits?.at(0)?.character}
+                {item.movie?.credits?.at(0)?.role === 'DIRECTOR' && 'Diretor'}
               </Text>
             </View>
-            <Pressable onPress={() => openMovieActions(item.movie.id)}>
+            <Pressable onPress={() => openMovieActions(item.movie!.id)}>
               <Feather
                 name="more-vertical"
                 color={colors.gray[100]}

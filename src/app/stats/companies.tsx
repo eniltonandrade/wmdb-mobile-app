@@ -27,27 +27,25 @@ import {
   sortMap,
   sortMapType,
 } from '@/constants/utils'
-import { SortType } from '@/services/api/fetch-cast-stats'
 import {
-  fetchCompanyStats,
-  PreferredRatingType,
-  QueryParams,
-} from '@/services/api/fetch-company-stats'
+  CompaniesInsightListFilters,
+  fetchCompaniesInsightList,
+} from '@/services/api/fetch-companies-insight-list'
+import { RatingSources, SortType } from '@/services/api/types'
 import { tmdbImage } from '@/utils/image'
 
 export default function CompanyStats() {
   const orderSelectionModalRef = useRef<BottomSheetModal>(null)
   const ratingSelectionModalRef = useRef<BottomSheetModal>(null)
 
-  const [params, setParams] = useState<QueryParams>({
+  const [params, setParams] = useState<CompaniesInsightListFilters>({
     sort_by: 'count.desc',
-    preferred_rating: 'imdb_rating',
   })
 
   async function fetchCompanyStatsFn({ pageParam }: { pageParam: number }) {
-    const res = await fetchCompanyStats({
+    const res = await fetchCompaniesInsightList({
       page: pageParam,
-      params,
+      filters: params,
     })
     return res
   }
@@ -67,7 +65,7 @@ export default function CompanyStats() {
     setParams((prev) => {
       return {
         ...prev,
-        preferred_rating: id as PreferredRatingType,
+        selected_rating: id !== 'average' ? (id as RatingSources) : undefined,
       }
     })
     ratingSelectionModalRef.current?.close()
@@ -78,7 +76,7 @@ export default function CompanyStats() {
     isLoading,
     fetchNextPage,
   } = useInfiniteQuery({
-    queryKey: ['api', 'stats', 'companies', ...Object.values(params)],
+    queryKey: ['api', 'insights', 'companies', ...Object.values(params)],
     queryFn: fetchCompanyStatsFn,
     retry: false,
     initialPageParam: 1,
@@ -157,7 +155,11 @@ export default function CompanyStats() {
                   }
                 />
                 <FilterBadge
-                  text={ratingSourceMap[params.preferred_rating]}
+                  text={
+                    params.selected_rating
+                      ? ratingSourceMap[params.selected_rating as RatingSources]
+                      : 'Média'
+                  }
                   removable={false}
                   onPress={handleOpenRatingSourceSelectionModal}
                   Icon={<Ionicons name="star" color={colors.white} />}
@@ -201,8 +203,8 @@ export default function CompanyStats() {
                     params: {
                       company_id: item.id,
                       name: item.name,
-                      count: item.count,
-                      average: item.average,
+                      count: item.appearances,
+                      average: item.avgRating,
                     },
                   }}
                   asChild
@@ -223,7 +225,7 @@ export default function CompanyStats() {
                         width={50}
                         className="bg-white rounded-md p-1"
                         source={{
-                          uri: tmdbImage(item.logo_path),
+                          uri: tmdbImage(item.logoPath),
                         }}
                       />
                     </View>
@@ -238,24 +240,24 @@ export default function CompanyStats() {
 
                         {selectedItem === 'average' ? (
                           <Text className="text-gray-400 text-xs font-psemibold">
-                            Filmes Assistidos: {item.count}
+                            Filmes Assistidos: {item.appearances}
                           </Text>
                         ) : (
                           <Text className="text-gray-400 text-xs font-psemibold">
-                            Média: {item.average.toFixed(1)}
+                            Média: {item.avgRating.toFixed(1)}
                           </Text>
                         )}
                       </View>
 
                       {selectedItem === 'average' ? (
                         <Text
-                          className={`text-xl font-bold ${getRatingColor(item.average)}`}
+                          className={`text-xl font-bold ${getRatingColor(item.avgRating)}`}
                         >
-                          {item.average.toFixed(1)}
+                          {item.avgRating.toFixed(1)}
                         </Text>
                       ) : (
                         <Text className={`text-xl font-bold text-green-500`}>
-                          {item.count}
+                          {item.appearances}
                         </Text>
                       )}
                     </View>
@@ -274,7 +276,7 @@ export default function CompanyStats() {
       />
       <FilterSelectionModal
         filterTitle="Notas por:"
-        currentSelection={params.preferred_rating}
+        currentSelection={params.selected_rating}
         modalRef={ratingSelectionModalRef}
         onChange={handleRatingSourceChange}
         items={RATING_SOURCES_OPTIONS}

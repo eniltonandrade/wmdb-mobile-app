@@ -11,7 +11,7 @@ import {
   MovieHistoryListRef,
 } from '@/components/MovieHistoryList'
 import { Container } from '@/components/ui/Container'
-import { type queryParams } from '@/services/api/fetch-user-history'
+import { FetchUseHistoryFilters } from '@/services/api/fetch-user-history'
 
 export default function Movies() {
   const { genre_id, name, company_id, release_year, watched_year } =
@@ -38,12 +38,12 @@ export default function Movies() {
         ([_, value]) => value !== undefined,
       ),
     ),
-  } as queryParams // Type assertion to satisfy TypeScript
+  } as FetchUseHistoryFilters
 
   const movieHistoryListRef = useRef<MovieHistoryListRef>(null)
   const [displayMethod, setDisplayMethod] = useState<'LIST' | 'GRID'>('LIST')
 
-  const [params, setParams] = useState<queryParams>(initialParams)
+  const [params, setParams] = useState<FetchUseHistoryFilters>(initialParams)
 
   function handleOpenFilterModal() {
     movieHistoryListRef.current?.openFilterModal()

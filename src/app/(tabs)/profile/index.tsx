@@ -14,17 +14,14 @@ import { Container } from '@/components/ui/Container'
 import { Heading } from '@/components/ui/Heading'
 import YearlyChart from '@/components/YearlyChart'
 import { useSession } from '@/contexts/authContext'
-import { getUserHistoryStats } from '@/services/api/get-user-history-stats'
+import { getUserHistoryInsights } from '@/services/api/get-user-history-insights'
 
 export default function Profile() {
   const { user, signOut } = useSession()
 
   const { data } = useQuery({
     queryKey: ['api', 'report', 'user', 'history'],
-    queryFn: () =>
-      getUserHistoryStats({
-        preferred_rating: 'imdb_rating',
-      }),
+    queryFn: () => getUserHistoryInsights(),
   })
 
   return (

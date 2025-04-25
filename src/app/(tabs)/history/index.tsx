@@ -8,13 +8,13 @@ import {
   MovieHistoryListRef,
 } from '@/components/MovieHistoryList'
 import { Container } from '@/components/ui/Container'
-import { type queryParams } from '@/services/api/fetch-user-history'
+import { type FetchUseHistoryFilters } from '@/services/api/fetch-user-history'
 
 export default function History() {
   const movieHistoryListRef = useRef<MovieHistoryListRef>(null)
   const [displayMethod, setDisplayMethod] = useState<'LIST' | 'GRID'>('LIST')
 
-  const [params, setParams] = useState<queryParams>({
+  const [params, setParams] = useState<FetchUseHistoryFilters>({
     sort_by: 'watched_date.desc',
   })
 

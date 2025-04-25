@@ -8,8 +8,7 @@ import colors from 'tailwindcss/colors'
 import Button from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import { queryClient } from '@/lib/react-query'
-import { History } from '@/services/api/models/history'
-import { HistoryDetails } from '@/services/api/models/history-details'
+import { History } from '@/services/api/types'
 import { updateUserHistory } from '@/services/api/update-user-history'
 
 type UserRatingModalProps = {
@@ -37,7 +36,7 @@ export default function UserRatingModal({
         : oldData,
     )
     const historiesListCache = queryClient.getQueriesData<{
-      histories: HistoryDetails[]
+      histories: History[]
     }>({
       queryKey: ['api', 'history'],
     })
@@ -47,7 +46,7 @@ export default function UserRatingModal({
         return
       }
       queryClient.setQueryData<{
-        histories: HistoryDetails[]
+        histories: History[]
       }>(cacheKey, {
         ...cacheData,
         histories: cacheData?.histories?.map((history) => {

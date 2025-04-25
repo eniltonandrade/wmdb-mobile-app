@@ -9,20 +9,20 @@ export type YearSortType =
   | 'year.asc'
   | 'year.desc'
 
-export type ReleaseYearInsightsListFilters = {
+export type WatchedYearInsightsListFilters = {
   selected_rating?: RatingSources
   sort_by: YearSortType
 }
 
-interface FetchReleaseYearInsightsListRequest {
-  filters?: ReleaseYearInsightsListFilters | null
+interface FetchWatchedYearInsightsListRequest {
+  filters?: WatchedYearInsightsListFilters | null
 }
 
-export async function fetchReleaseYearInsightsList({
+export async function fetchWatchedYearInsightsList({
   filters,
-}: FetchReleaseYearInsightsListRequest) {
+}: FetchWatchedYearInsightsListRequest) {
   const { data } = await api.get<ApiListResponse<YearInsight>>(
-    '/me/insights/release-years',
+    '/me/insights/watched-years',
     {
       params: {
         ...filters,
