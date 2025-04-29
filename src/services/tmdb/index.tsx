@@ -10,7 +10,6 @@ export type ListResponse<T> = {
 export const tmdbApi = axios.create({
   baseURL: 'https://api.themoviedb.org/3/',
   headers: {
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjY2IyMGExMzc2OWRiOTlhOWIyYmM1NWNiNjQ1Yzk4OSIsInN1YiI6IjU4ZDI4NmQwYzNhMzY4MzkwODAxYzliYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.jCeGItKZHabf1QGlLUKfSjqtenTyUKlmB3UjpegFSCw',
+    Authorization: `Bearer ${process.env.EXPO_TMDB_API_KEY}`,
   },
 })
