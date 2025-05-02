@@ -102,6 +102,12 @@ export type UserHistoryInsights = {
 export type GenreInsight = Insight
 
 export type PersonInsightDetails = {
+  person: {
+    id: string
+    name: string
+    tmdbId: number
+    profilePath: string | null
+  }
   movieCount: number
   averageRating: number
   totalRuntime: number

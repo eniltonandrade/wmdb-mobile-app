@@ -1,12 +1,12 @@
 import { tmdbApi } from '.'
 import { Language } from './models/common'
-import { PersonDetails } from './models/person'
+import { PersonResponse } from './models/person'
 
 export const getPersonDetails = async (id: number, language: Language) => {
-  const { data } = await tmdbApi.get<PersonDetails>(`/person/${id}`, {
+  const { data } = await tmdbApi.get<PersonResponse>(`/person/${id}`, {
     params: {
       language,
-      append_to_response: 'casts',
+      append_to_response: 'credits,images',
     },
   })
 

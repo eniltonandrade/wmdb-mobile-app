@@ -10,6 +10,6 @@ export type ListResponse<T> = {
 export const tmdbApi = axios.create({
   baseURL: 'https://api.themoviedb.org/3/',
   headers: {
-    Authorization: `Bearer ${process.env.EXPO_TMDB_API_KEY}`,
+    Authorization: `Bearer ${process.env.EXPO_PUBLIC_TMDB_API_KEY}`,
   },
 })

@@ -41,13 +41,13 @@ export default function RecentHistory() {
       {data && !isRecentHistoryLoading ? (
         <MoviesCarrousel
           movies={data.histories.map((history) => ({
-            id: history.movie.id,
-            tmdbId: history.movie.tmdbId,
+            id: history.movie?.id,
+            tmdbId: history.movie?.tmdbId,
             isWatched: !!history.date,
-            posterPath: history.movie.posterPath,
-            rating: history.movie.averageRating,
-            releaseDate: history.movie.releaseDate,
-            title: history.movie.title,
+            posterPath: history.movie?.posterPath,
+            rating: history.movie?.averageRating,
+            releaseDate: history.movie?.releaseDate,
+            title: history.movie?.title,
             userRating: history.rating,
           }))}
           emptyListText="Seus filmes assistidos aparecerão aqui."

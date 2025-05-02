@@ -109,9 +109,11 @@ const MovieHistoryList = forwardRef<MovieHistoryListRef, MovieHistoryListProps>(
     const selectedParamKeys = Object.keys(params).filter((p) => p !== 'sort_by')
     const [selectedOrder, selectedDirection] = params.sort_by.split('.')
 
-    if (isLoading) {
+    if (isLoading && !data) {
       return <Loading />
     }
+
+    console.log(params)
 
     return (
       <>

@@ -24,7 +24,7 @@ export default function FilterBadge({
 }: FilterBadgeProps) {
   return (
     <TouchableOpacity activeOpacity={0.7} {...rest}>
-      <View className="bg-gray-900 flex-row rounded-md p-2 items-center space-x-2 mb-4 mr-2 border border-gray-500">
+      <View className=" flex-row rounded-md px-1.5 py-1.5 items-center space-x-1 mb-4 mr-2 border border-gray-500">
         {Icon}
         <Text className=" font-psemibold text-xs text-gray-50">{text}</Text>
         {removable && (

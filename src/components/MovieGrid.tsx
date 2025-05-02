@@ -58,7 +58,7 @@ const MovieGrid = ({
       keyExtractor={(item) => String(item.id)}
       onEndReachedThreshold={0.1}
       renderItem={({ item }) => (
-        <View className="w-[33%] mb-4 px-2">
+        <View className="w-[33%] mb-2 px-2">
           <Link
             href={`/movie/${item.movie?.tmdbId}`}
             asChild
@@ -96,9 +96,9 @@ const MovieGrid = ({
             </TouchableOpacity>
           </Link>
           <View className="mt-2 flex-row items-start">
-            <View className="flex flex-col">
+            <View className="flex flex-col flex-1">
               <Text
-                numberOfLines={2}
+                numberOfLines={1}
                 className="text-gray-50 font-psemibold text-xs flex-1"
               >
                 {item.movie?.title}
@@ -111,7 +111,10 @@ const MovieGrid = ({
                 {item.movie?.credits?.at(0)?.role === 'DIRECTOR' && 'Diretor'}
               </Text>
             </View>
-            <Pressable onPress={() => openMovieActions(item.movie!.id)}>
+            <Pressable
+              onPress={() => openMovieActions(item.movie!.id)}
+              className="mr-[-8px]"
+            >
               <Feather
                 name="more-vertical"
                 color={colors.gray[100]}
